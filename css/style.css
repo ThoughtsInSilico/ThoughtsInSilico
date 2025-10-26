@@ -37,6 +37,36 @@ body, h1, h2, h3, h4, h5, h6,
   font-family: var(--font-sans);
 }
 
+/* --- Section spacing inside posts --- */
+:root{
+  --section-gap: 2.25rem;   /* adjust to taste */
+}
+
+.post-body h2:not(:first-child){
+  margin-top: var(--section-gap);
+  margin-bottom: .75rem;
+}
+
+.post-body h3:not(:first-child){
+  margin-top: calc(var(--section-gap) - .5rem);
+  margin-bottom: .5rem;
+}
+
+/* Nice spacing around other blocks */
+.post-body blockquote,
+.post-body ul,
+.post-body ol,
+.post-body hr{
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.post-body hr{
+  border: 0;
+  border-top: 1px solid var(--card-border);
+}
+
+
 
 /* ===== PAGE BACKGROUND (solid) ===== */
 html, body { height: 100%; }
