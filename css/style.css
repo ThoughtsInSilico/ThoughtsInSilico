@@ -31,6 +31,12 @@
   /* Shadow mood */
   --shadow: 0 8px 40px rgba(0,0,0,0.35);
 }
+/* Force the chosen font everywhere */
+body, h1, h2, h3, h4, h5, h6,
+.site-title, .site-nav a, .post-card, .post-body {
+  font-family: var(--font-sans);
+}
+
 
 /* ===== PAGE BACKGROUND (solid) ===== */
 html, body { height: 100%; }
