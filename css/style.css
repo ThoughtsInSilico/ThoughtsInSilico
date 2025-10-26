@@ -37,6 +37,8 @@ body, h1, h2, h3, h4, h5, h6,
   font-family: var(--font-sans);
 }
 
+
+
 /* --- Section spacing inside posts --- */
 :root{
   --section-gap: 2.25rem;   /* adjust to taste */
