@@ -1,37 +1,68 @@
-/* === Home with half-height, scrollable banner — Times New Roman === */
+/* === Iceberg + stable background image + tapered fade + floating post row === */
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
 
 /* Tokens */
 :root{
-  --bg: #000;                           /* true black */
-  --blue: #0d1f5a;                      /* deep blue for fade */
-  --glass: rgba(5,5,5,.22);
-  --panel: rgba(10,10,10,.30);          /* transparent post cards */
-  --border: rgba(190,200,230,.14);
-  --text: #eeeeee;
+  /* Contrast & palette */
+  --bg: #000;                           /* true black base */
+  --glass: rgba(8,10,18,.26);           /* translucent glass */
+  --panel: rgba(10,12,22,.32);          /* post cards (see-through) */
+  --border: rgba(185,205,255,.16);      /* cool, subtle border */
+  --text: #e8ecf7;
   --muted: #a3a9ba;
   --accent: #9ec1ff;
 
-  /* Times New Roman across site */
-  --font: "Times New Roman", Times, "Nimbus Roman", serif;
+  --font: "Iceberg", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 
   --base: 16px;
   --leading: 1.7;
-  --maxw: 1100px;                       /* a bit wider for horizontal feel */
+  --maxw: 1100px;
   --space: 1rem;
 }
 
 /* ===== Base ===== */
-*{ box-sizing: border-box }
-html,body{ height: 100% }
+*{ box-sizing:border-box }
+html,body{ height:100% }
 body{
-  margin: 0; color: var(--text);
+  margin:0; color:var(--text);
   background: var(--bg);
   font: 400 var(--base)/var(--leading) var(--font);
+  letter-spacing:.01em;
 }
+
+/* Stable banner as the global page background (no movement) */
+body::before{
+  content:"";
+  position: fixed; inset: 0; z-index: -2;
+  background:
+    /* darken top a bit for contrast */
+    linear-gradient(180deg, rgba(0,0,0,.30) 0%, rgba(0,0,0,.30) 20%, rgba(0,0,0,.25) 35%),
+    url("../img/banner.jpg");
+  background-size: cover;               /* minimal crop, cover viewport */
+  background-position: center top;      /* try to keep the top intact */
+  background-repeat: no-repeat;
+}
+
+/* Tapering fade to black JUST above the posts for readability */
+body::after{
+  content:"";
+  position: fixed; inset: 0; z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,.15) 30vh,
+    rgba(0,0,0,.40) 45vh,
+    rgba(0,0,0,.70) 55vh,
+    rgba(0,0,0,.90) 60vh,
+    #000 70vh,
+    #000 100%
+  );
+  pointer-events: none;
+}
+
 .container{ width: min(100% - 2rem, var(--maxw)); margin-inline: auto }
 .muted{ color: var(--muted) }
-
 a{ color: var(--accent); text-decoration: none }
 a:hover{ text-decoration: underline }
 a:visited{ color: var(--accent) }
@@ -39,86 +70,64 @@ a:visited{ color: var(--accent) }
 /* ===== Header ===== */
 .site-header{
   display:flex; align-items:center; justify-content:space-between;
-  margin: calc(var(--space)*1.2) auto var(--space);
+  margin: calc(var(--space)*1.6) auto var(--space);
 }
+
+/* Title — NO BOX */
 .site-title{
-  color:var(--text); text-decoration:none;
-  padding:.6rem .9rem;
-  border:1px solid var(--border);
-  background:var(--glass);
-
-  /* MUCH larger title */
+  color: var(--text);
+  text-decoration: none;
   font-weight: 700;
-  font-size: clamp(1.8rem, 5.2vw, 2.6rem);
-  letter-spacing: .01em;
-}
-.site-nav a{ color:var(--muted); padding:.45rem .6rem; border:1px solid transparent }
-.site-nav a:hover{ color:#fff; border-color:var(--border); background:rgba(255,255,255,.06) }
-.nav-dropdown{ position:relative; display:inline-block }
-.nav-submenu--row{
-  display:none; position:absolute; top:100%; left:0; z-index:10;
-  padding:.35rem; background: rgba(10,10,10,.6); border:1px solid var(--border);
-}
-.nav-dropdown:hover .nav-submenu--row{ display:flex; gap:.25rem }
-
-/* ===== TOP BANNER (upper half, scrollable image, fades to blue) ===== */
-.banner{
-  position: relative;
-  height: 50vh;              /* upper half of the viewport */
-  overflow: hidden;          /* contain the scroller */
-  border-bottom: 1px solid var(--border);
-}
-
-/* the image scrolls INSIDE this viewport */
-.banner__scroller{
-  height: 50vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-}
-.banner__scroller::-webkit-scrollbar{ width: 10px }
-.banner__scroller::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.15) }
-.banner__scroller img{
-  display:block;
-  width: 100%;
-  height: auto;
-  min-height: 110vh;         /* taller than the box so the user can scroll it */
-  object-fit: cover;
-}
-
-/* blue fade at the bottom of the banner */
-.banner::after{
-  content:"";
-  position:absolute; left:0; right:0; bottom:0; height: 50%;
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, var(--blue) 100%);
-  pointer-events: none;
-}
-
-/* ===== Intro (no box) ===== */
-.intro{ margin: 1rem auto 1.25rem }
-.intro p{
-  margin:0; max-width:48ch; color:var(--text);
+  /* bigger and cleaner */
+  font-size: clamp(1.6rem, 4.8vw, 2.4rem);
+  letter-spacing: .015em;
+  /* optional soft glow for contrast; remove if you dislike */
   text-shadow: 0 1px 2px rgba(0,0,0,.45);
 }
 
-/* ===== Horizontal post row ===== */
-.list-heading{ color: var(--muted); margin: 0 0 .6rem 0; letter-spacing:.01em }
+.site-nav a{
+  color: var(--muted);
+  padding:.45rem .6rem; border:1px solid transparent;
+}
+.site-nav a:hover{
+  color:#fff; border-color: var(--border);
+  background: rgba(255,255,255,.06);
+}
+
+/* Dropdown */
+.nav-dropdown{ position:relative; display:inline-block }
+.nav-submenu--row{
+  display:none; position:absolute; top:100%; left:0; z-index:10;
+  padding:.35rem; background: rgba(10,12,22,.6);
+  border:1px solid var(--border);
+}
+.nav-dropdown:hover .nav-submenu--row{ display:flex; gap:.25rem }
+
+/* ===== Intro (no box; readable over bg) ===== */
+.intro{ margin: .25rem auto 1.25rem }
+.intro p{
+  margin:0; max-width: 52ch; color:var(--text);
+  text-shadow: 0 1px 2px rgba(0,0,0,.45);
+}
+
+/* ===== Horizontal “Newest posts” row ===== */
+.list-heading{ color: var(--muted); margin: 0 0 .6rem; letter-spacing:.02em }
 
 .post-row{
   display:flex; gap:1rem; overflow-x:auto; padding-bottom:.25rem;
   scroll-snap-type:x mandatory;
 }
 .post-row::-webkit-scrollbar{ height:10px }
-.post-row::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.15) }
-.post-row::-webkit-scrollbar-track{ background:rgba(255,255,255,.05) }
+.post-row::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.18) }
+.post-row::-webkit-scrollbar-track{ background:rgba(255,255,255,.06) }
 
+/* Floating glass cards: more transparent; background shows through */
 .post-card{
   scroll-snap-align:start;
   min-width: clamp(260px, 32vw, 360px);
   background: var(--panel);
   border: 1px solid var(--border);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px) saturate(110%);
   padding: 1rem;
   box-shadow: 0 10px 32px rgba(0,0,0,.45);
   transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
@@ -128,7 +137,7 @@ a:visited{ color: var(--accent) }
   border-color: rgba(158,193,255,.35);
   box-shadow: 0 16px 48px rgba(0,0,0,.6);
 }
-.post-title{ margin:0 0 .35rem 0; font-weight:700; font-size:1.12rem }
+.post-title{ margin:0 0 .35rem; font-weight:600; font-size:1.08rem }
 .post-title a{ color:var(--text) }
 .post-time{ color:var(--muted); font-size:.9em; display:block }
 .post-meta{ color:var(--muted); margin:.3rem 0 0; font-size:.9em }
@@ -138,7 +147,7 @@ a:visited{ color: var(--accent) }
 .site-footer p{ margin:0 0 .25rem 0; color: var(--muted) }
 .site-footer small{ color: var(--muted) }
 
-/* ===== Helpers for post pages ===== */
+/* ===== Helpers (post pages reuse these) ===== */
 .post-body{ font-size: 1.02rem }
 .post-body p{ margin:.9rem 0; text-indent:.8em }
 .post-body p:first-of-type,.post-body h2 + p,.post-body h3 + p{ text-indent:0 }
