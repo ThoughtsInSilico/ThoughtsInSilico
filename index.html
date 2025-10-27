@@ -61,7 +61,8 @@
         posts.sort((a,b) => new Date(b.date) - new Date(a.date));
         const fmt = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
     
-        list.innerHTML = posts.map(p => `
+        list.innerHTML = posts.map(p =>
+          if (window.MathJax && MathJax.typeset) MathJax.typeset();`
           <article class="post-card">
             <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
             <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
