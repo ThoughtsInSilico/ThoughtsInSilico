@@ -14,6 +14,12 @@
     "subcategory": "Short Stories"
   },
   {
+    "title": "My 12-Year Journey with the Math Olympiads",
+    "url": "posts/math-olympiads-12-years.html",
+    "date": "2025-09-01",
+    "category": "Mathematics"
+  },
+  {
     "title": "The Case for the Profinite Fundamental Group π̂₁",
     "titleHtml": "The Case for the Profinite Fundamental Group \\(\\hat{\\pi}_1\\)",
     "url": "posts/profinite-fundamental-group.html",
@@ -22,6 +28,7 @@
   },
   {
     "title": "Book Reviews: After Finitude and Time's Arrow and Archimedes' Point",
+    "titleHtml": "Book Reviews: <em>After Finitude</em> and <em>Time's Arrow and Archimedes' Point</em>",
     "url": "posts/book-reviews-after-finitude-times-arrow.html",
     "date": "2025-10-01",
     "category": "Book Reviews"
