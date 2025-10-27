@@ -189,3 +189,65 @@ body{ min-height: 100dvh; display: flex; flex-direction: column; }
 }
 .nav-submenu--row a{ display:block; padding:.5rem .6rem; font-size:1rem; }
 .nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column; }
+
+
+
+/* === Full-page transparent layout over a darker background image === */
+
+/* 1) Use the image as the global page background (darker) */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    /* darken + add contrast control */
+    linear-gradient(180deg,
+      rgba(0,0,0,.58) 0%,
+      rgba(0,0,0,.62) 28%,
+      rgba(0,0,0,.68) 55%,
+      rgba(0,0,0,.78) 100%
+    ),
+    url("../img/banner.jpg");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+/* 2) If a hero-banner section still exists, hide it so the title sits on the bg */
+.hero-banner, .hero-media { display: none !important; }
+
+/* 3) Keep header/title exactly where it was (no boxes, no backgrounds) */
+.site-header{ margin: calc(var(--space)*1.4) auto var(--space); }
+.site-title{ color:#fff; text-shadow: 0 1px 2px rgba(0,0,0,.45); }
+
+/* 4) Posts hover transparently over the background (tune transparency here) */
+:root{
+  --panel: rgba(10,12,22,.22);     /* more transparent than before */
+  --border: rgba(185,205,255,.12); /* softer border */
+}
+
+/* Make sure nothing adds its own opaque background */
+.container, .site-intro, .posts-wrap, .site-footer { background: transparent; }
+
+/* Reset any previous “overlap the banner” offsets so spacing feels natural */
+.posts-wrap{ margin-top: 0; padding-top: 0; }
+
+/* Post cards: glassy hover without heavy shadows */
+.post-card{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(2px) saturate(110%);
+  box-shadow: 0 8px 28px rgba(0,0,0,.40);
+}
+.post-card:hover, .post-card:focus-within{
+  transform: translateY(-2px);
+  border-color: rgba(158,193,255,.30);
+  box-shadow: 0 14px 40px rgba(0,0,0,.55);
+}
+
+/* Footer stays at bottom on short pages */
+html, body { height: 100%; }
+body{ min-height: 100dvh; display:flex; flex-direction:column; }
+.page-main, .posts-wrap{ flex: 1; }
+
