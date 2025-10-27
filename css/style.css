@@ -188,3 +188,61 @@ body::after{
 /* Little vertical whitespace around footer */
 .site-footer{ margin: 1rem auto; }
 
+/* === Switch from fixed background to a scrolling top banner === */
+
+/* Kill the old fixed background/fade if present */
+body::before, body::after { content: none !important; }
+
+/* New scrolling banner at the top of the page */
+.hero-banner{
+  height: 60vh;                 /* how tall the banner is */
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,.12) 30%, rgba(0,0,0,.10) 55%),
+    url("../img/banner.jpg");
+  background-size: cover;       /* minimal crop but fills width */
+  background-position: center top;
+  background-repeat: no-repeat;
+  /* No position:fixed — it scrolls naturally with the page */
+  border-bottom: 1px solid var(--border);
+}
+
+/* Taper to black so posts float clearly */
+.hero-banner::after{
+  content: "";
+  position: relative;
+  display: block;
+  height: 25vh;                 /* length of the taper */
+  margin-top: -25vh;            /* overlap the bottom of the banner */
+  background: linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,.25) 40%,
+    rgba(0,0,0,.55) 70%,
+    #000 100%
+  );
+  pointer-events: none;
+}
+
+/* More spacious dropdown */
+.site-nav a{ font-size: 1.05rem; padding: .6rem .75rem; }
+.nav-dropdown{ position:relative; display:inline-block }
+.nav-submenu--row{
+  display:none; position:absolute; top:100%; left:0; z-index:10;
+  padding:.6rem; gap:.35rem;
+  min-width: 16rem;             /* wider panel */
+  background: rgba(10,12,22,.75);
+  border:1px solid var(--border);
+  backdrop-filter: blur(2px);
+}
+.nav-submenu--row a{
+  display:block;
+  padding:.5rem .6rem;
+  font-size: 1rem;
+}
+.nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column }
+
+/* Keep posts glassy/transparent (you already have these tokens) */
+.post-card{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(2px) saturate(110%);
+}
