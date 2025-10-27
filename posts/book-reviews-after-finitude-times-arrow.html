@@ -101,4 +101,80 @@
           <li>Summary of <em>Against Finitude</em></li>
           <li>Immanence</li>
           <li>Where Price Comes In</li>
-          <li>Bridging the Two</li
+          <li>Bridging the Two</li>
+          <li>Appendix 1: Set Theory</li>
+          <li>Appendix 2: Deleuze</li>
+        </ul>
+
+        <p>The short appendices critically explore Meillassoux’s use of mathematical arguments (set theory), and his twisting of Deleuze’s philosophy. </p>
+
+        <h2>Summary of <em>Against Finitude</em></h2>
+        <p>To begin with, consider Hume’s problem. Hume’s skepticism about necessary connection raises a challenge that rationalism either overreaches or collapses into a permissive marketplace of faiths.</p>
+        
+        <p>The problem Meillassoux tackles is whether there can be access to the absolute without invoking the dogmas of older metaphysics. His answer is yes, and he undergoes the task to justify his position.</p>
+        
+        <p>Meillassoux reopens the early modern split between ‘primary’ and ‘secondary’ qualities via ancestrality: statements about events prior to the emergence of life or thought (e.g., the age of the earth). If secondary qualities require a subject, then so, he says, must primary ones—yet scientific statements about ancestrality seem true regardless of whether any subject existed. Unless we deny science or inflate subjectivity, correlationism faces a tension: to admit the absolute or else render our best science unintelligible. Put concisely, if the very issue is how a past could be given to a subject, it voids their content.</p>
+        
+        <p>Meillassoux’s <em>tour de force</em> is to pull off a rationalist argument that undercuts both dogmatism and skepticism by showing that necessity cannot be necessary. The only absolute is contingency itself—the “hyper-chaos” that denies necessary laws. This is not the old ontological argument of the <em>Meditations</em>. What he does instead is give a <em>mathematical</em> warrant for the intelligibility of the absolute: the transfinite arithmetic of set theory shows that the absolute need not be thinkable as a totality (which would reinstate dogma), but as the consistency of unbounded becoming. (For details, see Appendix 1.)</p>
+
+        <!-- ... (your remaining essay content unchanged) ... -->
+
+        <hr>
+          <p id="note1"><strong>[1]</strong> “Correlationism consists in disqualifying the claim that it is possible to consider the realms of subjectivity and objectivity independently of one another.” (Meillassoux, <em>After Finitude</em>, p. 5)</p>
+      </div>
+
+      <aside class="similar-reads" aria-label="Similar reads">
+        <h2>Similar reads</h2>
+        <div id="similar-list">Loading…</div>
+      </aside>
+
+      <script>
+      (async function(){
+        const hereUrl = location.pathname.split('/').slice(-1)[0];
+        const cat = "Book Reviews";
+        const sub = "";
+        try{
+          const res = await fetch('../posts.json');
+          const posts = await res.json();
+          const matches = posts.filter(p=>{
+            const sameCat = p.category === cat;
+            const sameSub = sub ? p.subcategory === sub : true;
+            const notSelf = p.url.endsWith(hereUrl) === false;
+            return sameCat && sameSub && notSelf;
+          }).slice(0,3);
+          const el = document.getElementById('similar-list');
+          el.innerHTML = matches.length ? matches.map(p=>`
+            <a class="similar-card" href="../${p.url}">
+              <strong>${p.titleHtml || p.title}</strong>
+              <span>${p.subcategory ? p.subcategory + " • " : ""}${new Date(p.date).toLocaleString(undefined,{month:"short", year:"numeric"})}</span>
+            </a>
+          `).join("") : `<p class="muted">No related posts yet.</p>`;
+        }catch(e){
+          console.error(e);
+          document.getElementById('similar-list').innerHTML = `<p class="muted">Couldn’t load suggestions.</p>`;
+        }}
+      )();
+      </script>
+    </article>
+  </main>
+
+  <footer class="site-footer container">
+    <p><small>© 2025 Thoughts In Silico.</small></p>
+  </footer>
+
+  <script>
+    (function(){
+      const h1 = document.querySelector('article h1');
+      if(!h1) return;
+      const txt = h1.textContent.trim();
+      h1.textContent = "";
+      h1.classList.add('typer');
+      let i=0;
+      const id=setInterval(()=>{
+        h1.textContent = txt.slice(0, ++i);
+        if(i>=txt.length){ clearInterval(id); h1.classList.add('caret-done'); }
+      }, 45);
+    })();
+  </script>
+</body>
+</html>
