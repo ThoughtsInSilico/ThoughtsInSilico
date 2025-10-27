@@ -44,3 +44,51 @@
   <!-- MAIN -->
   <main class="container" id="main">
     <section class="hero">
+      <p>Hi, it's Reza. Call this a quiet place to share my thoughts to those who listen.</p>
+    </section>
+
+    <h2 class="list-heading">Newest posts</h2>
+    <section id="post-list" class="post-list"></section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>May the light be with you.</p>
+    <small>© <span id="y"></span> Thoughts In Silico</small>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Year stamp
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Render posts from posts/posts.json
+    async function renderHome() {
+      const list = document.getElementById('post-list');
+      try {
+        const res = await fetch('posts/posts.json');
+        const posts = await res.json();
+
+        posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+        const fmt = d => new Date(d).toLocaleString(undefined, { month:'long', year:'numeric' });
+
+        list.innerHTML = posts.map(p => `
+          <article class="post-card">
+            <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
+            <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
+            <p class="post-meta">
+              ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
+            </p>
+          </article>
+        `).join('');
+
+        if (window.MathJax && MathJax.typeset) MathJax.typeset();
+      } catch (e) {
+        console.error(e);
+        list.innerHTML = '<p class="muted">Could not load posts.</p>';
+      }
+    }
+    renderHome();
+  </script>
+</body>
+</html>
