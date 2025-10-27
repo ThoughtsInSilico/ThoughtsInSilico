@@ -49,8 +49,6 @@
     
       const res = await fetch('posts/posts.json');
       let posts = await res.json();
-    
-      // normalize helper
       const norm = s => (s || '').trim().toLowerCase();
     
       if (cat) posts = posts.filter(p => norm(p.category) === norm(cat));
@@ -65,7 +63,7 @@
       const list = document.getElementById('post-list');
       list.innerHTML = posts.length ? posts.map(p => `
         <article class="post-card">
-          <h2><a href="${p.url}">${p.title}</a></h2>
+          <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
           <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
         </article>
       `).join('') : `<p style="color:var(--muted)">No posts yet.</p>`;
@@ -73,5 +71,7 @@
     renderCategory();
   </script>
 
+
+  
 </body>
 </html>
