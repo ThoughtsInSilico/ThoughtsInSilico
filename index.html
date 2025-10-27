@@ -4,7 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Thoughts In Silico</title>
-  <link rel="stylesheet" href="css/style.css?v=7" />
+
+  <!-- Main stylesheet (your Iceberg theme + overrides live here) -->
+  <link rel="stylesheet" href="css/style.css?v=8" />
   <meta name="theme-color" content="#000000" />
 
   <!-- MathJax (if titles contain math) -->
@@ -16,44 +18,52 @@
 
 <body>
   <!-- Header -->
-  <header class="site-header container">…</header>
+  <header class="site-header container">
+    <a class="site-title" href="index.html">Thoughts In Silico</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html">Home</a>
 
+      <div class="nav-dropdown">
+        <a href="categories.html?cat=Fiction">Fiction ▾</a>
+        <div class="nav-submenu nav-submenu--row">
+          <a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
+          <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+        </div>
+      </div>
+
+      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
+      <a href="categories.html?cat=Mathematics">Mathematics</a>
+    </nav>
+  </header>
+
+  <!-- One-line description UNDER the title (above the image) -->
   <section class="site-intro container">
     <p>Hi, it’s Reza. A quiet place to share my thoughts with those who listen.</p>
   </section>
-  
-  <!-- Full image hero (controls its own height; no crop) -->
-  <section class="full-hero">
+
+  <!-- Full image hero (shows entire image; no crop). Everything else rides on top. -->
+  <section class="full-hero" aria-label="Site banner">
     <img src="img/banner.jpg" alt="Site banner">
   </section>
-  
-  <main class="container posts-wrap">
-    <h2 class="list-heading">Newest posts</h2>
-    <section id="post-grid" class="post-grid"></section>
-  </main>
 
-
-  <!-- Large transparent banner (image only, scrolls with page, fades at bottom) -->
-  <section class="hero-banner" aria-label="Site banner">
-    <div class="hero-media" aria-hidden="true"></div>
-  </section>
-
-  <!-- Posts overlap the bottom of the banner (no horizontal scroll, exactly 3) -->
+  <!-- Newest posts (exactly 3), floating transparently over the lower portion -->
   <main class="container posts-wrap">
     <h2 class="list-heading">Newest posts</h2>
     <section id="post-grid" class="post-grid" aria-label="Newest posts"></section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer container">
     <p>May the light be with you.</p>
     <small>© <span id="y"></span> Thoughts In Silico</small>
   </footer>
 
+  <!-- Scripts -->
   <script>
     // Footer year
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Render exactly 3 newest posts in a responsive grid
+    // Render exactly 3 newest posts
     async function renderHome() {
       const grid = document.getElementById('post-grid');
       try {
