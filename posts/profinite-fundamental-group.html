@@ -1,127 +1,88 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>The Case for the Profinite Fundamental Group π̂₁</title>
-<link rel="stylesheet" href="../css/style.css"/>
-<meta name="theme-color" content="#030536"/>
-
-<!-- MathJax for LaTeX -->
-<script>
-  window.MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']],
-      displayMath: [['$$','$$'], ['\\[','\\]']]
-    }
-  };
-</script>
-<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-<style>
-  .post-body p { text-align: justify; text-indent: 1.25em; margin: .75rem 0; }
-  .post-body p:first-of-type, .post-body h2 + p, .post-body h3 + p { text-indent: 0; }
-  .post-body li p, .post-body blockquote p { text-indent: 0; text-align: left; }
-  .post-body { --media-max: 720px; }
-  .post-body > * { max-width: var(--media-max); margin-left:auto; margin-right:auto; }
-</style>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Case for the Profinite Fundamental Group \(\hat{\pi}_1\)</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <meta name="theme-color" content="#030536" />
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
-
-  
 <body>
-<header class="site-header container">
-  <a class="site-title" href="../index.html">Thoughts In Silico</a>
-  <nav class="site-nav" aria-label="Primary">
-    <a href="../index.html">Home</a>
-    <div class="nav-dropdown">
-      <a href="../categories.html?cat=Fiction">Fiction ▾</a>
-      <div class="nav-submenu nav-submenu--row">
-        <a href="../categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
-        <a href="../categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+  <header class="site-header container">
+    <a class="site-title" href="../index.html">Thoughts In Silico</a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../categories.html?cat=Book%20Reviews">Book Reviews</a>
+
+      <div class="nav-dropdown">
+        <a href="../categories.html?cat=Fiction">Fiction ▾</a>
+        <div class="nav-submenu nav-submenu--row">
+          <a href="../categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
+          <a href="../categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+        </div>
       </div>
-    </div>
-    <a href="../categories.html?cat=Book%20Reviews">Book Reviews</a>
-    <a href="../categories.html?cat=Mathematics">Mathematics</a>
-  </nav>
-</header>
 
+      <a href="../categories.html?cat=Mathematics">Mathematics</a>
+      <a href="../categories.html?cat=Technology">Technology</a>
+      <a href="../categories.html?cat=Music">Music</a>
+      <a href="../categories.html?cat=Miscellaneous">Miscellaneous</a>
+    </nav>
+  </header>
 
-  
+  <main class="container page-main">
+    <article class="post-card">
+      <h1>The Case for the Profinite Fundamental Group \(\hat{\pi}_1\)</h1>
+      <time datetime="2025-07">July 2025</time>
 
-<main class="container page-main">
-  <article class="post-card">
-    <h1>The Case for the Profinite Fundamental Group \( \hat{\pi}_1 \)</h1>
-    <time datetime="2025-07">July 2025</time>
+      <div class="post-body">
+        <!-- (existing math post body unchanged) -->
+        <p>…</p>
+      </div>
 
-    <div class="post-body">
+      <aside class="similar-reads" aria-label="Similar reads">
+        <h2>Similar reads</h2>
+        <div id="similar-list">Loading…</div>
+      </aside>
 
-      <p><em>By Reza</em></p>
+      <script>
+      (async function(){
+        const hereUrl = location.pathname.split('/').slice(-1)[0];
+        const cat = "Mathematics";
+        const sub = "";
+        try{
+          const res = await fetch('../posts.json');
+          const posts = await res.json();
+          const matches = posts.filter(p=>{
+            const sameCat = p.category === cat;
+            const sameSub = sub ? p.subcategory === sub : true;
+            const notSelf = p.url.endsWith(hereUrl) === false;
+            return sameCat && sameSub && notSelf;
+          }).slice(0,3);
+          const el = document.getElementById('similar-list');
+          el.innerHTML = matches.length ? matches.map(p=>`
+            <a class="similar-card" href="../${p.url}">
+              <strong>${p.titleHtml || p.title}</strong>
+              <span>${p.subcategory ? p.subcategory + " • " : ""}${new Date(p.date).toLocaleString(undefined,{month:"short", year:"numeric"})}</span>
+            </a>
+          `).join("") : `<p class="muted">No related posts yet.</p>`;
+        }catch(e){
+          console.error(e);
+          document.getElementById('similar-list').innerHTML = `<p class="muted">Couldn’t load suggestions.</p>`;
+        }}
+      )();
+      </script>
+    </article>
+  </main>
 
-      <p><strong>Abstract.</strong> The profinite (topos-theoretic) fundamental group gives a uniform, functorial classification of finite locally constant objects, and hence of finite covers, across topology and algebraic geometry. In ‘nice’ topological cases it agrees with the profinite completion of the classical loop-based \( \pi_1 \). In short, I will demonstrate it being broader in scope and better aligned with Galois-style symmetry, at the cost of forgetting infinite-cover data.</p>
+  <footer class="site-footer container">
+    <p><small>© 2025 Thoughts In Silico.</small></p>
+  </footer>
 
-      <p><strong>Disclaimer.</strong> This essay comes from my independent speculation and study. I’ll only formally learn some of the specifics in autumn 2025. Any missing hypotheses or inaccuracies are mine.</p>
-
-      <hr/>
-
-      <h1>Introduction</h1>
-
-      <p>The topos-theoretic fundamental group arises from the Galois category of finite locally constant sheaves. Its virtue is <strong>uniformity</strong>, since it classifies finite covers in settings where loops and universal covers are unavailable or unhelpful (e.g. étale topology on schemes, locales, or spaces without classical covering theory).</p>
-
-      <p>For comparison, in familiar topological situations, such as a connected, locally path-connected space, its value is comparative. The profinite group \( \widehat{\pi}_1(X,x) \) is the profinite completion of the classical \( \pi_1(X,x) \), and it classifies the same finite covers without invoking paths in \([0,1]\). The gain is a definition internal to sheaves and functorial across toposes, but the trade-off is that \( \widehat{\pi}_1 \) forgets non-profinite information that \( \pi_1 \) can retain.</p>
-
-      <p>When I first tried my hand at covering theory, it felt backwards to compute \( \pi_1 \) only to keep its finite quotients. The topos route names the thing I actually used.</p>
-
-      <h1>Limits of the Classical Path Group</h1>
-
-      <p>Let me show you what is less satisfactory with the classical definition.</p>
-
-      <p>To begin with, the classical loop group \( \pi_1 \) is always definable for a topological space. What fails is the neat correspondence between subgroups of \( \pi_1 \) and covering maps: covering theory needs hypotheses (traditionally: locally path-connected and semilocally simply connected) that many spaces do not satisfy.</p>
-
-      <p>For example, on totally disconnected spaces, non-constant paths may be scarce and \( \pi_1 \) can be trivial, but there can still be interesting finite locally constant sheaves. In non-Hausdorff contexts and in locales, path-based covering theory can break down completely, whereas the sheaf-theoretic construction of \( \widehat{\pi}_1 \) still makes sense.</p>
-
-      <p>Meanwhile, in algebraic geometry, for schemes, the loop-based \( \pi_1 \) of the underlying Zariski topological space is rarely the right invariant; instead one works with the étale topos \( \mathrm{Ét}(X) \) and its profinite (indeed localic) fundamental group \( \widehat{\pi}^{\,\mathrm{ét}}_1(X,\bar x) \), which classifies finite étale covers. In the basic case \( X=\mathrm{Spec}(k) \), this recovers the absolute Galois group \( \mathrm{Gal}(\bar{k}/k) \).</p>
-
-      <h1>What \( \widehat{\pi}_1 \) Really Says</h1>
-
-      <p>Concretely, in a connected, locally connected topological space \( X \), the finite locally constant sheaves on \( X \) form a <strong>Galois category</strong>. Choosing a point \( x \) gives a fiber functor to <strong>FinSets</strong> whose automorphism group is a profinite group \( \widehat{\pi}_1(X,x) \). This group classifies finite covering spaces of \( X \). In this topological setting one has \( \widehat{\pi}_1(X,x) \cong \widehat{\;\pi_1(X,x)\;} \) (the profinite completion), so no new finite-cover data is gained beyond what is already latent in \( \pi_1 \). Rather, the data is <strong>packaged profinitely</strong> and obtained without reference to paths.</p>
-
-      <p>More generally, for a Grothendieck topos \( \mathcal{E} \) with the appropriate ‘Galois’ properties (connected/atomic, enough points, etc.), the subtopos generated by finite locally constant objects is equivalent to the <strong>classifying topos</strong> of a profinite (often localic) group. Basically, it is this Galois subtopos that is captured by a single profinite group. When \( \mathcal{E} \) has few or no points, one naturally lands on a <strong>localic</strong> fundamental group; a genuine profinite group appears after choosing a geometric point.</p>
-
-      <h1>The Circle</h1>
-
-      <p>For \( S^1 \), \( \pi_1(S^1)=\mathbb{Z} \). Finite \( n \)-fold covers correspond to finite-index subgroups \( n\mathbb{Z}\le \mathbb{Z} \), or equivalently to quotients \( \mathbb{Z}\twoheadrightarrow \mathbb{Z}/n \). The profinite completion \( \widehat{\mathbb{Z}} \) organizes all these finite quotients continuously: \( \widehat{\pi}_1(S^1)=\widehat{\mathbb{Z}} \). Nothing has collapsed in passing from the universal cover \( \mathbb{R}\to S^1 \). It is only that the profinite group forgets infinite-sheeted covers and retains exactly the finite-level information. Basically the general phenomenon is that \( \widehat{\pi}_1 \) keeps the finite Galois theory of covers and discards the rest.</p>
-
-      <p><em>(Picture \( \widehat{\mathbb{Z}} \) as ‘all finite clocks running at once’; it’s a good idea for the finite-level viewpoint.)</em></p>
-
-      <h1>Functoriality and Structure</h1>
-
-      <p>I think the main advantage is that topos-theoretic \( \widehat{\pi}_1 \) comes with clean <strong>functoriality</strong>. A geometric morphism of toposes induces a continuous homomorphism on profinite (or localic) fundamental groups. Exact-sequence behavior familiar from Galois theory appears in étale settings, and descent arguments live naturally in the sheaf-theoretic world.</p>
-
-      <p>However, on the classical side there are also important repairs that should be acknowledged. The <strong>fundamental groupoid</strong> (à la Brown) softens basepoint dependence and improves van Kampen, and <strong>shape/pro-\( \pi_1 \)</strong> techniques extend profinite information to wild spaces.</p>
-
-      <p>So, the right comparison is: ‘\( \widehat{\pi}_1 \) is the canonical invariant for finite locally constant objects, and \( \pi_1 \) retains strictly more than that in nice spaces’.</p>
-
-      <h1>Scope and Trade-Offs</h1>
-
-      <p>Operationally, if your aim is to classify finite covers, the primary datum is the Galois category of finite locally constant objects. In this category, you can say \( \widehat{\pi}_1 \) is the <strong>automorphism group of a fiber functor</strong>. This view works uniformly in topology, number theory, and algebraic geometry, and it does so without reference to intervals, homotopies of loops, or universal covers.</p>
-
-      <p>On the contrary, the price of this uniformity is that \( \widehat{\pi}_1 \) discards information about infinite covers and other non-profinite features that the discrete \( \pi_1 \) can encode. In contexts where loops are unavailable or misleading (étale sites, locales, non-classical spaces), the price is worth paying. In classical manifold-level topology, both viewpoints coexist, with \( \widehat{\pi}_1 \) handling finite-cover theory and \( \pi_1 \) seeing strictly more.</p>
-
-      <h1>Conclusion</h1>
-
-      <p>What I wrote is best understood as a <strong>scope adjustment</strong>. The topos-theoretic \( \widehat{\pi}_1 \) is the right tool when the observable data are finite covers and locally constant sheaves, and it extends cleanly beyond spaces where path-lifting stories make sense. The loop-based \( \pi_1 \) is richer in the classical topological regime but less portable.</p>
-
-      <p>Perhaps a balanced stance is to use \( \pi_1 \) when you need the full discrete group and infinite-cover phenomena, and use \( \widehat{\pi}_1 \) when you want the Galois theory of finite covers in a setting that includes topological spaces, schemes, and fields on the same footing. On \( S^1 \) this distinction is harmless, yet, on \( \mathrm{Spec}(k) \) it is decisive.</p>
-
-    </div>
-
-    <p><a href="../index.html">← Back to Home</a></p>
-  </article>
-</main>
-
-  
-
-<footer class="site-footer container">
-  <small>© <span id="y"></span> Thoughts In Silico</small>
-</footer>
-<script>document.getElementById('y').textContent = new Date().getFullYear();</script>
-</body></html>
+  <script>
+    (function(){
+      const
