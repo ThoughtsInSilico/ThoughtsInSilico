@@ -42,18 +42,20 @@
       <div class="post-body">
         <p><em>By Reza</em></p>
         
-      <div class="img-row">
-        <img src="/img/image1.png" alt="Cover image 1">
-        <img src="/img/image2.png" alt="Cover image 2">
-      </div>
+        <p class="img-row">
+          <img src="/img/image1.png" alt="Cover image 1">
+          <img src="/img/image2.png" alt="Cover image 2">
+        </p>
 
 
-      /* Image layout */
+
+      /* --- Image layout for posts --- */
       .post-body img{
         display: block;
         max-width: 100%;
         height: auto;
         border-radius: 8px;
+        margin: .5rem auto;          /* center single images */
       }
       
       /* Two images side-by-side (wraps on small screens) */
@@ -61,11 +63,21 @@
         display: flex;
         gap: .75rem;
         flex-wrap: wrap;
+        align-items: flex-start;
         margin: .5rem 0 1rem;
       }
+      
+      /* Each image aims for ~50% width, won’t get smaller than 280px */
       .post-body .img-row img{
         flex: 1 1 320px;
+        max-width: calc(50% - .75rem);
       }
+      
+      /* Optional: cap media width to keep things visually lighter */
+      .post-body{ --media-max: 720px; }
+      .post-body img,
+      .post-body .img-row{ max-width: var(--media-max); }
+
         
 
         <h2>Introduction</h2>
