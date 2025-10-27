@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Thoughts In Silico</title>
   <link rel="stylesheet" href="css/style.css" />
-  <meta name="theme-color" content="#030536" />
+  <meta name="theme-color" content="#0d1220" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- MathJax (for LaTeX in titles if needed) -->
+  <!-- MathJax for any math in titles -->
   <script>
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
   </script>
@@ -15,10 +17,9 @@
 </head>
 
 <body>
-  <!-- HEADER -->
+  <!-- Header -->
   <header class="site-header">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
-
     <nav class="site-nav" aria-label="Primary">
       <a href="index.html">Home</a>
 
@@ -35,14 +36,17 @@
     </nav>
   </header>
 
-  <!-- BANNER -->
+  <!-- Banner -->
   <div class="site-banner">
-    <img src="img/banner.jpg" alt="Thoughts In Silico banner"
-         width="1600" height="360" loading="eager" decoding="async">
+    <picture>
+      <source srcset="img/banner.avif" type="image/avif">
+      <source srcset="img/banner.webp" type="image/webp">
+      <img src="img/banner.jpg" alt="Thoughts In Silico banner"
+           width="1600" height="360" loading="eager" decoding="async">
+    </picture>
   </div>
 
-  <!-- MAIN -->
-  <main class="container" id="main">
+  <main class="container">
     <section class="hero">
       <p>Hi, it's Reza. Call this a quiet place to share my thoughts to those who listen.</p>
     </section>
@@ -51,18 +55,16 @@
     <section id="post-list" class="post-list"></section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
     <p>May the light be with you.</p>
     <small>© <span id="y"></span> Thoughts In Silico</small>
   </footer>
 
-  <!-- SCRIPTS -->
   <script>
-    // Year stamp
+    // Footer year
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Render posts from posts/posts.json
+    // Render post list
     async function renderHome() {
       const list = document.getElementById('post-list');
       try {
@@ -76,13 +78,13 @@
           <article class="post-card">
             <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
             <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
-            <p class="post-meta">
+            <p class="meta-line">
               ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
             </p>
           </article>
         `).join('');
 
-        if (window.MathJax && MathJax.typeset) MathJax.typeset();
+        if (window.MathJax?.typeset) MathJax.typeset();
       } catch (e) {
         console.error(e);
         list.innerHTML = '<p class="muted">Could not load posts.</p>';
