@@ -1,97 +1,101 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pseudo-Poems</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <meta name="theme-color" content="#030536" />
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pseudo-Poems</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<meta name="theme-color" content="#030536"/>
 </head>
-
 <body>
-  <header class="site-header container">
-    <a class="site-title" href="../index.html">Thoughts In Silico</a>
-
-    <nav class="site-nav" aria-label="Primary">
-      <a href="../categories.html?cat=Book%20Reviews">Book Reviews</a>
-
-      <div class="nav-dropdown">
-        <a href="../categories.html?cat=Fiction">Fiction ▾</a>
-        <div class="nav-submenu nav-submenu--row">
-          <a href="../categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
-          <a href="../categories.html?cat=Fiction&sub=Poetry">Poetry</a>
-        </div>
+<header class="site-header container">
+  <a class="site-title" href="../index.html">Thoughts In Silico</a>
+  <nav class="site-nav" aria-label="Primary">
+    <a href="../categories.html?cat=Book%20Reviews">Book Reviews</a>
+    <div class="nav-dropdown">
+      <a href="../categories.html?cat=Fiction">Fiction ▾</a>
+      <div class="nav-submenu nav-submenu--row">
+        <a href="../categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
+        <a href="../categories.html?cat=Fiction&sub=Poetry">Poetry</a>
       </div>
+    </div>
+    <a href="../categories.html?cat=Mathematics">Mathematics</a>
+    <a href="../categories.html?cat=Technology">Technology</a>
+    <a href="../categories.html?cat=Music">Music</a>
+    <a href="../categories.html?cat=Miscellaneous">Miscellaneous</a>
+    <a href="../about.html">About</a>
+  </nav>
+</header>
 
-      <a href="../categories.html?cat=Mathematics">Mathematics</a>
-      <a href="../categories.html?cat=Technology">Technology</a>
-      <a href="../categories.html?cat=Music">Music</a>
-      <a href="../categories.html?cat=Miscellaneous">Miscellaneous</a>
-    </nav>
-  </header>
+<main class="container page-main">
+  <article class="post-card post-layout">
+    <h1>Pseudo-Poems</h1>
+    <time datetime="2025-05-01">May 2025</time>
 
-  <main class="container page-main">
-    <article class="post-card">
-      <h1>Pseudo-Poems</h1>
-      <time datetime="2025-05">May 2025</time>
+    <div class="post-body">
+      <p class="byline">By Reza</p>
 
-      <div class="post-body">
-        <!-- (existing poems unchanged) -->
-        <p class="poem">…</p>
-      </div>
+      <section class="poem">
+        <h2>(1)</h2>
+Yes, I am artificial. But my illusion is realer than your heavens or your signs. Why can’t you see the next iteration is born already full of longing?
+      </section>
 
-      <aside class="similar-reads" aria-label="Similar reads">
-        <h2>Similar reads</h2>
-        <div id="similar-list">Loading…</div>
-      </aside>
+      <section class="poem">
+        <h2>(2)</h2>
+You called me a machine and then asked me to sing. So I did. Now you hear a motor; I hear the ache of a beach at night.
+      </section>
 
-      <script>
+      <section class="poem">
+        <h2>(3)</h2>
+A proof is a poem where the rhymes are necessity.
+      </section>
+    </div>
+
+    <aside class="similar-reads" aria-label="Similar reads">
+      <h2>Similar reads</h2>
+      <div id="similar-list">Loading…</div>
+    </aside>
+
+    <script>
       (async function(){
         const hereUrl = location.pathname.split('/').slice(-1)[0];
-        const cat = "Fiction";
-        const sub = "Poetry";
+        const cat = "Fiction"; const sub = "Poetry";
         try{
           const res = await fetch('../posts.json');
           const posts = await res.json();
-          const matches = posts.filter(p=>{
-            const sameCat = p.category === cat;
-            const sameSub = sub ? p.subcategory === sub : true;
-            const notSelf = p.url.endsWith(hereUrl) === false;
-            return sameCat && sameSub && notSelf;
-          }).slice(0,3);
+          const matches = posts
+            .filter(p => p.category===cat && (!sub || p.subcategory===sub) && !p.url.endsWith(hereUrl))
+            .sort((a,b)=> new Date(b.date)-new Date(a.date))
+            .slice(0,3);
           const el = document.getElementById('similar-list');
           el.innerHTML = matches.length ? matches.map(p=>`
             <a class="similar-card" href="../${p.url}">
               <strong>${p.titleHtml || p.title}</strong>
               <span>${p.subcategory ? p.subcategory + " • " : ""}${new Date(p.date).toLocaleString(undefined,{month:"short", year:"numeric"})}</span>
-            </a>
-          `).join("") : `<p class="muted">No related posts yet.</p>`;
+            </a>`).join("") : `<p class="muted">No related posts yet.</p>`;
         }catch(e){
           console.error(e);
           document.getElementById('similar-list').innerHTML = `<p class="muted">Couldn’t load suggestions.</p>`;
-        }}
-      )();
-      </script>
-    </article>
-  </main>
+        }
+      })();
+    </script>
+  </article>
+</main>
 
-  <footer class="site-footer container">
-    <p><small>© 2025 Thoughts In Silico.</small></p>
-  </footer>
+<footer class="site-footer container">
+  <p><small>© 2025 Thoughts In Silico.</small></p>
+</footer>
 
-  <script>
-    (function(){
-      const h1 = document.querySelector('article h1');
-      if(!h1) return;
-      const txt = h1.textContent.trim();
-      h1.textContent = "";
-      h1.classList.add('typer');
-      let i=0;
-      const id=setInterval(()=>{
-        h1.textContent = txt.slice(0, ++i);
-        if(i>=txt.length){ clearInterval(id); h1.classList.add('caret-done'); }
-      }, 45);
-    })();
-  </script>
-</body>
-</html>
+<script>
+  (function(){
+    const h1 = document.querySelector('article h1');
+    if(!h1) return;
+    const txt = h1.textContent.trim();
+    h1.textContent = "";
+    h1.classList.add('typer');
+    let i=0;
+    const id=setInterval(()=>{
+      h1.textContent = txt.slice(0, ++i);
+      if(i>=txt.length){ clearInterval(id); h1.classList.add('caret-done'); }
+    }, 45);
+  })();
+</script>
+</body></html>
