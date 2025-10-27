@@ -1,17 +1,17 @@
-/* === Black theme — Plus Jakarta Sans + square edges === */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+/* === Black, full-bleed banner, sleek Manrope === */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
 
 :root{
   /* Colors */
-  --bg: #000000;         /* true black */
-  --panel: #0a0a0a;      /* near-black panels */
-  --border: #232323;
-  --text: #eaeaea;
-  --muted: #a8a8a8;
-  --accent: #9ec1ff;     /* soft cool blue */
+  --bg: #000000;        /* pure black */
+  --panel: #060606;     /* nearly black panels */
+  --border: #1a1a1a;    /* subtle divider */
+  --text: #eeeeee;
+  --muted: #9a9a9a;
+  --accent: #b9ccff;    /* soft cool blue */
 
   /* Type & layout */
-  --font-ui: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-ui: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 
   --base: 16px;
@@ -28,9 +28,9 @@ html,body{ height:100%; }
 body{
   margin:0;
   color:var(--text);
-  background: var(--bg);
+  background: var(--bg);           /* pure black */
   font: 400 var(--base)/var(--leading) var(--font-ui);
-  letter-spacing: .005em;
+  letter-spacing: .002em;          /* tighter, more elegant */
 }
 .container{ width:min(100% - 2rem, var(--maxw)); margin-inline:auto; }
 
@@ -47,7 +47,7 @@ a:visited{ color: var(--accent); }
 }
 .site-title{
   text-decoration:none; color:var(--text);
-  font-weight:700; letter-spacing:.01em; font-size:clamp(1rem,2.5vw,1.15rem);
+  font-weight:700; letter-spacing:.005em; font-size:clamp(1rem,2.5vw,1.15rem);
   padding:.45rem .65rem;
   border:1px solid var(--border);
   background:transparent;
@@ -59,35 +59,35 @@ a:visited{ color: var(--accent); }
   transition: background .12s ease, color .12s ease, border-color .12s ease;
 }
 .site-nav a:hover,.site-nav a:focus{
-  color:#fff; border-color:var(--border); background:rgba(255,255,255,.04);
+  color:#fff; border-color:var(--border); background:rgba(255,255,255,.06);
 }
 
 /* Dropdown */
 .nav-dropdown{ position:relative; display:inline-block; }
 .nav-submenu--row{
   display:none; position:absolute; top:100%; left:0; z-index:20;
-  padding:.35rem; background:#0a0a0a;
+  padding:.35rem; background:#040404;
   border:1px solid var(--border); border-radius: var(--radius);
   gap:.25rem; white-space:nowrap;
 }
 .nav-submenu--row a{ color:var(--text); }
-.nav-submenu--row a:hover{ background: rgba(255,255,255,.06); }
+.nav-submenu--row a:hover{ background: rgba(255,255,255,.08); }
 .nav-dropdown:hover .nav-submenu--row{ display:flex; }
 
-/* Banner */
+/* Full-bleed banner (touches the sides) */
 .site-banner{
-  margin: 1.25rem auto 2rem;
-  width: min(100% - 2rem, 960px);
-  border: 1px solid var(--border);
+  width:100%;
+  margin: 0 0 2rem;           /* no side margins, full bleed */
+  border: 0;
   border-radius: 0;
   overflow: hidden;
-  background: #0a0a0a;
-  box-shadow: 0 6px 24px rgba(0,0,0,.28);
+  background: #000;
+  box-shadow: none;
 }
 .site-banner img{
   display:block; width:100%; height:auto;
-  /* If your image is very tall/short and you want a fixed height crop, uncomment:
-     height: 360px; object-fit: cover; */
+  /* If you want a fixed-height crop, uncomment the next two lines: */
+  /* height: 360px; object-fit: cover; */
 }
 
 /* Hero */
@@ -95,7 +95,7 @@ a:visited{ color: var(--accent); }
 .hero p{ color: var(--muted); margin: 0; }
 
 /* Lists / cards */
-.list-heading{ margin: 0 0 .6rem 0; color: var(--muted); letter-spacing:.01em; }
+.list-heading{ margin: 0 0 .6rem 0; color: var(--muted); letter-spacing:.005em; }
 
 .post-list{ display:grid; gap: calc(var(--space) * 1.15); margin-bottom: calc(var(--space) * 5); }
 
@@ -104,14 +104,14 @@ a:visited{ color: var(--accent); }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: calc(var(--space) * 1.1);
-  box-shadow: 0 6px 24px rgba(0,0,0,.28);
+  box-shadow: 0 6px 24px rgba(0,0,0,.35);
   transition: transform .12s ease, border-color .12s ease;
 }
-.post-card:hover{ transform: translateY(-1px); border-color: rgba(158,193,255,.35); }
+.post-card:hover{ transform: translateY(-1px); border-color: rgba(185,204,255,.35); }
 .post-card h1,.post-card h2{
   margin:0 0 .25rem 0; font-weight:600;
-  font-size: clamp(1.05rem, 2.6vw, 1.22rem);
-  letter-spacing:.005em;
+  font-size: clamp(1.04rem, 2.4vw, 1.2rem);
+  letter-spacing:.003em;
 }
 .post-card h2 a{ text-decoration: none; color: var(--accent); }
 .post-card h2 a:hover{ color: #fff; text-decoration: underline; }
@@ -130,7 +130,7 @@ a:visited{ color: var(--accent); }
 
 .post-body h2:not(:first-child){
   margin-top: 2rem; margin-bottom:.65rem;
-  font-weight:600; letter-spacing:.005em;
+  font-weight:600; letter-spacing:.003em;
 }
 .post-body h3:not(:first-child){
   margin-top: 1.25rem; margin-bottom:.45rem;
@@ -141,8 +141,8 @@ a:visited{ color: var(--accent); }
 .post-body blockquote{
   margin: 1.25rem 0;
   padding: .7rem .95rem;
-  border-left: 3px solid rgba(158,193,255,.35);
-  background: rgba(255,255,255,.04);
+  border-left: 3px solid rgba(185,204,255,.35);
+  background: rgba(255,255,255,.06);
   border-radius: var(--radius);
 }
 .post-body blockquote p{ margin:.6rem 0; }
@@ -156,7 +156,7 @@ a:visited{ color: var(--accent); }
 /* Code & images */
 img{ max-width:100%; height:auto; display:block; border-radius: var(--radius); }
 .post-body pre{
-  background: #0f0f0f;
+  background: #0b0b0b;
   border: 1px solid var(--border);
   padding: .9rem 1rem; overflow:auto;
   border-radius: var(--radius);
