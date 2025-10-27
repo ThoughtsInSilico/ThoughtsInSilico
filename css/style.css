@@ -1,259 +1,139 @@
+/* ===== intimate-cool theme (keeps your current font) ===== */
 @import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
 
-/* ========== THEME VARS ========== */
+/* ---------- tokens ---------- */
 :root{
-  /* Background */
-  --bg-mode: color;
-  --bg-color: #030536;        /* page background */
-  --bg-gradient: none;
-  --bg-image-url: none;
+  /* palette: cool + low-saturation */
+  --bg-color: #0d1220;                 /* inky blue */
+  --text: #e7eaf4;
+  --muted: #a9b1c8;
+  --accent: #a8c7ff;                   /* soft periwinkle */
+  --card: rgba(255,255,255,0.035);     /* very subtle panel */
+  --card-border: rgba(188,199,222,0.16);
 
-  /* Colors */
-  --text: #e8eaf6;
-  --muted: #aab1d1;
-  --accent: #8ad1ff;
-  --card: rgba(255,255,255,0.04);
-  --card-border: rgba(255,255,255,0.10);
-
-  /* Typography */
+  /* type & layout */
   --font-sans: "Iceberg", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-size: 16px;
-  --leading: 1.7;
-  --max-width: 760px;
-
-  /* Spacing & radii */
+  --leading: 1.78;
+  --max-width: 720px;
   --space: 1rem;
-  --radius: 16px;
+  --radius: 12px;
 
-  /* Links */
+  /* links/interaction */
   --link: var(--accent);
   --link-hover: #ffffff;
-
-  /* Shadow */
-  --shadow: 0 8px 40px rgba(0,0,0,0.35);
-
-  /* Content rhythm */
-  --section-gap: 2.25rem;
 }
 
-/* ========== GLOBAL ========== */
-html, body { height: 100%; }
+/* ---------- base ---------- */
 * { box-sizing: border-box; }
-
+html, body { height: 100%; }
 body{
   margin: 0;
   color: var(--text);
+  background: radial-gradient(1200px 800px at 15% -10%, #111834 0%, #0d1220 55%, #0b1020 100%);
   font: 400 var(--font-size)/var(--leading) var(--font-sans);
-  background: var(--bg-color);
 }
 
-body::before{
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: var(--bg-color);
-  background-image: none !important;
-  opacity: 1;
-}
+/* keep my font everywhere */
+body, h1,h2,h3,h4,h5,h6, .site-title, .site-nav a, .post-card, .post-body { font-family: var(--font-sans); }
 
-/* Force the chosen font everywhere */
-body, h1, h2, h3, h4, h5, h6,
-.site-title, .site-nav a, .post-card, .post-body {
-  font-family: var(--font-sans);
-}
+.container{ width: min(100% - 2rem, var(--max-width)); margin-inline: auto; }
 
-/* Utility containers */
-.container{
-  width: min(100% - 2rem, var(--max-width));
-  margin-inline: auto;
-}
-
-/* ========== HEADER & NAV ========== */
+/* ---------- header & nav ---------- */
 .site-header, .site-footer{
   width: min(100% - 2rem, var(--max-width));
   margin: calc(var(--space) * 2) auto;
-  display: flex;
-  align-items: center;
-  gap: var(--space);
-  justify-content: space-between;
+  display: flex; align-items: center; gap: .75rem; justify-content: space-between;
 }
 
-.site-header { position: relative; z-index: 40; }
-.post-list, .post-card { position: relative; z-index: 1; }
-.post-card a { position: relative; z-index: 2; }
-
 .site-title{
-  text-decoration: none;
-  color: var(--text);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
-  padding: .5rem .75rem;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--card-border);
-  box-shadow: var(--shadow);
+  text-decoration: none; color: var(--text);
+  font-weight: 700; letter-spacing: .02em;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  padding: .42rem .6rem;
+  border-radius: 10px;
+  background: transparent;                 
+  border: 1px solid var(--card-border);    
 }
 
 .site-nav a{
-  text-decoration: none;
-  color: var(--muted);
-  padding: .5rem .75rem;
-  border-radius: 12px;
-  border: 1px solid transparent;
+  text-decoration: none; color: var(--muted);
+  padding: .42rem .6rem; border-radius: 8px; border: 1px solid transparent;
 }
-.site-nav a:hover, .site-nav a:focus{
+.site-nav a:hover,.site-nav a:focus{
   color: var(--link-hover);
   border-color: var(--card-border);
-  background: var(--card);
+  background: rgba(255,255,255,.03);
 }
 
-/* === Dropdown nav === */
-.nav-dropdown { position: relative; display: inline-block; }
-.nav-dropdown > a { display: inline-block; }
-
-/* Horizontal dropdown submenu for Fiction */
+/* dropdown */
+.nav-dropdown{ position: relative; display: inline-block; }
 .nav-submenu--row{
-  display: none;                 /* hidden until hover */
-  position: absolute;
-  top: 100%; left: 0;
-  padding: .35rem .5rem;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(2px);
-  z-index: 20;
+  display:none; position:absolute; top:100%; left:0;
+  padding:.35rem; background: rgba(12,18,36,.9);
+  border:1px solid var(--card-border); border-radius:10px; backdrop-filter: blur(1px);
+  gap:.25rem; white-space:nowrap; z-index:20;
+}
+.nav-submenu--row a{ color: var(--text); border-radius:8px; }
+.nav-submenu--row a:hover{ background: rgba(255,255,255,.05); }
+.nav-dropdown:hover .nav-submenu--row{ display:flex; }
 
-  /* horizontal layout */
-  gap: .25rem;
-  white-space: nowrap;
-}
-.nav-submenu--row a{
-  display: inline-block;
-  padding: .45rem .6rem;
-  border-radius: 8px;
-  color: var(--text);
-  text-decoration: none;
-}
-.nav-submenu--row a:hover{ background: rgba(255,255,255,0.06); }
+/* ---------- home/category list ---------- */
+.list-heading{ margin: 0 0 .6rem 0; color: var(--muted); letter-spacing:.01em; }
 
-/* show on hover */
-.nav-dropdown:hover .nav-submenu--row{ display: flex; }
+.post-list{ display:grid; gap: calc(var(--space) * 1.15); margin-bottom: calc(var(--space) * 5); }
 
-/* ========== HERO (optional) ========== */
-.hero{
-  margin: calc(var(--space) * 4) 0 calc(var(--space) * 2);
-}
-.hero h1{
-  margin: 0 0 .5rem 0;
-  font-size: clamp(1.25rem, 4vw, 2rem);
-}
-.hero p{ color: var(--muted); margin: 0; }
-
-/* ========== LIST HEADING (Home: "Newest posts") ========== */
-.list-heading{
-  margin: 0 0 .75rem 0;
-  font-size: clamp(1.1rem, 3.2vw, 1.35rem);
-  color: var(--muted);
-  letter-spacing: .02em;
-}
-
-/* ========== POSTS LIST ========== */
-.post-list{
-  display: grid;
-  gap: calc(var(--space) * 1.25);
-  margin-bottom: calc(var(--space) * 6);
-}
 .post-card{
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  padding: calc(var(--space) * 1.25);
-  backdrop-filter: blur(2px);
-  box-shadow: var(--shadow);
+  padding: calc(var(--space) * 1.1);
+  box-shadow: 0 6px 24px rgba(0,0,0,.22);   
+  backdrop-filter: none;                    
 }
-.post-card h1,
-.post-card h2{
-  margin: 0 0 .25rem 0;
-  font-size: clamp(1.05rem, 3vw, 1.25rem);
-}
-.post-card h2 a{
-  color: var(--link);
-  text-decoration: none;
-}
-.post-card h2 a:hover{
-  color: var(--link-hover);
-  text-decoration: underline;
-}
-.post-card time{
-  color: var(--muted);
-  font-size: .9em;
-}
+.post-card h1,.post-card h2{ margin:0 0 .2rem 0; font-size: clamp(1.05rem, 2.6vw, 1.22rem); }
+.post-card h2 a{ color: var(--link); text-decoration: none; }
+.post-card h2 a:hover{ color: var(--link-hover); text-decoration: underline; }
+.post-card time{ color: var(--muted); font-size:.9em; }
 
-/* ========== POST BODY (content) ========== */
-.post-body h2:not(:first-child){
-  margin-top: var(--section-gap);
-  margin-bottom: .75rem;
+/* ---------- post body ---------- */
+.post-body{
+  font-size: 1.02rem;
 }
-.post-body h3:not(:first-child){
-  margin-top: calc(var(--section-gap) - .5rem);
-  margin-bottom: .5rem;
+.post-body p{
+  margin: .85rem 0;
+  text-align: left;
+  text-indent: .8em;                       /* first-line indent */
 }
-.post-body p { margin: .75rem 0; }
+.post-body p:first-of-type,
+.post-body h2 + p, .post-body h3 + p { text-indent: 0; }
 
-/* Lists & rules rhythm */
-.post-body blockquote,
-.post-body ul,
-.post-body ol,
-.post-body hr{
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-.post-body ul, .post-body ol { padding-left: 1.25rem; }
-.post-body hr{
-  border: 0;
-  border-top: 1px solid var(--card-border);
-}
+.post-body h2:not(:first-child){ margin-top: 2rem; margin-bottom:.65rem; }
+.post-body h3:not(:first-child){ margin-top: 1.25rem; margin-bottom:.45rem; }
 
-/* Blockquote styling */
+/* friendlier blockquotes */
 .post-body blockquote{
-  margin: 1.5rem 0;
-  padding-left: 1rem;
-  border-left: 3px solid var(--card-border);
-  font-style: italic;
+  margin: 1.25rem 0;
+  padding: .6rem .9rem;
+  border-left: 3px solid rgba(176,189,215,.35);
+  background: rgba(255,255,255,.03);
+  border-radius: 10px;
 }
-.post-body blockquote p{ margin: 0 0 .75rem 0; }
-.post-body blockquote::before,
-.post-body blockquote::after{
-  position: relative;
-  font-style: normal;
-  font-size: 2.1em;
-  line-height: 0;
-  opacity: .35;
-  color: inherit;
-}
-.post-body blockquote::before{ content: "“"; left: -.55ch; top: .25rem; }
-.post-body blockquote::after { content: "”"; right: 0;     top: .8rem;  }
-.post-body blockquote footer{
-  font-style: normal;
-  color: var(--muted);
-  font-size: .95em;
-}
-.post-body blockquote footer cite{ font-style: normal; }
-.post-body blockquote footer a{ color: var(--link); text-decoration: none; }
-.post-body blockquote footer a:hover{ text-decoration: underline; }
+.post-body blockquote p{ margin: .6rem 0; }
+.post-body blockquote footer{ color: var(--muted); font-size: .95em; }
 
-/* ========== BASICS ========== */
-a{ color: var(--link); }
-a:hover{ color: var(--link-hover); }
+/* lists & rules */
+.post-body ul, .post-body ol{ padding-left: 1.2rem; }
+.post-body blockquote, .post-body ul, .post-body ol, .post-body hr{ margin-top: 1.35rem; margin-bottom: 1.35rem; }
+.post-body hr{ border:0; border-top:1px solid var(--card-border); }
 
-img{ max-width: 100%; height: auto; display: block; }
+/* links: understated underline with offset */
+a{ color: var(--link); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: .06em; }
+a:hover{ color: var(--link-hover); text-decoration-thickness: .08em; }
 
-/* ========== FOOTER ========== */
-.site-footer p{
-  margin: 0 0 .25rem 0;
-  color: var(--muted);
-}
+/* images */
+img{ max-width:100%; height:auto; display:block; border-radius: 8px; }
+
+/* footer */
+.site-footer p{ margin:0 0 .25rem 0; color: var(--muted); }
 .site-footer small{ color: var(--muted); }
