@@ -47,7 +47,7 @@
       const cat = params.get('cat') ? decodeURIComponent(params.get('cat')) : null;
       const sub = params.get('sub') ? decodeURIComponent(params.get('sub')) : null;
     
-      const res = await fetch('posts/posts.json');
+      const res = await fetch('posts/posts.json');      // no leading slash
       let posts = await res.json();
       const norm = s => (s || '').trim().toLowerCase();
     
@@ -70,6 +70,7 @@
     }
     renderCategory();
   </script>
+
 
 
   
