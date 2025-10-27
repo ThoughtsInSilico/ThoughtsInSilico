@@ -33,7 +33,7 @@
 
   <main class="container">
     <section class="hero">
-      <p>Hi, it's Reza. Math enthusiast. Technophile and posthumanist. Philosophy reader.</p>
+      <p>Hi, it's Reza, and this is my world. Mathematics enthusiast. Technophile and posthumanist. Philosophy reader. Hobbyist musician and composer (saxophone). </p>
     </section>
 
     <h2 class="list-heading">Newest posts</h2>
@@ -46,28 +46,32 @@
   </footer>
 
   <!-- (3) SCRIPTS -->
-  <script>
-    async function renderHome() {
-      const list = document.getElementById('post-list');
-      const res = await fetch('/posts/posts.json');
-      const posts = await res.json();
-    
-      posts.sort((a,b) => new Date(b.date) - new Date(a.date));
-      const fmt = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
-      const href = p => (p.url.startsWith('/') ? p.url : '/' + p.url);
-    
-      list.innerHTML = posts.map(p => `
-        <article class="post-card">
-          <h2><a href="${href(p)}">${p.titleHtml || p.title}</a></h2>
-          <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
-          <p style="margin:.25rem 0 0;color:var(--muted);font-size:.9em;">
-            ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
-          </p>
-        </article>
-      `).join('');
-    }
-    renderHome();
-    </script>
+ <script>
+  async function renderHome() {
+    const list = document.getElementById('post-list');
+    if (!list) return;
+  
+    const res   = await fetch('/posts/posts.json', { cache: 'no-store' });
+    const posts = await res.json();
+  
+    // newest first
+    posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+  
+    const fmt = d => new Date(d).toLocaleString(undefined, { month:'long', year:'numeric' });
+  
+    list.innerHTML = posts.map(p => `
+      <article class="post-card">
+        <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
+        <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
+        <p style="margin:.25rem 0 0;color:var(--muted);font-size:.9em;">
+          ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
+        </p>
+      </article>
+    `).join('');
+  }
+  renderHome();
+</script>
+
 
 
 
