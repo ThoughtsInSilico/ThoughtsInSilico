@@ -1,27 +1,26 @@
-/* === Iceberg + stable background image + tapered fade + floating post row === */
+/* === Iceberg + big transparent banner + 3-post grid hovering over fade === */
 @import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
 
 /* Tokens */
 :root{
-  /* Contrast & palette */
-  --bg: #000;                           /* true black base */
-  --glass: rgba(8,10,18,.26);           /* translucent glass */
-  --panel: rgba(10,12,22,.32);          /* post cards (see-through) */
-  --border: rgba(185,205,255,.16);      /* cool, subtle border */
-  --text: #e8ecf7;
-  --muted: #a3a9ba;
-  --accent: #9ec1ff;
+  --bg:#000;                          /* true black base */
+  --glass: rgba(8,10,18,.24);         /* translucent */
+  --panel: rgba(10,12,22,.30);        /* post cards transparency */
+  --border: rgba(185,205,255,.16);    /* cool, subtle border */
+  --text:#e8ecf7;
+  --muted:#a3a9ba;
+  --accent:#9ec1ff;
 
-  --font: "Iceberg", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font:"Iceberg", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 
-  --base: 16px;
-  --leading: 1.7;
-  --maxw: 1100px;
-  --space: 1rem;
+  --base:16px;
+  --leading:1.7;
+  --maxw:1100px;
+  --space:1rem;
 }
 
-/* ===== Base ===== */
+/* Base */
 *{ box-sizing:border-box }
 html,body{ height:100% }
 body{
@@ -30,101 +29,106 @@ body{
   font: 400 var(--base)/var(--leading) var(--font);
   letter-spacing:.01em;
 }
+.container{ width:min(100% - 2rem, var(--maxw)); margin-inline:auto }
+a{ color:var(--accent); text-decoration:none }
+a:hover{ text-decoration:underline }
+a:visited{ color:var(--accent) }
+.muted{ color:var(--muted) }
 
-/* Stable banner as the global page background (no movement) */
-body::before{
-  content:"";
-  position: fixed; inset: 0; z-index: -2;
-  background:
-    /* darken top a bit for contrast */
-    linear-gradient(180deg, rgba(0,0,0,.30) 0%, rgba(0,0,0,.30) 20%, rgba(0,0,0,.25) 35%),
-    url("../img/banner.jpg");
-  background-size: cover;               /* minimal crop, cover viewport */
-  background-position: center top;      /* try to keep the top intact */
-  background-repeat: no-repeat;
-}
-
-/* Tapering fade to black JUST above the posts for readability */
-body::after{
-  content:"";
-  position: fixed; inset: 0; z-index: -1;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0) 0%,
-    rgba(0,0,0,.15) 30vh,
-    rgba(0,0,0,.40) 45vh,
-    rgba(0,0,0,.70) 55vh,
-    rgba(0,0,0,.90) 60vh,
-    #000 70vh,
-    #000 100%
-  );
-  pointer-events: none;
-}
-
-.container{ width: min(100% - 2rem, var(--maxw)); margin-inline: auto }
-.muted{ color: var(--muted) }
-a{ color: var(--accent); text-decoration: none }
-a:hover{ text-decoration: underline }
-a:visited{ color: var(--accent) }
-
-/* ===== Header ===== */
+/* Header / nav */
 .site-header{
   display:flex; align-items:center; justify-content:space-between;
-  margin: calc(var(--space)*1.6) auto var(--space);
+  margin: calc(var(--space)*1.4) auto var(--space);
 }
-
-/* Title — NO BOX */
 .site-title{
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 700;
-  /* bigger and cleaner */
-  font-size: clamp(1.6rem, 4.8vw, 2.4rem);
-  letter-spacing: .015em;
-  /* optional soft glow for contrast; remove if you dislike */
+  color:#fff; text-decoration:none; font-weight:700;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  letter-spacing:.015em;
   text-shadow: 0 1px 2px rgba(0,0,0,.45);
 }
-
 .site-nav a{
-  color: var(--muted);
-  padding:.45rem .6rem; border:1px solid transparent;
+  color:var(--muted); padding:.6rem .75rem; border:1px solid transparent;
 }
-.site-nav a:hover{
-  color:#fff; border-color: var(--border);
-  background: rgba(255,255,255,.06);
-}
-
-/* Dropdown */
+.site-nav a:hover{ color:#fff; border-color:var(--border); background:rgba(255,255,255,.06) }
 .nav-dropdown{ position:relative; display:inline-block }
 .nav-submenu--row{
   display:none; position:absolute; top:100%; left:0; z-index:10;
-  padding:.35rem; background: rgba(10,12,22,.6);
-  border:1px solid var(--border);
+  min-width:16rem; padding:.6rem; gap:.35rem;
+  background: rgba(10,12,22,.75); border:1px solid var(--border);
+  backdrop-filter: blur(2px);
 }
-.nav-dropdown:hover .nav-submenu--row{ display:flex; gap:.25rem }
+.nav-submenu--row a{ display:block; padding:.5rem .6rem; font-size:1rem }
+.nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column }
 
-/* ===== Intro (no box; readable over bg) ===== */
-.intro{ margin: .25rem auto 1.25rem }
-.intro p{
-  margin:0; max-width: 52ch; color:var(--text);
-  text-shadow: 0 1px 2px rgba(0,0,0,.45);
+/* Intro (single line under the title) */
+.site-intro{ margin: 0 auto .75rem }
+.site-intro p{
+  margin:0; max-width: 60ch; color:var(--text);
+  text-shadow: 0 1px 2px rgba(0,0,0,.35);
 }
 
-/* ===== Horizontal “Newest posts” row ===== */
-.list-heading{ color: var(--muted); margin: 0 0 .6rem; letter-spacing:.02em }
-
-.post-row{
-  display:flex; gap:1rem; overflow-x:auto; padding-bottom:.25rem;
-  scroll-snap-type:x mandatory;
+/* Big transparent banner that scrolls with page */
+.hero-banner{
+  position: relative;
+  height: 82vh;                 /* fills almost whole page */
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
 }
-.post-row::-webkit-scrollbar{ height:10px }
-.post-row::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.18) }
-.post-row::-webkit-scrollbar-track{ background:rgba(255,255,255,.06) }
+.hero-media{
+  position: absolute; inset: 0;
+  background-image: url("../img/banner.jpg");
+  background-size: cover;       /* minimal crop while filling width */
+  background-position: center top;
+  background-repeat: no-repeat;
+  opacity: .86;                 /* slightly more opaque background */
+  filter: brightness(.88) contrast(.92) saturate(.9); /* lower contrast */
+}
+/* Subtle dark overlay (top) */
+.hero-banner::before{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(180deg,
+    rgba(0,0,0,.18) 0%,
+    rgba(0,0,0,.14) 40%,
+    rgba(0,0,0,.10) 65%
+  );
+  pointer-events:none;
+}
+/* Taper at bottom so posts are clear */
+.hero-banner::after{
+  content:""; position:absolute; left:0; right:0; bottom:0;
+  height: 22vh;
+  background: linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,.34) 55%,
+    rgba(0,0,0,.68) 80%,
+    #000 100%
+  );
+  pointer-events:none;
+}
 
-/* Floating glass cards: more transparent; background shows through */
+/* Posts overlap the banner bottom (hover effect) */
+.posts-wrap{
+  position: relative;
+  margin-top: -16vh;            /* pulls posts up over the taper */
+  padding-top: 2vh;             /* breathing room above cards */
+  margin-bottom: 2rem;
+}
+
+/* 3-post responsive grid (no horizontal scroll) */
+.post-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+}
+@media (max-width: 900px){
+  .post-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 620px){
+  .post-grid{ grid-template-columns: 1fr; }
+}
+
+/* Floating glass cards */
 .post-card{
-  scroll-snap-align:start;
-  min-width: clamp(260px, 32vw, 360px);
   background: var(--panel);
   border: 1px solid var(--border);
   backdrop-filter: blur(2px) saturate(110%);
@@ -137,252 +141,22 @@ a:visited{ color: var(--accent) }
   border-color: rgba(158,193,255,.35);
   box-shadow: 0 16px 48px rgba(0,0,0,.6);
 }
+.list-heading{ color:var(--muted); margin:0 0 .6rem; letter-spacing:.02em }
 .post-title{ margin:0 0 .35rem; font-weight:600; font-size:1.08rem }
 .post-title a{ color:var(--text) }
 .post-time{ color:var(--muted); font-size:.9em; display:block }
 .post-meta{ color:var(--muted); margin:.3rem 0 0; font-size:.9em }
 
-/* ===== Footer ===== */
-.site-footer{ margin: 2rem auto }
+/* Footer */
+.site-footer{ margin: 1.25rem auto }
 .site-footer p{ margin:0 0 .25rem 0; color: var(--muted) }
 .site-footer small{ color: var(--muted) }
 
-/* ===== Helpers (post pages reuse these) ===== */
-.post-body{ font-size: 1.02rem }
+/* Post content helpers (for article pages) */
+.post-body{ font-size:1.02rem }
 .post-body p{ margin:.9rem 0; text-indent:.8em }
 .post-body p:first-of-type,.post-body h2 + p,.post-body h3 + p{ text-indent:0 }
 .post-body blockquote{
   margin:1.25rem 0; padding:.7rem .95rem;
   background: var(--panel); border:1px solid var(--border);
 }
-
-/* === Show most background: lighter top, shorter taper === */
-
-body::before{
-  background:
-    linear-gradient(180deg,
-      rgba(0,0,0,.15) 0%,
-      rgba(0,0,0,.15) 22%,
-      rgba(0,0,0,.12) 38%
-    ),
-    url("../img/banner.jpg");
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-}
-
-/* Start the fade low and make it short */
-body::after{
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0) 0%,
-    rgba(0,0,0,.06) 58vh,
-    rgba(0,0,0,.18) 64vh,
-    rgba(0,0,0,.36) 70vh,
-    rgba(0,0,0,.60) 76vh,
-    #000 84vh,
-    #000 100%
-  );
-}
-
-/* Little vertical whitespace around footer */
-.site-footer{ margin: 1rem auto; }
-
-/* === Switch from fixed background to a scrolling top banner === */
-
-/* Kill the old fixed background/fade if present */
-body::before, body::after { content: none !important; }
-
-/* New scrolling banner at the top of the page */
-.hero-banner{
-  height: 60vh;                 /* how tall the banner is */
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,.12) 30%, rgba(0,0,0,.10) 55%),
-    url("../img/banner.jpg");
-  background-size: cover;       /* minimal crop but fills width */
-  background-position: center top;
-  background-repeat: no-repeat;
-  /* No position:fixed — it scrolls naturally with the page */
-  border-bottom: 1px solid var(--border);
-}
-
-/* Taper to black so posts float clearly */
-.hero-banner::after{
-  content: "";
-  position: relative;
-  display: block;
-  height: 25vh;                 /* length of the taper */
-  margin-top: -25vh;            /* overlap the bottom of the banner */
-  background: linear-gradient(to bottom,
-    rgba(0,0,0,0) 0%,
-    rgba(0,0,0,.25) 40%,
-    rgba(0,0,0,.55) 70%,
-    #000 100%
-  );
-  pointer-events: none;
-}
-
-/* More spacious dropdown */
-.site-nav a{ font-size: 1.05rem; padding: .6rem .75rem; }
-.nav-dropdown{ position:relative; display:inline-block }
-.nav-submenu--row{
-  display:none; position:absolute; top:100%; left:0; z-index:10;
-  padding:.6rem; gap:.35rem;
-  min-width: 16rem;             /* wider panel */
-  background: rgba(10,12,22,.75);
-  border:1px solid var(--border);
-  backdrop-filter: blur(2px);
-}
-.nav-submenu--row a{
-  display:block;
-  padding:.5rem .6rem;
-  font-size: 1rem;
-}
-.nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column }
-
-/* Keep posts glassy/transparent */
-.post-card{
-  background: var(--panel);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(2px) saturate(110%);
-}
-
-/* === Transparent hero that fills the page, tapers, lower-contrast bg === */
-
-/* Remove any old fixed background layers */
-body::before, body::after { content: none !important; }
-
-/* The hero spans almost all the viewport, then fades out */
-.hero-banner{
-  position: relative;
-  height: 88vh;                  /* fills most of the page */
-  overflow: hidden;              /* contain the media layer */
-  border-bottom: 1px solid var(--border);
-}
-
-/* Background image layer (transparent, slightly dim + lower contrast) */
-.hero-media{
-  position: absolute; inset: 0;
-  background-image: url("../img/banner.jpg");
-  background-size: cover;        /* minimal crop while covering width */
-  background-position: center top;
-  background-repeat: no-repeat;
-  opacity: .88;                  /* slightly more opaque background */
-  filter: brightness(.85) contrast(.9) saturate(.85); /* lower contrast */
-}
-
-/* A subtle dark overlay for readability (tunable) */
-.hero-banner::before{
-  content:"";
-  position:absolute; inset:0;
-  background: linear-gradient(180deg,
-    rgba(0,0,0,.20) 0%,
-    rgba(0,0,0,.18) 35%,
-    rgba(0,0,0,.14) 60%
-  );
-  pointer-events:none;
-}
-
-/* Taper down to black just above the posts */
-.hero-banner::after{
-  content:"";
-  position:absolute; left:0; right:0; bottom:0;
-  height: 24vh;                  /* length of the taper */
-  background: linear-gradient(to bottom,
-    rgba(0,0,0,0) 0%,
-    rgba(0,0,0,.35) 55%,
-    rgba(0,0,0,.70) 80%,
-    #000 100%
-  );
-  pointer-events:none;
-}
-
-/* Title in white (no box), description under it and nudged right */
-.site-title--hero{
-  margin: 0;
-  color: #fff;                   /* explicit white */
-  text-decoration: none;
-  font-weight: 700;
-  font-size: clamp(2rem, 5.2vw, 3rem);  /* larger in the hero */
-  letter-spacing: .015em;
-  text-shadow: 0 2px 6px rgba(0,0,0,.45);
-}
-
-.tagline{
-  margin: .4rem 0 0;
-  color: var(--text);
-  max-width: 60ch;
-  transform: translateX(10px);   /* slight shift to the right */
-  text-shadow: 0 1px 3px rgba(0,0,0,.4);
-}
-
-/* Position hero text within the banner */
-.hero-content{
-  position: relative;
-  padding-top: min(12vh, 8rem);  /* push text down from very top */
-}
-
-/* Keep horizontal 'Newest posts' row */
-.post-row{
-  display:flex; gap:1rem; overflow-x:auto; padding-bottom:.25rem;
-  scroll-snap-type:x mandatory;
-}
-.post-card{
-  scroll-snap-align:start;
-  min-width: clamp(260px, 32vw, 360px);
-  background: var(--panel);              /* see-through glass */
-  border: 1px solid var(--border);
-  backdrop-filter: blur(2px) saturate(110%);
-  box-shadow: 0 10px 32px rgba(0,0,0,.45);
-  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-}
-.post-card:hover, .post-card:focus-within{
-  transform: translateY(-2px);
-  border-color: rgba(158,193,255,.35);
-  box-shadow: 0 16px 48px rgba(0,0,0,.6);
-}
-
-/* Roomy dropdown */
-.site-nav a{ font-size: 1.05rem; padding: .6rem .75rem; }
-.nav-submenu--row{
-  min-width: 16rem; padding:.6rem; gap:.35rem;
-  background: rgba(10,12,22,.75); backdrop-filter: blur(2px);
-  border:1px solid var(--border);
-}
-.nav-submenu--row a{ display:block; padding:.5rem .6rem; font-size: 1rem; }
-.nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column }
-
-/* === Switch "Newest posts" from horizontal scroll to a responsive grid === */
-
-/* Grid instead of scroller */
-.post-row{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.1rem;
-  overflow: visible;           /* no horizontal scrolling */
-  scroll-snap-type: none;
-}
-/* Hide the old scrollbar styles from earlier */
-.post-row::-webkit-scrollbar{ display:none; }
-
-/* Cards should fill their grid cell */
-.post-card{
-  width: 100%;
-  min-width: 0;                /* override earlier min-width */
-}
-
-/* Type & spacing that scale nicely on phones */
-@media (max-width: 680px){
-  .site-header{ margin: 1rem auto .5rem; }
-  .site-nav a{ padding: .5rem .6rem; font-size: 1rem; }
-
-  .hero-banner{ height: 66vh; }                  /* a bit shorter on small screens */
-  .hero-content{ padding-top: min(10vh, 5rem); }
-  .site-title--hero{ font-size: clamp(1.6rem, 9vw, 2.2rem); }
-  .tagline{ max-width: 40ch; transform: translateX(6px); }
-}
-
-/* A touch more width on big desktops */
-@media (min-width: 1200px){
-  .container{
-
