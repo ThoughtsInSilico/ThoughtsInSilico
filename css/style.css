@@ -181,3 +181,54 @@ article.post-card{display:block}
   <img src="../img/olympiads-notes.png">
 </p>
 
+/* === HEADER RESTRUCTURE: Title row, Blurb row, Menu row (no HTML changes) === */
+
+/* 3 stacked rows so nothing bumps anything else */
+.site-header{
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: auto auto auto !important;  /* Row 1: Title, Row 2: Blurb, Row 3: Menu */
+  row-gap: .55rem !important;
+  align-items: center !important;
+}
+
+/* Title occupies its own full-width row */
+.site-title{
+  grid-row: 1 !important;
+  grid-column: 1 !important;
+  justify-self: start !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+/* Blurb occupies its own full-width row, centered */
+.site-header::after{
+  grid-row: 2 !important;
+  grid-column: 1 !important;
+  justify-self: center !important;
+  text-align: center !important;
+  margin: 0 !important;
+}
+
+/* Menu occupies the third row */
+.site-nav{
+  grid-row: 3 !important;
+  grid-column: 1 / -1 !important;
+  justify-content: flex-start !important;
+  flex-wrap: wrap !important;
+  gap: .2rem .6rem !important;
+}
+
+/* ABOUT: slightly larger, boxed, first item in the row */
+.site-nav a[href$="about.html"]{
+  order: -1; /* show first */
+  font-family: "Zen Tokyo Zoo", var(--font);
+  font-size: 1.15rem;          /* slightly larger */
+  color: #fff;
+  padding: .4rem .9rem;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.05);
+  border-radius: 0;            /* square to match your style */
+}
+/* hover for About */
+.sit
