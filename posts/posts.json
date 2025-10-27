@@ -28,10 +28,13 @@
   "subcategory": "Short Stories"
   },
   {
-    "title": "Short Fiction",
-    "url": "posts/short-fiction.html",
-    "date": "2025-05-01",
-    "category": "Fiction",
-    "subcategory": "Short Stories"
+  {
+  "title": "Pseudo-Poems",
+  "url": "posts/pseudo-poems.html",
+  "date": "2025-07-01",
+  "category": "Fiction",
+  "subcategory": "Poetry"
+  }
+
   }
 ]
