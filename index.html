@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Thoughts In Silico</title>
-  <link rel="stylesheet" href="css/style.css?v=5" />
+  <link rel="stylesheet" href="css/style.css?v=7" />
   <meta name="theme-color" content="#000000" />
 
   <!-- MathJax (if titles contain math) -->
@@ -33,28 +33,22 @@
       <a href="categories.html?cat=Mathematics">Mathematics</a>
     </nav>
   </header>
-  <!-- Transparent hero banner that scrolls with the page -->
+
+  <!-- One-line description UNDER the title, above the banner -->
+  <section class="site-intro container">
+    <p>Hi, it’s Reza. A quiet place to share my thoughts with those who listen.</p>
+  </section>
+
+  <!-- Large transparent banner (image only, scrolls with page, fades at bottom) -->
   <section class="hero-banner" aria-label="Site banner">
     <div class="hero-media" aria-hidden="true"></div>
-  
-    <div class="hero-content container">
-      <h1 class="site-title site-title--hero">Thoughts In Silico</h1>
-      <p class="tagline">Hi, it's Reza. A quiet place to share my thoughts with those who listen.</p>
-    </div>
   </section>
 
-
-
-  <!-- Intro (no box) -->
-  <section class="intro container">
-    <p>Hi, it's Reza. A quiet place to share my thoughts with those who listen.</p>
-  </section>
-
-  <!-- Horizontal posts -->
-  <section class="container">
+  <!-- Posts overlap the bottom of the banner (no horizontal scroll, exactly 3) -->
+  <main class="container posts-wrap">
     <h2 class="list-heading">Newest posts</h2>
-  </section>
-  <section id="post-row" class="post-row container" aria-label="Newest posts"></section>
+    <section id="post-grid" class="post-grid" aria-label="Newest posts"></section>
+  </main>
 
   <footer class="site-footer container">
     <p>May the light be with you.</p>
@@ -65,17 +59,19 @@
     // Footer year
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Render posts as horizontal cards
+    // Render exactly 3 newest posts in a responsive grid
     async function renderHome() {
-      const row = document.getElementById('post-row');
+      const grid = document.getElementById('post-grid');
       try {
         const res = await fetch('posts/posts.json');
         const posts = await res.json();
+
         posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+        const top3 = posts.slice(0, 3);
         const fmt = d => new Date(d).toLocaleString(undefined, { month:'long', year:'numeric' });
 
-        row.innerHTML = posts.map(p => `
-          <article class="post-card" tabindex="0">
+        grid.innerHTML = top3.map(p => `
+          <article class="post-card">
             <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
             <time class="post-time" datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
             <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
@@ -85,7 +81,7 @@
         if (window.MathJax?.typeset) MathJax.typeset();
       } catch (e) {
         console.error(e);
-        row.innerHTML = '<p class="muted">Could not load posts.</p>';
+        grid.innerHTML = '<p class="muted">Could not load posts.</p>';
       }
     }
     renderHome();
