@@ -6,6 +6,10 @@
   <title>Browse — Thoughts In Silico</title>
   <link rel="stylesheet" href="css/style.css"/>
   <meta name="theme-color" content="#030536"/>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -63,6 +67,7 @@
         const fmt = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
     
         list.innerHTML = posts.map(p => `
+        if (window.MathJax && MathJax.typeset) MathJax.typeset();
           <article class="post-card">
             <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
             <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
