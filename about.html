@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About • Thoughts In Silico</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="theme-color" content="#000000" />
+</head>
+<body>
+  <header class="site-header container">
+    <a class="site-title" href="index.html">Thoughts In Silico</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
+      <div class="nav-dropdown">
+        <a href="categories.html?cat=Fiction">Fiction ▾</a>
+        <div class="nav-submenu nav-submenu--row">
+          <a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
+          <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+        </div>
+      </div>
+      <a href="categories.html?cat=Mathematics">Mathematics</a>
+      <a href="categories.html?cat=Technology">Technology</a>
+      <a href="categories.html?cat=Music">Music</a>
+      <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="container page-main">
+    <article class="post-card">
+      <h1>About</h1>
+      <div class="post-body">
+        <p>Hi, I’m Reza. Thoughts In Silico is where I write about mathematics, technology, and fiction. You’ll find notes from math, short stories, poems, and occasional book reviews.</p>
+        <p>If you want to reach out: <em>(add your contact or socials here)</em>.</p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer container">
+    <p><small>© 2025 Thoughts In Silico.</small></p>
+  </footer>
+
+  <script>
+    // Typewriter for page title
+    (function(){
+      const h1 = document.querySelector('article h1');
+      if(!h1) return;
+      const txt = h1.textContent.trim();
+      h1.textContent = "";
+      h1.classList.add('typer');
+      let i=0;
+      const id=setInterval(()=>{
+        h1.textContent = txt.slice(0, ++i);
+        if(i>=txt.length){ clearInterval(id); h1.classList.add('caret-done'); }
+      }, 45);
+    })();
+  </script>
+</body>
+</html>
