@@ -348,3 +348,17 @@ article.post-card{display:block}
 .site-nav a[href$="about.html"]::before,
 .site-nav a[href$="about.html"]::after{ content:none !important; }
 
+
+/* === Home page banner background ===
+   Expects the image at /img/banner.jpg
+   (CSS file lives in /css/, so path is ../img/) */
+body.home{
+  /* dark overlay for readability + the banner image */
+  background:
+    linear-gradient(180deg, rgba(10,13,26,.78), rgba(10,13,26,.78)),
+    url("../img/banner.jpg") center / cover no-repeat fixed !important;
+}
+
+/* optional: make the overlay a touch lighter or darker by changing .78 above
+   e.g. .70 (lighter) or .85 (darker) */
+
