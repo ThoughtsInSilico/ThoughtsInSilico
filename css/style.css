@@ -232,3 +232,24 @@ article.post-card{display:block}
 }
 /* hover for About */
 .sit
+
+/* === Keep title & blurb to ONE line (auto-shrink on small screens) === */
+
+/* Site title: never wrap; scale down with viewport if needed */
+.site-title{
+  white-space: nowrap !important;
+  /* downsize smoothly on smaller widths so it still fits one line */
+  font-size: clamp(1.4rem, 5.6vw, 2.8rem) !important;
+  letter-spacing: .006em !important;     /* slightly tighter to help fit */
+  overflow: hidden;                       /* safety: avoid layout break */
+  text-overflow: ellipsis;                /* if it's impossibly narrow */
+}
+
+/* Blurb (the header ::after content): keep to one line & scale */
+.site-header::after{
+  white-space: nowrap !important;
+  font-size: clamp(.9rem, 2.2vw, 1.05rem) !important;
+  line-height: 1.1 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
