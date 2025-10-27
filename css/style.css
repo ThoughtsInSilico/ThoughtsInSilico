@@ -155,3 +155,36 @@ a:visited{ color: var(--accent) }
   margin:1.25rem 0; padding:.7rem .95rem;
   background: var(--panel); border:1px solid var(--border);
 }
+
+/* === Show most background: lighter top, shorter taper === */
+
+body::before{
+  background:
+    linear-gradient(180deg,
+      rgba(0,0,0,.15) 0%,
+      rgba(0,0,0,.15) 22%,
+      rgba(0,0,0,.12) 38%
+    ),
+    url("../img/banner.jpg");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+/* Start the fade low and make it short */
+body::after{
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,.06) 58vh,
+    rgba(0,0,0,.18) 64vh,
+    rgba(0,0,0,.36) 70vh,
+    rgba(0,0,0,.60) 76vh,
+    #000 84vh,
+    #000 100%
+  );
+}
+
+/* Little vertical whitespace around footer */
+.site-footer{ margin: 1rem auto; }
+
