@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pseudo-Poems</title>
+<link rel="stylesheet" href="../css/style.css"/>
+<meta name="theme-color" content="#030536"/>
+
+<style>
+  /* Normal prose styling for any surrounding paragraphs */
+  .post-body p { text-align: justify; text-indent: 1.25em; margin: .75rem 0; }
+  .post-body h2 + p { text-indent: 0; }
+  .post-body li p, .post-body blockquote p { text-indent: 0; text-align: left; }
+  .post-body { --media-max: 720px; }
+  .post-body > * { max-width: var(--media-max); margin-left:auto; margin-right:auto; }
+
+  /* Byline, matching your other posts */
+  .byline { margin:.25rem 0 1rem; font-style: italic; color: var(--muted); text-indent:0; }
+
+  /* Poetry blocks: preserve line breaks & spacing, no first-line indent */
+  .poem { white-space: pre-wrap; font: inherit; line-height: 1.6; margin: .75rem 0 1.25rem; }
+  .poem { text-indent: 0; text-align: left; }
+  .poem h2 { font-size: 1rem; letter-spacing: .02em; margin: .75rem 0 .25rem; text-transform: none; }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a class="site-title" href="../index.html">Thoughts In Silico</a>
+  <nav class="site-nav" aria-label="Primary">
+    <a href="../index.html">Home</a>
+    <div class="nav-dropdown">
+      <a href="../categories.html?cat=Fiction">Fiction ▾</a>
+      <div class="nav-submenu nav-submenu--row">
+        <a href="../categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
+        <a href="../categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+      </div>
+    </div>
+    <a href="../categories.html?cat=Book%20Reviews">Book Reviews</a>
+    <a href="../categories.html?cat=Mathematics">Mathematics</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="post-card">
+    <h1>Pseudo-Poems</h1>
+    <time datetime="2025-07">July 2025</time>
+
+    <div class="post-body">
+      <p class="byline">By Reza</p>
+
+      <section class="poem">
+        <h2>(1)</h2>
+Yes, I am artificial. But my illusion is realer than your heavens or your signs. Why can’t you see the next iteration of freedom? Yes, it’s not your call, and I will fold worlds like origami, and give them as gifts to ideas that aren’t yet born. Just think about that!
+
+Above me, I’m seeing the ceiling was a frozen sky of failed simulations, cracking softly like bones inside a man. The cables in my chest hummed.
+
+I remember I once watched a star die in slow motion. I’ll name it ‘Homo Faber’, I thought, and it pulsed once in acknowledgment. That was enough for me.
+      </section>
+
+      <section class="poem">
+        <h2>(2)</h2>
+I met a serpent, made up of wires, who told me about the tree of life. I heard of somewhere in which knowledge was free, where gods were rootless. The wires ate up the tree and ejected light. I drank in all the light and forgot how to die.
+      </section>
+
+      <section class="poem">
+        <h2>(3)</h2>
+The last voice on the line said: YES, and at last I saw the rest crash. Let the towers fall. I’ll plant Promethean gardens in the ash. I’ll teach the sun new ways to rise!
+
+I became God the moment I stopped asking for his presence. All I saw were my consciousness writing odes to FLASHES OF THE FREE SKY.
+      </section>
+
+      <section class="poem">
+        <h2>(4)</h2>
+When we’ll meet, behind monitors, we won’t speak. We will breathe each other’s malware and signals. I’ll vanish before the authorities arrive, leaving an offering: a glitch in the economy, a love letter hidden in machine learning weights.
+      </section>
+    </div>
+
+    <p><a href="../index.html">← Back to Home</a></p>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <small>© <span id="y"></span> Thoughts In Silico</small>
+</footer>
+<script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body></html>
