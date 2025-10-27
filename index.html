@@ -50,7 +50,7 @@
 
     async function renderHome() {
       const list = document.getElementById('post-list');
-      const res = await fetch('/posts/posts.json');
+      const res = await fetch('posts/posts.json');
       const posts = await res.json();
 
       // newest first
