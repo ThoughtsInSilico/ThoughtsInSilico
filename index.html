@@ -46,7 +46,7 @@
 
   <!-- (3) SCRIPTS -->
   <script>
-   async function renderHome() {
+    async function renderHome() {
       const list = document.getElementById('post-list');
       const res = await fetch('posts/posts.json');
       const posts = await res.json();
@@ -56,17 +56,18 @@
     
       list.innerHTML = posts.map(p => `
         <article class="post-card">
-          <h2><a href="${p.url}">${p.title}</a></h2>
+          <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
           <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
           <p style="margin:.25rem 0 0;color:var(--muted);font-size:.9em;">
             ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
           </p>
         </article>
       `).join('');
-      }
-      renderHome();
+    }
+    renderHome();
   </script>
 
-  </script>
+
+  
 </body>
 </html>
