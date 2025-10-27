@@ -16,6 +16,35 @@
   <meta name="theme-color" content="#030536" />
 </head>
 
+
+  
+
+<script>
+async function renderHome() {
+  const list = document.getElementById('post-list');
+  const res = await fetch('/posts/posts.json');
+  const posts = await res.json();
+
+  // newest first by ISO date
+  posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  const fmt = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
+
+  list.innerHTML = posts.map(p => `
+    <article class="post-card">
+      <h2><a href="${p.url}">${p.title}</a></h2>
+      <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
+      <p style="margin:.25rem 0 0;color:var(--muted);font-size:.9em;">${p.category}${p.subcategory ? ' • '+p.subcategory : ''}</p>
+    </article>
+  `).join('');
+}
+renderHome();
+</script>
+
+
+  
+
+  
 <body>
 
   <header class="site-header">
@@ -32,38 +61,7 @@
       <p>Hi, it's Reza. Math enthusiast. Technophile and posthumanist. Philosophy reader. This is a quiet place to share my thoughts to those who listen.</p>
     </section>
 
-    <section class="post-list">
-      <article class="post-card">
-        <h2><a href="posts/book-reviews-after-finitude-times-arrow.html">Book Reviews: (1) After Finitude (2) Time's Arrow and Archimedes' Point</a></h2>
-        <time datetime="2025-10">October 2025</time>
-        <p><!-- optional teaser --></p>
-      </article>
-      
-      <article class="post-card">
-        <h2><a href="posts/math-olympiads-12-years.html">My 12-Year Journey With the Math Olympiads</a></h2>
-        <time datetime="2025-09">September 2025</time>
-        <p><!-- optional teaser --></p>
-      </article>
-      
-      <article class="post-card">
-        <h2><a href="posts/profinite-fundamental-group.html">The Case for the Profinite Fundamental Group π̂₁</a></h2>
-        <time datetime="2025-07">July 2025</time>
-        <p><!-- optional teaser --></p>
-      </article>
-      
-      <article class="post-card">
-        <h2><a href="posts/oracle-of-orr.html">Short Story: Oracle of Orr</a></h2>
-        <time datetime="2025-07">July 2025</time>
-        <p><!-- optional teaser --></p>
-      </article>
-      
-      <article class="post-card">
-        <h2><a href="posts/short-fiction.html">Short Fiction</a></h2>
-        <time datetime="2025-05">May 2025</time>
-        <p><!-- optional teaser --></p>
-      </article>
-    </section>
-
+  <section id="post-list" class="post-list"></section>
 
   </main>
     <footer class="site-footer">
