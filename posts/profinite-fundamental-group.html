@@ -85,4 +85,17 @@
 
   <script>
     (function(){
-      const
+      const h1 = document.querySelector('article h1');
+      if(!h1) return;
+      const txt = h1.textContent.trim();
+      h1.textContent = "";
+      h1.classList.add('typer');
+      let i=0;
+      const id=setInterval(()=>{
+        h1.textContent = txt.slice(0, ++i);
+        if(i>=txt.length){ clearInterval(id); h1.classList.add('caret-done'); }
+      }, 45);
+    })();
+  </script>
+</body>
+</html>
