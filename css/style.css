@@ -352,3 +352,37 @@ body::before, body::after { content: none !important; }
 .nav-submenu--row a{ display:block; padding:.5rem .6rem; font-size: 1rem; }
 .nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column }
 
+/* === Switch "Newest posts" from horizontal scroll to a responsive grid === */
+
+/* Grid instead of scroller */
+.post-row{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.1rem;
+  overflow: visible;           /* no horizontal scrolling */
+  scroll-snap-type: none;
+}
+/* Hide the old scrollbar styles from earlier */
+.post-row::-webkit-scrollbar{ display:none; }
+
+/* Cards should fill their grid cell */
+.post-card{
+  width: 100%;
+  min-width: 0;                /* override earlier min-width */
+}
+
+/* Type & spacing that scale nicely on phones */
+@media (max-width: 680px){
+  .site-header{ margin: 1rem auto .5rem; }
+  .site-nav a{ padding: .5rem .6rem; font-size: 1rem; }
+
+  .hero-banner{ height: 66vh; }                  /* a bit shorter on small screens */
+  .hero-content{ padding-top: min(10vh, 5rem); }
+  .site-title--hero{ font-size: clamp(1.6rem, 9vw, 2.2rem); }
+  .tagline{ max-width: 40ch; transform: translateX(6px); }
+}
+
+/* A touch more width on big desktops */
+@media (min-width: 1200px){
+  .container{
+
