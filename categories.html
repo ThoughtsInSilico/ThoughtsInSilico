@@ -47,7 +47,7 @@
     const cat = params.get('cat');
     const sub = params.get('sub');
 
-    const res = await fetch('/posts/posts.json');
+    const res = await fetch('posts/posts.json');
     let posts = await res.json();
 
     if (cat) posts = posts.filter(p => p.category === cat);
