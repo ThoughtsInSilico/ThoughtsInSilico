@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Case for the Profinite Fundamental Group π̂₁</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <meta name="theme-color" content="#030536" />
+
+  <!-- MathJax for LaTeX -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']]
+      },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Marked.js to render Markdown at runtime -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    .post-body p { text-align: justify; text-indent: 1.25em; margin: .75rem 0; }
+    .post-body p:first-of-type,
+    .post-body h2 + p,
+    .post-body h3 + p { text-indent: 0; }
+    .post-body li p, .post-body blockquote p { text-indent: 0; text-align: left; }
+    .post-body { --media-max: 720px; }
+    .post-body > * { max-width: var(--media-max); margin-left: auto; margin-right: auto; }
+    .post-body h1, .post-body h2, .post-body h3 { margin-top: 1.25rem; }
+    .post-body blockquote { border-left: 3px solid var(--muted); padding: .5rem 1rem; margin: 1rem auto; }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/">Thoughts In Silico</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <div class="nav-dropdown">
+        <a href="../categories.html?cat=Fiction">Fiction ▾</a>
+        <div class="nav-submenu nav-submenu--row">
+          <a href="../categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
+          <a href="../categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+        </div>
+      </div>
+      <a href="../categories.html?cat=Book%20Reviews">Book Reviews</a>
+      <a href="../categories.html?cat=Mathematics">Mathematics</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <article class="post-card">
+      <h1>The Case for the Profinite Fundamental Group π̂₁</h1>
+      <time datetime="2025-07">July 2025</time>
+
+      <div class="post-body" id="post-body">
+        <!-- Your Markdown is embedded here -->
+        <script type="text/markdown" id="md-src">
+**Written: July 2025**
+
+Abstract**:**  The profinite (topos-...)  <!--- full markdown content from your file is embedded here; keep it all --->
+        </script>
+      </div>
+
+      <p><a href="/">← Back to Home</a></p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <small>© <span id="y"></span> Thoughts In Silico</small>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
+
+  <script>
+    (function() {
+      const src = document.getElementById('md-src').textContent;
+      marked.setOptions({ gfm: true, breaks: false });
+      const html = marked.parse(src);
+      const body = document.getElementById('post-body');
+      body.innerHTML = html;
+      if (window.MathJax && MathJax.typeset) { MathJax.typeset(); }
+    })();
+  </script>
+</body>
+</html>
