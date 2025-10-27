@@ -42,10 +42,30 @@
       <div class="post-body">
         <p><em>By Reza</em></p>
         
-        <p>
-          <img src="/img/image1.png" alt="Cover image 1">
-          <img src="/img/image2.png" alt="Cover image 2">
-        </p>
+      <div class="img-row">
+        <img src="../img/image1.png" alt="Cover image 1">
+        <img src="../img/image2.png" alt="Cover image 2">
+      </div>
+
+      /* Image layout */
+      .post-body img{
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+      
+      /* Two images side-by-side (wraps on small screens) */
+      .post-body .img-row{
+        display: flex;
+        gap: .75rem;
+        flex-wrap: wrap;
+        margin: .5rem 0 1rem;
+      }
+      .post-body .img-row img{
+        flex: 1 1 320px;
+      }
+        
 
         <h2>Introduction</h2>
         <p>This a double-book-review of two philosophy books, with different focuses, but make a related point on anthropocentrism.</p>
