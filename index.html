@@ -46,14 +46,14 @@
   </footer>
 
   <!-- (3) SCRIPTS -->
-  <script>
+   <script>
     async function renderHome() {
       const list = document.getElementById('post-list');
-      const res = await fetch('posts/posts.json');
+      const res  = await fetch('posts/posts.json');     // no leading slash
       const posts = await res.json();
     
       posts.sort((a,b) => new Date(b.date) - new Date(a.date));
-      const fmt = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
+      const fmt = d => new Date(d).toLocaleString(undefined,{month:'long', year:'numeric'});
     
       list.innerHTML = posts.map(p => `
         <article class="post-card">
@@ -67,6 +67,7 @@
     }
     renderHome();
   </script>
+
 
 
   
