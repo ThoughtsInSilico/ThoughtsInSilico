@@ -175,3 +175,9 @@ article.post-card{display:block}
 .post-body img,.figure img{display:block;max-width:680px;width:100%;height:auto;max-height:420px;object-fit:contain;margin:0 auto;border:1px solid var(--border);background:rgba(0,0,0,.25)}
 .figure--row{display:grid;grid-template-columns:1fr;gap:.75rem}
 @media (min-width:820px){.figure--row{grid-template-columns:1fr 1fr}.figure--row img{max-height:360px}}
+
+<p class="img-row">
+  <img src="../img/olympiads-problem.png">
+  <img src="../img/olympiads-notes.png">
+</p>
+
