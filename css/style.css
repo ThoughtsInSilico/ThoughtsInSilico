@@ -253,3 +253,49 @@ article.post-card{display:block}
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* === ONE-LINE title + ONE-LINE blurb + tidy About (final overrides) === */
+
+/* Title: never wrap; auto-shrink so it fits on one line */
+.site-title{
+  white-space: nowrap !important;
+  /* scales with viewport until it fits; smaller max to prevent wrap */
+  font-size: clamp(1.4rem, 3.8vw, 2.4rem) !important;
+  letter-spacing: .006em !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Blurb (the ::after text): keep to one line, align with title, never overflow */
+.site-header::after{
+  white-space: nowrap !important;
+  font-size: clamp(.9rem, 1.9vw, 1.05rem) !important;
+  line-height: 1.1 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+  justify-self: start !important;   /* line up under the title */
+}
+
+/* Make sure the header really has 3 rows (title / blurb / menu) */
+.site-header{
+  grid-template-columns: 1fr !important;
+  grid-template-rows: auto auto auto !important;
+}
+
+/* About: do NOT stretch; just a neat boxed button the size of its text */
+.site-nav a[href$="about.html"]{
+  flex: 0 0 auto !important;     /* stop flex-growing to full width */
+  display: inline-flex !important;
+  align-items: center !important;
+  font-size: 1.15rem !important; /* slightly larger than others */
+  padding: .4rem .9rem !important;
+  border: 1px solid var(--border) !important;
+  background: rgba(255,255,255,.05) !important;
+  border-radius: 0 !important;
+}
+
+/* If an older rule added decorative lines around About, kill them */
+.site-nav a[href$="about.html"]::before,
+.site-nav a[href$="about.html"]::after{ content:none !important; }
+
