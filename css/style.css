@@ -68,6 +68,27 @@ body{
 .nav-submenu--row a:hover{ background: rgba(255,255,255,.05); }
 .nav-dropdown:hover .nav-submenu--row{ display:flex; }
 
+/*banner */
+.site-banner{
+  margin: 1.25rem auto 2rem;
+  width: min(100% - 2rem, 960px);
+  border: 1px solid var(--border);
+  border-radius: 0;           /* square corners */
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0,0,0,.18);
+}
+.site-banner img{ display:block; width:100%; height:auto; }
+
+<div class="site-banner">
+  <picture>
+    <source srcset="img/banner.avif" type="image/avif">
+    <source srcset="img/banner.webp" type="image/webp">
+    <img src="img/banner.jpg" alt="Thoughts In Silico banner"
+         width="1600" height="360" loading="eager" decoding="async">
+  </picture>
+</div>
+
+
 /* Lists / cards */
 .list-heading{ margin: 0 0 .6rem 0; color: var(--muted); letter-spacing:.01em; }
 
