@@ -14,7 +14,9 @@
 <body>
   <header class="site-header container">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
+
     <nav class="site-nav" aria-label="Primary">
+      <a href="about.html">About</a>
       <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
       <div class="nav-dropdown">
         <a href="categories.html?cat=Fiction">Fiction ▾</a>
@@ -27,15 +29,13 @@
       <a href="categories.html?cat=Technology">Technology</a>
       <a href="categories.html?cat=Music">Music</a>
       <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
-      <a href="about.html">About</a>
+
+      <!-- blurb, now at the end of the same row -->
+      <span class="site-intro"><p>Hi, it’s Reza. I write about math, tech, and fiction.</p></span>
     </nav>
   </header>
 
   <main class="container">
-    <section class="site-intro">
-      <p>Hi, it’s Reza. I write about math, tech, and fiction.</p>
-    </section>
-
     <h2 class="list-heading">Recent posts</h2>
     <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
   </main>
@@ -45,25 +45,16 @@
   </footer>
 
   <script>
-    // Title then subtitle typewriter
+    // Title then subtle caret
     (function(){
       const titleEl = document.querySelector('.site-title');
-      const subtitleEl = document.querySelector('.site-intro p');
       const titleText = titleEl.textContent.trim();
-      const subtitleText = subtitleEl?.textContent.trim() || "";
       titleEl.textContent = "";
-      if(subtitleEl) subtitleEl.textContent = "";
       titleEl.classList.add('typer');
-      if (subtitleEl) subtitleEl.classList.add('typer');
-      function type(el, text, speed){
-        return new Promise(res=>{
-          let i=0; const id=setInterval(()=>{
-            el.textContent = text.slice(0, ++i);
-            if(i>=text.length){ clearInterval(id); el.classList.add('caret-done'); res(); }
-          }, speed);
-        });
-      }
-      (async()=>{ await type(titleEl, titleText, 55); if(subtitleEl) await type(subtitleEl, subtitleText, 35); })();
+      let i=0; const id=setInterval(()=>{
+        titleEl.textContent = titleText.slice(0, ++i);
+        if(i>=titleText.length){ clearInterval(id); titleEl.classList.add('caret-done'); }
+      }, 55);
     })();
   </script>
 
@@ -73,10 +64,7 @@
       try{
         const res = await fetch('posts/posts.json');
         let posts = await res.json();
-
-        // newest at top-left
         posts = posts.sort((a,b) => new Date(b.date) - new Date(a.date));
-
         grid.innerHTML = posts.map(p => `
           <article class="post-card">
             <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
