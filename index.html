@@ -4,10 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Thoughts In Silico</title>
-  <link rel="stylesheet" href="css/style.css?v=3" />
+  <link rel="stylesheet" href="css/style.css?v=4" />
   <meta name="theme-color" content="#000000" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- MathJax for any math in titles -->
+  <!-- MathJax in case any titles use math -->
   <script>
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
   </script>
@@ -16,7 +18,7 @@
 
 <body>
   <!-- Header -->
-  <header class="site-header">
+  <header class="site-header container">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
     <nav class="site-nav" aria-label="Primary">
       <a href="index.html">Home</a>
@@ -34,22 +36,19 @@
     </nav>
   </header>
 
-  <!-- Banner (ensure the file exists at img/banner.jpg) -->
-  <div class="site-banner">
-    <img src="img/banner.jpg" alt="Thoughts In Silico banner"
-         width="1600" height="360" loading="eager" decoding="async">
-  </div>
+  <!-- Hero intro that floats over the moving background -->
+  <section class="intro container">
+    <p>Hi, it's Reza. A quiet place to share my thoughts with those who listen.</p>
+  </section>
 
-  <main class="container">
-    <section class="hero">
-      <p>Hi, it's Reza. Call this a quiet place to share my thoughts to those who listen.</p>
-    </section>
-
+  <!-- Horizontal, scrollable “Newest posts” row -->
+  <section class="container">
     <h2 class="list-heading">Newest posts</h2>
-    <section id="post-list" class="post-list"></section>
-  </main>
+  </section>
+  <section id="post-row" class="post-row container" aria-label="Newest posts"></section>
 
-  <footer class="site-footer">
+  <!-- Footer -->
+  <footer class="site-footer container">
     <p>May the light be with you.</p>
     <small>© <span id="y"></span> Thoughts In Silico</small>
   </footer>
@@ -58,30 +57,27 @@
     // Footer year
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Render post list
+    // Render posts as horizontal cards
     async function renderHome() {
-      const list = document.getElementById('post-list');
+      const row = document.getElementById('post-row');
       try {
         const res = await fetch('posts/posts.json');
         const posts = await res.json();
-
         posts.sort((a,b) => new Date(b.date) - new Date(a.date));
         const fmt = d => new Date(d).toLocaleString(undefined, { month:'long', year:'numeric' });
 
-        list.innerHTML = posts.map(p => `
-          <article class="post-card">
-            <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
-            <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
-            <p class="meta-line">
-              ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
-            </p>
+        row.innerHTML = posts.map(p => `
+          <article class="post-card" tabindex="0">
+            <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
+            <time class="post-time" datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
+            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
           </article>
         `).join('');
 
         if (window.MathJax?.typeset) MathJax.typeset();
       } catch (e) {
         console.error(e);
-        list.innerHTML = '<p class="muted">Could not load posts.</p>';
+        row.innerHTML = '<p class="muted">Could not load posts.</p>';
       }
     }
     renderHome();
