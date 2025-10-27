@@ -4,74 +4,69 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Thoughts In Silico</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="css/style.css" />
-  <meta property="og:title" content="Thoughts In Silico" />
-  <meta property="og:description" content="" />
-  <meta property="og:image" content="img/social.jpg" /><!-- provide your own file if you want -->
   <meta name="theme-color" content="#030536" />
 </head>
 
-
-  
-
-<script>
-async function renderHome() {
-  const list = document.getElementById('post-list');
-  const res = await fetch('/posts/posts.json');
-  const posts = await res.json();
-
-  // newest first by ISO date
-  posts.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-  const fmt = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
-
-  list.innerHTML = posts.map(p => `
-    <article class="post-card">
-      <h2><a href="${p.url}">${p.title}</a></h2>
-      <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
-      <p style="margin:.25rem 0 0;color:var(--muted);font-size:.9em;">${p.category}${p.subcategory ? ' • '+p.subcategory : ''}</p>
-    </article>
-  `).join('');
-}
-renderHome();
-</script>
-
-
-  
-
-  
 <body>
-
+  <!-- (1) HEADER -->
   <header class="site-header">
     <a class="site-title" href="/">Thoughts In Silico</a>
 
     <nav class="site-nav" aria-label="Primary">
       <a href="/">Home</a>
-      <a href="about.html">About</a>
+
+      <div class="nav-dropdown">
+        <a href="/categories.html?cat=Fiction">Fiction ▾</a>
+        <div class="nav-submenu">
+          <a href="/categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
+          <a href="/categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+        </div>
+      </div>
+
+      <a href="/categories.html?cat=Book%20Reviews">Book Reviews</a>
+      <a href="/categories.html?cat=Mathematics">Mathematics</a>
     </nav>
   </header>
 
   <main class="container">
     <section class="hero">
-      <p>Hi, it's Reza. Math enthusiast. Technophile and posthumanist. Philosophy reader. This is a quiet place to share my thoughts to those who listen.</p>
+      <p>Hi, it's Reza. Math enthusiast. Technophile and posthumanist. Philosophy reader.</p>
     </section>
 
-  <section id="post-list" class="post-list"></section>
-
+    <!-- (2) HOME FEED HOOK -->
+    <section id="post-list" class="post-list"></section>
   </main>
-    <footer class="site-footer">
+
+  <footer class="site-footer">
     <p>May the light be with you.</p>
     <small>© <span id="y"></span> Thoughts In Silico</small>
   </footer>
 
-
+  <!-- (3) SCRIPTS -->
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    async function renderHome() {
+      const list = document.getElementById('post-list');
+      const res = await fetch('/posts/posts.json');
+      const posts = await res.json();
+
+      // newest first
+      posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+      const fmt = d => new Date(d).toLocaleString(undefined,{month:'long', year:'numeric'});
+
+      list.innerHTML = posts.map(p => `
+        <article class="post-card">
+          <h2><a href="${p.url}">${p.title}</a></h2>
+          <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
+          <p style="margin:.25rem 0 0;color:var(--muted);font-size:.9em;">
+            ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
+          </p>
+        </article>
+      `).join('');
+    }
+    renderHome();
   </script>
 </body>
 </html>
