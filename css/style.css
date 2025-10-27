@@ -295,6 +295,55 @@ article.post-card{display:block}
   border-radius: 0 !important;
 }
 
+/* === Sleeker header polish (no HTML edits) === */
+
+/* Tighter vertical rhythm for the 3 header rows */
+.site-header{ row-gap:.30rem !important; }
+
+/* Title: slightly smaller + tighter tracking, still one line */
+.site-title{
+  font-size: clamp(1.6rem, 3.6vw, 2.2rem) !important;
+  letter-spacing: .003em !important;
+}
+
+/* Blurb: lighter color/weight so it doesn’t fight the title; one line */
+.site-header::after{
+  color: var(--muted) !important;
+  font-weight: 400 !important;
+  font-size: clamp(.95rem, 1.8vw, 1.05rem) !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+}
+
+/* Menu row: smaller paddings and tighter spacing */
+.site-nav{
+  gap: .15rem .40rem !important;
+  align-items: center !important;
+}
+.site-nav a{
+  padding: .40rem .55rem !important;
+}
+
+/* “About” — understated box: thin border, no fill until hover */
+.site-nav a[href$="about.html"]{
+  font-family: "Zen Tokyo Zoo", var(--font) !important;
+  font-size: 1.05rem !important;          /* just a touch bigger */
+  padding: .32rem .62rem !important;
+  border: 1px solid rgba(185,205,255,.28) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
+.site-nav a[href$="about.html"]:hover{
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(185,205,255,.42) !important;
+}
+
+/* Kill any old decorative lines that made it feel busy */
+.site-nav a[href$="about.html"]::before,
+.site-nav a[href$="about.html"]::after{ content:none !important; }
+
+
 /* If an older rule added decorative lines around About, kill them */
 .site-nav a[href$="about.html"]::before,
 .site-nav a[href$="about.html"]::after{ content:none !important; }
