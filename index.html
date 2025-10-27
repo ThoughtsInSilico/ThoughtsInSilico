@@ -4,12 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Thoughts In Silico</title>
-  <link rel="stylesheet" href="css/style.css?v=4" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
   <meta name="theme-color" content="#000000" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- MathJax in case any titles use math -->
+  <!-- MathJax (if titles contain math) -->
   <script>
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
   </script>
@@ -36,18 +34,24 @@
     </nav>
   </header>
 
-  <!-- Hero intro that floats over the moving background -->
+  <!-- TOP BANNER: upper half, picture scrolls inside, fades to blue -->
+  <section class="banner" aria-label="Site banner">
+    <div class="banner__scroller" aria-label="Scrollable banner image">
+      <img src="img/banner.jpg" alt="Site banner image">
+    </div>
+  </section>
+
+  <!-- Intro (no box) -->
   <section class="intro container">
     <p>Hi, it's Reza. A quiet place to share my thoughts with those who listen.</p>
   </section>
 
-  <!-- Horizontal, scrollable “Newest posts” row -->
+  <!-- Horizontal posts -->
   <section class="container">
     <h2 class="list-heading">Newest posts</h2>
   </section>
   <section id="post-row" class="post-row container" aria-label="Newest posts"></section>
 
-  <!-- Footer -->
   <footer class="site-footer container">
     <p>May the light be with you.</p>
     <small>© <span id="y"></span> Thoughts In Silico</small>
