@@ -46,31 +46,36 @@
   </footer>
 
   <!-- (3) SCRIPTS -->
- <script>
-  async function renderHome() {
-    const list = document.getElementById('post-list');
-    if (!list) return;
-  
-    const res   = await fetch('/posts/posts.json', { cache: 'no-store' });
-    const posts = await res.json();
-  
-    // newest first
-    posts.sort((a,b) => new Date(b.date) - new Date(a.date));
-  
-    const fmt = d => new Date(d).toLocaleString(undefined, { month:'long', year:'numeric' });
-  
-    list.innerHTML = posts.map(p => `
-      <article class="post-card">
-        <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
-        <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
-        <p style="margin:.25rem 0 0;color:var(--muted);font-size:.9em;">
-          ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
-        </p>
-      </article>
-    `).join('');
-  }
-  renderHome();
-</script>
+  <script>
+    async function renderHome() {
+      const list = document.getElementById('post-list');
+      if (!list) return;
+    
+      try {
+        // relative path, no leading slash
+        const res = await fetch('posts/posts.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('posts.json not found');
+        const posts = await res.json();
+    
+        posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+        const fmt = d => new Date(d).toLocaleString(undefined, { month:'long', year:'numeric' });
+    
+        list.innerHTML = posts.map(p => `
+          <article class="post-card">
+            <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
+            <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
+            <p style="margin:.25rem 0 0;color:var(--muted);font-size:.9em;">
+              ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
+            </p>
+          </article>
+        `).join('');
+      } catch (err) {
+        list.innerHTML = `<p style="color:var(--muted)">Couldn’t load posts. (${err.message})</p>`;
+        console.error(err);
+      }
+    }
+    renderHome();
+   </script>
 
 
 
