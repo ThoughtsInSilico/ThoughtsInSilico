@@ -251,3 +251,65 @@ html, body { height: 100%; }
 body{ min-height: 100dvh; display:flex; flex-direction:column; }
 .page-main, .posts-wrap{ flex: 1; }
 
+
+
+/* === Full-size, uncropped hero image that determines page height === */
+
+/* Stop using the fixed background */
+body::before, body::after { content: none !important; }
+
+/* The hero image sits in normal flow and sets its own height */
+.full-hero{
+  position: relative;
+  margin: 0;           /* no gaps above the image */
+  line-height: 0;      /* avoid extra space under images */
+}
+.full-hero img{
+  display: block;
+  width: 100%;
+  height: auto;        /* <-- keeps original aspect ratio, no cropping */
+}
+
+/* Soft taper at the bottom so cards read clearly */
+.full-hero::after{
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: min(22vh, 260px);
+  background: linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,.35) 55%,
+    rgba(0,0,0,.70) 80%,
+    #000 100%
+  );
+  pointer-events: none;
+}
+
+/* Posts hover over the bottom of the image */
+.posts-wrap{
+  position: relative;
+  margin-top: clamp(-14vh, -12vw, -120px);  /* slight overlap; adjust to taste */
+  padding-top: 1rem;
+}
+
+/* Make the background around everything else a bit darker */
+:root{
+  --panel: rgba(10,12,22,.24);
+  --border: rgba(185,205,255,.12);
+}
+.post-card{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(2px) saturate(110%);
+  box-shadow: 0 10px 32px rgba(0,0,0,.45);
+}
+.post-card:hover, .post-card:focus-within{
+  transform: translateY(-2px);
+  border-color: rgba(158,193,255,.30);
+  box-shadow: 0 16px 48px rgba(0,0,0,.6);
+}
+
+/* Keep footer pushed to bottom on short pages */
+html, body { height: 100%; }
+body{ min-height: 100dvh; display:flex; flex-direction:column; }
+.posts-wrap { flex: 1; }
+
