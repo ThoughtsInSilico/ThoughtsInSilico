@@ -10,7 +10,55 @@
   };
 </script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<style>
+  /* Tidy reading: justified paragraphs with soft hyphenation */
+  .post-body{ font-size:1.02rem }
+  .post-body p{
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    margin: .85rem 0;
+    text-indent: 1.1em;
+  }
+  .post-body p:first-of-type,
+  .post-body h2 + p { text-indent: 0; }
+
+  /* Responsive image figures */
+  .figure {
+    margin: .75rem auto 1.1rem;
+    width: min(100%, 820px);         /* never wider than post column */
+  }
+  .figure img{
+    display:block;
+    width: 100%;
+    height: auto;
+    max-height: 520px;               /* prevents “too big” images */
+    object-fit: contain;             /* never crop */
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,.25);
+  }
+  .figure--row{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+  }
+  @media (min-width: 820px){
+    .figure--row{ grid-template-columns: 1fr 1fr; }
+  }
+  .caption{
+    margin: .4rem 0 0;
+    color: var(--muted);
+    font-size: .92rem;
+    text-align: left;
+    text-indent: 0;
+  }
+</style>
 </head>
+
+
+  
 <body>
 <header class="site-header container">
   <a class="site-title" href="../index.html">Thoughts In Silico</a>
