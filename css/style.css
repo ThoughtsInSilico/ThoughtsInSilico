@@ -69,9 +69,6 @@ body, h1, h2, h3, h4, h5, h6,
   margin-inline: auto;
 }
 
-
-
-
 /* ========== HEADER & NAV ========== */
 .site-header, .site-footer{
   width: min(100% - 2rem, var(--max-width));
@@ -84,7 +81,6 @@ body, h1, h2, h3, h4, h5, h6,
 
 .site-header{ position: relative; z-index: 40; }  /* header above content only when needed */
 .post-list, .post-card{ position: relative; z-index: 1; }  /* clickable */
-
 
 .site-title{
   text-decoration: none;
@@ -145,10 +141,6 @@ body, h1, h2, h3, h4, h5, h6,
 /* show on hover */
 .nav-dropdown:hover .nav-submenu--row{ display: flex; }
 
-
-
-
-
 /* ========== HERO (optional) ========== */
 .hero{
   margin: calc(var(--space) * 4) 0 calc(var(--space) * 2);
@@ -159,8 +151,13 @@ body, h1, h2, h3, h4, h5, h6,
 }
 .hero p{ color: var(--muted); margin: 0; }
 
-
-
+/* ========== LIST HEADING (Home: "Newest posts") ========== */
+.list-heading{
+  margin: 0 0 .75rem 0;
+  font-size: clamp(1.1rem, 3.2vw, 1.35rem);
+  color: var(--muted);
+  letter-spacing: .02em;
+}
 
 /* ========== POSTS LIST ========== */
 .post-list{
