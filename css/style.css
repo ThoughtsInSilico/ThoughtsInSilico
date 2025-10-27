@@ -160,3 +160,32 @@ a:visited{ color:var(--accent) }
   margin:1.25rem 0; padding:.7rem .95rem;
   background: var(--panel); border:1px solid var(--border);
 }
+
+
+/* === Normalize internal pages to match the home header/footer === */
+
+/* Make the whole page a column so the footer drops to the bottom on short pages */
+html, body { height: 100%; }
+body{ min-height: 100dvh; display: flex; flex-direction: column; }
+.page-main{ flex: 1; }
+
+/* Ensure headers are centered exactly like the home page,
+   even if a page forgot the .container class */
+.site-header{
+  width: min(100% - 2rem, var(--maxw));
+  margin: calc(var(--space) * 1.4) auto var(--space);
+}
+
+/* Extra safety: if a page still lacks .container on the header, add a tiny gutter */
+.site-header:not(.container){ padding-inline: 0; }
+
+/* Keep the dropdown panel comfortable on all pages */
+.site-nav a{ font-size: 1.05rem; padding: .6rem .75rem; }
+.nav-submenu--row{
+  min-width: 16rem; padding: .6rem; gap: .35rem;
+  background: rgba(10,12,22,.75);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(2px);
+}
+.nav-submenu--row a{ display:block; padding:.5rem .6rem; font-size:1rem; }
+.nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column; }
