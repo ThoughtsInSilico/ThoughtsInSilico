@@ -82,6 +82,10 @@ body, h1, h2, h3, h4, h5, h6,
   justify-content: space-between;
 }
 
+.site-header{ position: relative; z-index: 40; }  /* header above content only when needed */
+.post-list, .post-card{ position: relative; z-index: 1; }  /* clickable */
+
+
 .site-title{
   text-decoration: none;
   color: var(--text);
