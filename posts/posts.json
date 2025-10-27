@@ -1,17 +1,17 @@
 [
   {
-    "title": "Book Reviews: After Finitude and Time's Arrow and Archimedes' Point",
-    "titleHtml": "Book Reviews: <em>After Finitude</em> and <em>Time's Arrow and Archimedes' Point</em>",
-    "url": "posts/book-reviews-after-finitude-times-arrow.html",
-    "date": "2025-10-01",
-    "category": "Book Reviews",
-    "subcategory": null
+    "title": "Pseudo-Poems",
+    "url": "posts/pseudo-poems.html",
+    "date": "2025-07-01",
+    "category": "Fiction",
+    "subcategory": "Poetry"
   },
   {
-    "title": "My 12-Year Journey With the Math Olympiads",
-    "url": "posts/math-olympiads-12-years.html",
-    "date": "2025-09-01",
-    "category": "Mathematics"
+    "title": "Oracle of Orr",
+    "url": "posts/oracle-of-orr.html",
+    "date": "2025-07-01",
+    "category": "Fiction",
+    "subcategory": "Short Stories"
   },
   {
     "title": "The Case for the Profinite Fundamental Group π̂₁",
@@ -21,20 +21,9 @@
     "category": "Mathematics"
   },
   {
-  "title": "Oracle of Orr",
-  "url": "posts/oracle-of-orr.html",
-  "date": "2025-07-01",
-  "category": "Fiction",
-  "subcategory": "Short Stories"
-  },
-  {
-  {
-  "title": "Pseudo-Poems",
-  "url": "posts/pseudo-poems.html",
-  "date": "2025-07-01",
-  "category": "Fiction",
-  "subcategory": "Poetry"
-  }
-
+    "title": "Book Reviews: After Finitude and Time's Arrow and Archimedes' Point",
+    "url": "posts/book-reviews-after-finitude-times-arrow.html",
+    "date": "2025-10-01",
+    "category": "Book Reviews"
   }
 ]
