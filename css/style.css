@@ -192,3 +192,27 @@ article.post-card{ display:block }
 /* Typewriter effect (titles) */
 .typer{ border-right: 2px solid rgba(255,255,255,.85); white-space:normal; overflow:visible }
 .caret-done{ border-right-color: transparent }
+
+
+/* === Global image sizing for posts (paste at end of style.css) === */
+.post-body img,
+.figure img {
+  display: block;
+  max-width: 680px;     /* ← shrink overall width cap */
+  width: 100%;          /* responsive: fill container up to the cap */
+  height: auto;
+  max-height: 420px;    /* ← shrink height cap */
+  object-fit: contain;  /* never crop */
+  margin: 0 auto;       /* centered */
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,.25);
+}
+
+/* when two images are side-by-side in a row, keep them small too */
+.figure--row {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 820px){
+  .figure--row { grid-template-columns: 1fr 1fr; }
+  .figure--row img { max-width: 100%; max-height: 360px; }
+}
