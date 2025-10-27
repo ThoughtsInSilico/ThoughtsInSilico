@@ -1,22 +1,23 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Browse — Thoughts In Silico</title>
-  <link rel="stylesheet" href="css/style.css"/>
-  <meta name="theme-color" content="#030536"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Categories • Thoughts In Silico</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="theme-color" content="#000000" />
   <script>
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
 <body>
   <header class="site-header container">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
-
     <nav class="site-nav" aria-label="Primary">
-      <a href="index.html">Home</a>
+      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
+
       <div class="nav-dropdown">
         <a href="categories.html?cat=Fiction">Fiction ▾</a>
         <div class="nav-submenu nav-submenu--row">
@@ -24,66 +25,54 @@
           <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
         </div>
       </div>
-      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
+
       <a href="categories.html?cat=Mathematics">Mathematics</a>
+      <a href="categories.html?cat=Technology">Technology</a>
+      <a href="categories.html?cat=Music">Music</a>
+      <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
     </nav>
   </header>
 
-  <main class="container page-main">
-    <section class="hero">
-      <h1 id="catHeading">Category</h1>
-    </section>
-  
-    <section id="post-list" class="post-list"></section>
+  <main class="container posts-wrap">
+    <h1 id="cat-title">Posts</h1>
+    <div id="posts-grid" class="posts-grid"></div>
   </main>
 
-
   <footer class="site-footer container">
-    <small>© <span id="y"></span> Thoughts In Silico</small>
+    <p><small>© 2025 Thoughts In Silico.</small></p>
   </footer>
-  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
-
 
   <script>
-    async function renderCategory() {
-      const params = new URLSearchParams(location.search);
-      const cat = params.get('cat');
-      const sub = params.get('sub');
-  
-      const heading = document.getElementById('catHeading');
-      heading.textContent = sub ? `${cat} / ${sub}` : (cat || 'All posts');
-      document.title = `${heading.textContent} — Thoughts In Silico`;
-  
-      const list = document.getElementById('post-list');
-  
-      try {
+    function getParams(){
+      const u = new URL(location.href);
+      return Object.fromEntries(u.searchParams.entries());
+    }
+    function titleCase(s){ return s ? s.replace(/%20/g,' ').replace(/\+/g,' ').replace(/\s+/g,' ').trim() : ''; }
+    async function renderCategory(){
+      const {cat, sub} = getParams();
+      const title = document.getElementById('cat-title');
+      const grid = document.getElementById('posts-grid');
+      const catText = titleCase(cat)||'All';
+      const subText = titleCase(sub)||'';
+      title.textContent = subText ? `${catText} • ${subText}` : catText;
+      try{
         const res = await fetch('posts/posts.json');
-        let posts = await res.json();
-  
-        if (cat) posts = posts.filter(p => p.category === cat);
-        if (sub) posts = posts.filter(p => p.subcategory === sub);
-  
-        posts.sort((a,b) => new Date(b.date) - new Date(a.date));
-        const fmt = d => new Date(d).toLocaleString(undefined, { month: 'long', year: 'numeric' });
-  
-        list.innerHTML = posts.map(p => `
+        const posts = await res.json();
+        const filtered = posts.filter(p => (!cat || p.category===catText) && (!sub || p.subcategory===subText));
+        grid.innerHTML = filtered.map(p => `
           <article class="post-card">
-            <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
-            <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
+            <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
+            <time class="post-time" datetime="${p.date}">${new Date(p.date).toLocaleString(undefined,{month:'short', year:'numeric'})}</time>
+            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
           </article>
-        `).join('') || `<p style="color:var(--muted)">No posts yet.</p>`;
-  
-        // Typeset LaTeX in titles when using titleHtml
-        if (window.MathJax && MathJax.typeset) MathJax.typeset();
-      } catch (e) {
+        `).join('') || '<p class="muted">No posts yet.</p>';
+        if (window.MathJax?.typeset) MathJax.typeset();
+      }catch(e){
         console.error(e);
-        list.innerHTML = '<p style="color:var(--muted)">Could not load posts.</p>';
+        grid.innerHTML = '<p class="muted">Could not load posts.</p>';
       }
     }
     renderCategory();
   </script>
-
-
-
 </body>
 </html>
