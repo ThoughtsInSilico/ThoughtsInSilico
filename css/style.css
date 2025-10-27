@@ -1,16 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
 
+/* ========== THEME VARS ========== */
 :root{
-  /* SOLID BACKGROUND (no gradient/image) */
+  /* Background */
   --bg-mode: color;
-  --bg-color: #030536;         /* page background */
+  --bg-color: #030536;        /* page background */
   --bg-gradient: none;
   --bg-image-url: none;
 
   /* Colors */
-  --text: #e8eaf6;             /* main text */
-  --muted: #aab1d1;            /* secondary text */
-  --accent: #8ad1ff;           /* links, accents */
+  --text: #e8eaf6;
+  --muted: #aab1d1;
+  --accent: #8ad1ff;
   --card: rgba(255,255,255,0.04);
   --card-border: rgba(255,255,255,0.10);
 
@@ -24,60 +25,28 @@
   --space: 1rem;
   --radius: 16px;
 
-  /* Link hover */
+  /* Links */
   --link: var(--accent);
   --link-hover: #ffffff;
 
-  /* Shadow mood */
+  /* Shadow */
   --shadow: 0 8px 40px rgba(0,0,0,0.35);
-}
-/* Force the chosen font everywhere */
-body, h1, h2, h3, h4, h5, h6,
-.site-title, .site-nav a, .post-card, .post-body {
-  font-family: var(--font-sans);
+
+  /* Content rhythm */
+  --section-gap: 2.25rem;
 }
 
-
-
-/* --- Section spacing inside posts --- */
-:root{
-  --section-gap: 2.25rem;   /* adjust to taste */
-}
-
-.post-body h2:not(:first-child){
-  margin-top: var(--section-gap);
-  margin-bottom: .75rem;
-}
-
-.post-body h3:not(:first-child){
-  margin-top: calc(var(--section-gap) - .5rem);
-  margin-bottom: .5rem;
-}
-
-/* Nice spacing around other blocks */
-.post-body blockquote,
-.post-body ul,
-.post-body ol,
-.post-body hr{
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.post-body hr{
-  border: 0;
-  border-top: 1px solid var(--card-border);
-}
-
-
-
-/* ===== PAGE BACKGROUND (solid) ===== */
+/* ========== GLOBAL ========== */
 html, body { height: 100%; }
+* { box-sizing: border-box; }
+
 body{
   margin: 0;
   color: var(--text);
   font: 400 var(--font-size)/var(--leading) var(--font-sans);
   background: var(--bg-color);
 }
+
 body::before{
   content: "";
   position: fixed;
@@ -85,16 +54,22 @@ body::before{
   z-index: -1;
   background: var(--bg-color);
   background-image: none !important;
-  opacity: 1;           /* set < 1 for a faint veil */
-  filter: none;
+  opacity: 1;
 }
 
-/* ===== LAYOUT ===== */
+/* Force the chosen font everywhere */
+body, h1, h2, h3, h4, h5, h6,
+.site-title, .site-nav a, .post-card, .post-body {
+  font-family: var(--font-sans);
+}
+
+/* Utility containers */
 .container{
   width: min(100% - 2rem, var(--max-width));
   margin-inline: auto;
 }
 
+/* ========== HEADER & NAV ========== */
 .site-header, .site-footer{
   width: min(100% - 2rem, var(--max-width));
   margin: calc(var(--space) * 2) auto;
@@ -104,14 +79,12 @@ body::before{
   justify-content: space-between;
 }
 
-/* ===== HEADER ===== */
 .site-title{
   text-decoration: none;
   color: var(--text);
   font-weight: 700;
   letter-spacing: 0.02em;
   font-size: clamp(1rem, 2.5vw, 1.25rem);
-  text-transform: none;
   padding: .5rem .75rem;
   border-radius: 999px;
   background: rgba(255,255,255,0.04);
@@ -132,7 +105,34 @@ body::before{
   background: var(--card);
 }
 
-/* ===== HERO (optional) ===== */
+/* === Dropdown nav === */
+.nav-dropdown { position: relative; display: inline-block; }
+.nav-dropdown > a { display: inline-block; }
+
+.nav-submenu{
+  display: none;
+  position: absolute;
+  top: 100%; left: 0;
+  min-width: 180px;
+  padding: .35rem;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(2px);
+  z-index: 20; /* keep above cards */
+}
+.nav-submenu a{
+  display: block;
+  padding: .45rem .6rem;
+  border-radius: 8px;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-submenu a:hover{ background: rgba(255,255,255,0.06); }
+.nav-dropdown:hover .nav-submenu{ display: block; }
+
+/* ========== HERO (optional) ========== */
 .hero{
   margin: calc(var(--space) * 4) 0 calc(var(--space) * 2);
 }
@@ -142,7 +142,7 @@ body::before{
 }
 .hero p{ color: var(--muted); margin: 0; }
 
-/* ===== POSTS LIST ===== */
+/* ========== POSTS LIST ========== */
 .post-list{
   display: grid;
   gap: calc(var(--space) * 1.25);
@@ -174,7 +174,68 @@ body::before{
   font-size: .9em;
 }
 
-/* ===== BASIC ELEMENTS ===== */
+/* ========== POST BODY (content) ========== */
+.post-body h2:not(:first-child){
+  margin-top: var(--section-gap);
+  margin-bottom: .75rem;
+}
+.post-body h3:not(:first-child){
+  margin-top: calc(var(--section-gap) - .5rem);
+  margin-bottom: .5rem;
+}
+.post-body p { margin: .75rem 0; }
+
+/* Lists & rules rhythm */
+.post-body blockquote,
+.post-body ul,
+.post-body ol,
+.post-body hr{
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.post-body ul, .post-body ol { padding-left: 1.25rem; }
+.post-body hr{
+  border: 0;
+  border-top: 1px solid var(--card-border);
+}
+
+/* Blockquote styling */
+.post-body blockquote{
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--card-border);
+  font-style: italic;
+}
+.post-body blockquote p{ margin: 0 0 .75rem 0; }
+.post-body blockquote::before,
+.post-body blockquote::after{
+  position: relative;
+  font-style: normal;
+  font-size: 2.1em;
+  line-height: 0;
+  opacity: .35;
+  color: inherit;
+}
+.post-body blockquote::before{ content: "“"; left: -.55ch; top: .25rem; }
+.post-body blockquote::after { content: "”"; right: 0;     top: .8rem;  }
+.post-body blockquote footer{
+  font-style: normal;
+  color: var(--muted);
+  font-size: .95em;
+}
+.post-body blockquote footer cite{ font-style: normal; }
+.post-body blockquote footer a{ color: var(--link); text-decoration: none; }
+.post-body blockquote footer a:hover{ text-decoration: underline; }
+
+/* ========== BASICS ========== */
 a{ color: var(--link); }
 a:hover{ color: var(--link-hover); }
-img{ max-width: 100%; height
+
+img{ max-width: 100%; height: auto; display: block; }
+
+/* ========== FOOTER ========== */
+.site-footer p{
+  margin: 0 0 .25rem 0;
+  color: var(--muted);
+}
+.site-footer small{ color: var(--muted); }
