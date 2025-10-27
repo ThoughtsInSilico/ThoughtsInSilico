@@ -1,23 +1,17 @@
-/* === Iceberg + big transparent banner + 3-post grid hovering over fade === */
+/* === Base fonts === */
 @import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Zen+Tokyo+Zoo&display=swap');
 
-/* Tokens */
 :root{
-  --bg:#000;                          /* true black base */
-  --glass: rgba(8,10,18,.24);         /* translucent */
-  --panel: rgba(10,12,22,.30);        /* post cards transparency */
-  --border: rgba(185,205,255,.16);    /* cool, subtle border */
-  --text:#e8ecf7;
+  --bg: #0a0d1a;
+  --panel: rgba(12,14,24,.20);
+  --border: rgba(185,205,255,.14);
+  --text: #e8ecf7;
   --muted:#a3a9ba;
   --accent:#9ec1ff;
 
-  --font:"Iceberg", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-
+  --font: "Iceberg", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --maxw: 1040px;
-  --base: 16px;
-  --leading: 1.65;
-
   --space: 1.25rem;
 }
 
@@ -25,15 +19,16 @@
 html{ -webkit-text-size-adjust:100%; text-size-adjust:100% }
 body{
   margin:0; color:var(--text);
-  background: var(--bg);
-  font: 400 var(--base)/var(--leading) var(--font);
+  background: var(--bg);                  /* no banner image anymore */
+  font: 400 16px/1.65 var(--font);
   letter-spacing:.01em;
 }
+
+/* Layout helpers */
 .container{ width:min(100% - 2rem, var(--maxw)); margin-inline:auto }
+.muted{ color:var(--muted) }
 a{ color:var(--accent); text-decoration:none }
 a:hover{ text-decoration:underline }
-a:visited{ color:var(--accent) }
-.muted{ color:var(--muted) }
 
 /* Header / nav */
 .site-header{
@@ -41,11 +36,14 @@ a:visited{ color:var(--accent) }
   margin: calc(var(--space)*1.4) auto var(--space);
 }
 .site-title{
-  color:#fff; text-decoration:none; font-weight:700;
-  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-family: "Zen Tokyo Zoo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important;
+  font-weight: 400;
+  color:#fff; text-decoration:none;
+  font-size: clamp(1.9rem, 5vw, 3.4rem);
   letter-spacing:.015em;
   text-shadow: 0 1px 2px rgba(0,0,0,.45);
 }
+.site-title:visited{ color:#fff }
 .site-nav a{
   color:var(--muted); padding:.6rem .75rem; border:1px solid transparent;
 }
@@ -53,262 +51,93 @@ a:visited{ color:var(--accent) }
 .nav-dropdown{ position:relative; display:inline-block }
 .nav-submenu--row{
   display:none; position:absolute; top:100%; left:0; z-index:10;
-  min-width: 12rem; background: rgba(8,10,18,.9);
-  border: 1px solid var(--border); border-radius:.5rem;
-  padding:.4rem;
+  min-width: 12rem; background: rgba(8,10,18,.95);
+  border: 1px solid var(--border); border-radius:.5rem; padding:.4rem;
   box-shadow: 0 16px 40px rgba(0,0,0,.6);
 }
 .nav-submenu--row a{ display:block; padding:.5rem .6rem; font-size:1rem }
 .nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column }
 
-/* Intro (single line under the title) */
+/* Intro line on home */
 .site-intro{ margin: 0 auto .75rem }
-.site-intro p{
-  margin:0; max-width: 60ch; color:var(--text);
-  text-shadow: 0 1px 2px rgba(0,0,0,.35);
-}
+.site-intro p{ margin:0; max-width: 60ch; color:var(--text); text-shadow: 0 1px 2px rgba(0,0,0,.35) }
 
-/* Big transparent banner that scrolls with page */
-.hero-banner{
-  position: relative;
-  height: 82vh;               /* fills almost whole page */
-  overflow: hidden;
-  border-bottom: 1px solid var(--border);
-}
-.hero-media{
-  position: absolute; inset: 0;
-  background-image: url("../img/banner.jpg");
-  background-size: cover;       /* minimal crop while filling width */
-  background-position: center top;
-  background-repeat: no-repeat;
-  opacity: .86;                 /* slightly more opaque background */
-  filter: brightness(.88) contrast(.92) saturate(.9); /* lower contrast */
-}
-/* Subtle dark overlay (top) */
-.hero-banner::before{
-  content:""; position:absolute; inset:0;
-  background: linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 45%);
-  pointer-events:none;
-}
-
-/* Grid of posts (home & category) */
-.posts-wrap{ margin-top: clamp(1rem, 2vw, 1.5rem) }
+/* Posts list (home & categories) */
 .list-heading{ color:var(--muted); margin:0 0 .6rem; letter-spacing:.02em }
-
 .posts-grid{
-  display:grid; gap: .9rem;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  display:grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* wider cards */
 }
-
 .post-card{
   background: var(--panel);
   border: 1px solid var(--border);
-  padding: .9rem;
+  padding: 1rem;
   border-radius: .75rem;
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
   text-decoration: none;
-  display:block;
 }
 .post-card:hover, .post-card:focus-within{
   transform: translateY(-2px);
-  border-color: rgba(158,193,255,.35);
-  box-shadow: 0 16px 48px rgba(0,0,0,.6);
+  border-color: rgba(158,193,255,.30);
+  box-shadow: 0 16px 48px rgba(0,0,0,.55);
 }
-.list-heading{ color:var(--muted); margin:0 0 .6rem; letter-spacing:.02em }
-.post-title{ margin:0 0 .35rem; font-weight:600; font-size:1.08rem }
+.post-title{ margin:0 0 .35rem; font-weight:600; font-size:1.08rem; line-height:1.2 }
 .post-title a{ color:var(--text) }
 .post-time{ color:var(--muted); font-size:.9em; display:block }
-.post-meta{ color:var(--muted); margin:.3rem 0 0; font-size:.9em }
+.post-meta{ color:var(--muted); margin:.35rem 0 0; font-size:.92em }
+.post-card *{ word-break: normal; overflow-wrap: anywhere; }  /* no one-word-per-line */
+
+/* Article pages */
+.page-main{ width:min(100% - 2rem, var(--maxw)); margin-inline:auto }
+article.post-card{ display:block } /* allow sidebar grid (below) */
+.post-body{ font-size:1.02rem }
+.post-body p{ margin:.9rem 0; text-indent: .8em; }
+.post-body p:first-of-type,.post-body h2 + p,.post-body h3 + p{ text-indent:0 }
+
+/* Blockquotes: big quotes & left line */
+.post-body blockquote{
+  margin:1.25rem 0; padding:.7rem .95rem 1rem 1rem;
+  background: rgba(12,14,24,.18); border:1px solid var(--border);
+  position:relative; border-left: 4px solid rgba(158,193,255,.35);
+}
+.post-body blockquote::before, .post-body blockquote::after{
+  position:absolute; font-size: 2.6rem; line-height:1;
+  color: rgba(158,193,255,.35);
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+.post-body blockquote::before{ content:"“"; left:-.35rem; top:-.6rem; }
+.post-body blockquote::after{ content:"”"; right:.35rem; bottom:-.9rem; }
+
+/* Similar reads sidebar */
+.similar-reads{
+  margin-top: 1.25rem; padding: .75rem;
+  background: var(--panel); border: 1px solid var(--border); border-radius: .5rem;
+}
+.similar-reads h2{ margin:0 0 .5rem 0; font-size:1.05rem; color:var(--muted) }
+#similar-list{ display:grid; gap:.5rem }
+.similar-card{
+  display:flex; flex-direction:column; gap:.1rem;
+  padding:.55rem .6rem; border:1px solid var(--border); border-radius:.45rem;
+  background: rgba(10,12,22,.22); text-decoration:none; color:var(--text);
+}
+.similar-card:hover{ border-color: rgba(158,193,255,.35) }
+.similar-card strong{ font-size:.98rem }
+.similar-card span{ color:var(--muted); font-size:.88rem }
+@media (min-width: 980px){
+  .post-card.post-layout{
+    display:grid; grid-template-columns: 1fr minmax(260px, 320px); gap: 1rem;
+  }
+  .post-card.post-layout > h1,
+  .post-card.post-layout > time,
+  .post-card.post-layout > .post-body{ grid-column: 1; }
+  .post-card.post-layout > .similar-reads{ grid-column: 2; align-self: start; position: sticky; top: 1rem; }
+}
 
 /* Footer */
 .site-footer{ margin: 1.25rem auto }
 .site-footer p{ margin:0 0 .25rem 0; color: var(--muted) }
 .site-footer small{ color: var(--muted) }
 
-/* Post content helpers (for article pages) */
-.post-body{ font-size:1.02rem }
-.post-body p{ margin:.9rem 0; text-indent:.8em }
-.post-body p:first-of-type,.post-body h2 + p,.post-body h3 + p{ text-indent:0 }
-.post-body blockquote{
-  margin:1.25rem 0; padding:.7rem .95rem;
-  background: var(--panel); border:1px solid var(--border);
-}
-
-
-/* === Normalize internal pages to match the home header/footer === */
-
-/* Make the whole page a column so the footer drops to the bottom on short pages */
-html, body { height: 100%; }
-body{ min-height: 100dvh; display:flex; flex-direction:column; }
-.posts-wrap { flex: 1; }
-
-/* 1) Use a dim, subtle fixed background like “about” pages */
-body{
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,.68),
-      rgba(0,0,0,.68)
-    ),
-    url("../img/banner.jpg");
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-}
-
-/* 2) If a hero-banner section still exists, hide it so the title sits on the bg */
-.hero-banner, .hero-media { display: none !important; }
-
-/* 3) Keep header/title exactly where it was (no boxes, no backgrounds) */
-.site-header{ margin: calc(var(--space)*1.4) auto var(--space); }
-.site-title{ color:#fff; text-shadow: 0 1px 2px rgba(0,0,0,.45); }
-
-/* 4) Posts hover transparently over the background (tune transparency here) */
-:root{
-  --panel: rgba(10,12,22,.22);     /* more transparent than before */
-  --border: rgba(185,205,255,.12); /* softer border */
-}
-
-/* Make sure nothing adds its own opaque background */
-.container, .site-intro, .posts-wrap, .site-footer { background: transparent; }
-
-/* Reset any previous “overlap the banner” offsets so spacing feels natural */
-.posts-wrap{ margin-top: 0; padding-top: 0; }
-
-/* Post cards: glassy hover without heavy shadows */
-.post-card{
-  background: var(--panel);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(2px) saturate(110%);
-  box-shadow: 0 10px 32px rgba(0,0,0,.45);
-}
-.post-card:hover, .post-card:focus-within{
-  transform: translateY(-2px);
-  border-color: rgba(158,193,255,.30);
-  box-shadow: 0 16px 48px rgba(0,0,0,.6);
-}
-
-/* 5) Keep the page structure sane (footer at bottom on short pages) */
-html, body { height: 100%; }
-body{ min-height: 100dvh; display:flex; flex-direction:column; }
-.posts-wrap{ flex: 1; }
-
-/* Title is always white, all states, all pages */
-.site-title,
-.site-title:link,
-.site-title:visited,
-.site-title:hover,
-.site-title:active{
-  color:#fff !important;
-  text-decoration:none;
-}
-
-/* Show the entire hero image; posts start AFTER it */
-body::before, body::after{ content:none !important; }  /* ensure no fixed bg */
-
-.full-hero{ margin:0; line-height:0; }    /* hero image controls its own height */
-.full-hero img{ display:block; width:100%; height:auto; } /* no cropping */
-
-/* Keep the soft taper on the bottom of the hero only */
-.full-hero::after{
-  content:"";
-  position:absolute; left:0; right:0; bottom:0;
-  height: 120px; pointer-events:none;
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,.75) 65%, rgba(0,0,0,1) 100%);
-}
-
-/* Reusable post-card style on internal pages */
-.page-main{ width:min(100% - 2rem, var(--maxw)); margin-inline:auto }
-.page-main .post-card{
-  background: var(--panel);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(2px) saturate(110%);
-  box-shadow: 0 10px 32px rgba(0,0,0,.45);
-}
-.post-card:hover, .post-card:focus-within{
-  transform: translateY(-2px);
-  border-color: rgba(158,193,255,.30);
-  box-shadow: 0 16px 48px rgba(0,0,0,.6);
-}
-
-/* 5) Keep the page structure sane (footer at bottom on short pages) */
-html, body { height: 100%; }
-body{ min-height: 100dvh; display:flex; flex-direction:column; }
-.posts-wrap{ flex: 1; }
-
-
-/* === User-requested customizations (Oct 2025) === */
-
-/* === Fonts: Zen Tokyo Zoo for site title only === */
-@import url('https://fonts.googleapis.com/css2?family=Zen+Tokyo+Zoo&display=swap');
-
-.site-title{
-  font-family: "Zen Tokyo Zoo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  font-weight: 400;
-}
-
-/* === Typewriter effect (site title & post titles) === */
-.typer {
-  border-right: 2px solid rgba(255,255,255,.8);
-  white-space: nowrap;
-  overflow: hidden;
-}
-.caret-done { border-right-color: transparent; }
-
-/* === Transparent post boxes on all pages (ensure) === */
-:root{
-  --panel: rgba(10,12,22,.22);
-  --border: rgba(185,205,255,.12);
-}
-
-/* === “Similar reads” sidebar === */
-.similar-reads{
-  margin-top: 1.25rem;
-  padding: .75rem;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: .5rem;
-}
-.similar-reads h2{
-  margin: 0 0 .5rem 0; font-size: 1.05rem; color: var(--muted);
-}
-#similar-list{ display:grid; gap:.5rem; }
-.similar-card{
-  display:flex; flex-direction:column; gap:.1rem;
-  padding:.55rem .6rem; border:1px solid var(--border); border-radius:.45rem;
-  background: rgba(10,12,22,.22); text-decoration:none; color:var(--text);
-}
-.similar-card:hover{ border-color: rgba(158,193,255,.35); }
-.similar-card strong{ font-size:.98rem; }
-.similar-card span{ color:var(--muted); font-size:.88rem; }
-@media (min-width: 980px){
-  .post-card{ display:grid; grid-template-columns: 1fr minmax(240px, 320px); gap: 1rem; }
-  .post-card > h1,
-  .post-card > time,
-  .post-card > .post-body{ grid-column: 1; }
-  .similar-reads{ grid-column: 2; align-self: start; position: sticky; top: 1rem; }
-}
-
-/* === Fancy blockquotes: big quotes + left vertical line === */
-.post-body blockquote{
-  position: relative;
-  border-left: 4px solid rgba(158,193,255,.35);
-  background: rgba(12,14,24,.18);
-  padding-left: 1rem;
-}
-.post-body blockquote::before,
-.post-body blockquote::after{
-  position:absolute;
-  font-size: 2.6rem;
-  line-height: 1;
-  color: rgba(158,193,255,.35);
-  font-family: Georgia, "Times New Roman", Times, serif;
-}
-.post-body blockquote::before{
-  content: "“";
-  left: -0.4rem; top: -0.6rem;
-}
-.post-body blockquote::after{
-  content: "”";
-  right: .35rem; bottom: -.9rem;
-}
+/* Typewriter effect for site title + post titles */
+.typer{ border-right: 2px solid rgba(255,255,255,.85); white-space:nowrap; overflow:hidden }
+.caret-done{ border-right-color: transparent }
