@@ -22,8 +22,11 @@
   .poem h2 { font-size: 1rem; letter-spacing: .02em; margin: .75rem 0 .25rem; text-transform: none; }
 </style>
 </head>
+
+
+  
 <body>
-<header class="site-header">
+<header class="site-header container">
   <a class="site-title" href="../index.html">Thoughts In Silico</a>
   <nav class="site-nav" aria-label="Primary">
     <a href="../index.html">Home</a>
@@ -39,7 +42,9 @@
   </nav>
 </header>
 
-<main class="container">
+  
+
+<main class="container page-main">
   <article class="post-card">
     <h1>Pseudo-Poems</h1>
     <time datetime="2025-05">May 2025</time>
@@ -78,7 +83,7 @@ When we’ll meet, behind monitors, we won’t speak. We will breathe each other
   </article>
 </main>
 
-<footer class="site-footer">
+<footer class="site-footer container">
   <small>© <span id="y"></span> Thoughts In Silico</small>
 </footer>
 <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
