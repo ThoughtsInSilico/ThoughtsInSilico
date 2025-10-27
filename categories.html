@@ -10,9 +10,9 @@
 <body>
   <header class="site-header">
     <a class="site-title" href="/">Thoughts In Silico</a>
+
     <nav class="site-nav" aria-label="Primary">
       <a href="/">Home</a>
-    
       <div class="nav-dropdown">
         <a href="/categories.html?cat=Fiction">Fiction ▾</a>
         <div class="nav-submenu nav-submenu--row">
@@ -20,11 +20,9 @@
           <a href="/categories.html?cat=Fiction&sub=Poetry">Poetry</a>
         </div>
       </div>
-    
       <a href="/categories.html?cat=Book%20Reviews">Book Reviews</a>
       <a href="/categories.html?cat=Mathematics">Mathematics</a>
     </nav>
-
   </header>
 
   <main class="container">
@@ -41,37 +39,32 @@
   <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
 
   <script>
-    async function renderCategory() {
-      const params = new URLSearchParams(location.search);
-      const cat = params.get('cat');
-      const sub = params.get('sub');
-    
-      const res = await fetch('/posts/posts.json');
-      let posts = await res.json();
-    
-      if (cat) posts = posts.filter(p => p.category === cat);
-      if (sub) posts = posts.filter(p => p.subcategory === sub);
-    
-      posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
-      const fmt  = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
-      const href = p => (p.url.startsWith('/') ? p.url : '/' + p.url);
-    
-      document.title = (sub ? `${sub} — ` : '') + (cat || 'Browse') + ' — Thoughts In Silico';
-      document.querySelector('.hero h1').textContent = sub ? `${cat} / ${sub}` : (cat || 'Browse');
-    
-      const list = document.getElementById('post-list');
-      list.innerHTML = posts.map(p => `
-        <article class="post-card">
-          <h2><a href="${href(p)}">${p.titleHtml || p.title}</a></h2>
-          <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
-        </article>
-      `).join('') || `<p style="color:var(--muted)">No posts yet.</p>`;
-    }
-    renderCategory();
-    </script>
+  async function renderCategory() {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('cat');        // e.g. "Book Reviews"
+    const sub = params.get('sub');        // optional
 
+    const res   = await fetch('/posts/posts.json', { cache: 'no-store' });
+    let posts   = await res.json();
 
+    if (cat) posts = posts.filter(p => p.category === cat);
+    if (sub) posts = posts.filter(p => p.subcategory === sub);
 
-  
+    posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+    const fmt = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
+
+    document.title = (sub ? `${sub} — ` : '') + (cat || 'Browse') + ' — Thoughts In Silico';
+    document.querySelector('.hero h1').textContent = sub ? `${cat} / ${sub}` : (cat || 'Browse');
+
+    const list = document.getElementById('post-list');
+    list.innerHTML = posts.map(p => `
+      <article class="post-card">
+        <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
+        <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
+      </article>
+    `).join('') || `<p style="color:var(--muted)">No posts yet.</p>`;
+  }
+  renderCategory();
+  </script>
 </body>
 </html>
