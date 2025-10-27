@@ -112,28 +112,6 @@ body, h1, h2, h3, h4, h5, h6,
 .nav-dropdown { position: relative; display: inline-block; }
 .nav-dropdown > a { display: inline-block; }
 
-.nav-submenu{
-  display: none;
-  position: absolute;
-  top: 100%; left: 0;
-  min-width: 180px;
-  padding: .35rem;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(2px);
-  z-index: 20; /* keep above cards */
-}
-.nav-submenu a{
-  display: block;
-  padding: .45rem .6rem;
-  border-radius: 8px;
-  color: var(--text);
-  text-decoration: none;
-}
-.nav-submenu a:hover{ background: rgba(255,255,255,0.06); }
-.nav-dropdown:hover .nav-submenu{ display: block; }
 /* Horizontal dropdown submenu for Fiction */
 .nav-submenu--row{
   display: none;                 /* hidden until hover */
@@ -148,7 +126,6 @@ body, h1, h2, h3, h4, h5, h6,
   z-index: 20;
 
   /* horizontal layout */
-  display: none;
   gap: .25rem;
   white-space: nowrap;
 }
