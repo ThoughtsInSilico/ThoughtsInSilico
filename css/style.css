@@ -313,3 +313,43 @@ html, body { height: 100%; }
 body{ min-height: 100dvh; display:flex; flex-direction:column; }
 .posts-wrap { flex: 1; }
 
+
+/* Title is always white, all states, all pages */
+.site-title,
+.site-title:link,
+.site-title:visited,
+.site-title:hover,
+.site-title:active{
+  color:#fff !important;
+  text-decoration:none;
+}
+
+
+
+/* Show the entire hero image; posts start AFTER it */
+body::before, body::after{ content:none !important; }  /* ensure no fixed bg */
+
+.full-hero{ margin:0; line-height:0; }    /* hero image controls its own height */
+.full-hero img{ display:block; width:100%; height:auto; } /* no cropping */
+
+/* Keep the soft taper on the bottom of the hero only */
+.full-hero::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:min(18vh,220px);
+  background:linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,.28) 55%,
+    rgba(0,0,0,.60) 85%,
+    #000 100%
+  );
+  pointer-events:none;
+}
+
+/* Posts no longer overlap the image — they start below it */
+.posts-wrap{
+  position:relative;
+  margin-top:0 !important;
+  padding-top:1.25rem;
+}
+
