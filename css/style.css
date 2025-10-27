@@ -19,7 +19,7 @@
 html{ -webkit-text-size-adjust:100%; text-size-adjust:100% }
 body{
   margin:0; color:var(--text);
-  background: var(--bg);                  /* no banner image anymore */
+  background: var(--bg);
   font: 400 16px/1.65 var(--font);
   letter-spacing:.01em;
 }
@@ -30,25 +30,51 @@ body{
 a{ color:var(--accent); text-decoration:none }
 a:hover{ text-decoration:underline }
 
-/* Header / nav */
+/* =========================
+   Header / nav (2-row nav)
+   ========================= */
 .site-header{
-  display:flex; align-items:center; justify-content:space-between;
-  margin: calc(var(--space)*1.4) auto var(--space);
+  display:block;
+  margin: calc(var(--space)*1.2) auto var(--space);
 }
+
+/* Title size fixed (smaller & tighter) */
 .site-title{
   font-family: "Zen Tokyo Zoo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important;
   font-weight: 400;
   color:#fff; text-decoration:none;
-  font-size: clamp(1.9rem, 5vw, 3.4rem);
-  letter-spacing:.015em;
+  font-size: clamp(1.6rem, 4.2vw, 2.8rem);  /* ↓ reduced */
+  line-height: 1.1;                        /* tighter */
+  letter-spacing:.01em;                    /* ↓ less spacing */
   text-shadow: 0 1px 2px rgba(0,0,0,.45);
+  display:inline-block;
 }
 .site-title:visited{ color:#fff }
+
+/* NAV AS GRID:
+   Row 1 → centered "About" with lines
+   Row 2 → the rest of the menu (Book Reviews, Fiction, …)
+*/
+.site-nav{
+  display:grid;
+  grid-template-rows: auto auto;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  align-items:center;
+  justify-content:start;
+  gap: .25rem .25rem;
+  margin-top: .6rem;   /* space under title */
+}
+
+/* All regular links (row 2 by default) */
 .site-nav a{
   color:var(--muted); padding:.6rem .75rem; border:1px solid transparent;
+  grid-row: 2;
 }
 .site-nav a:hover{ color:#fff; border-color:var(--border); background:rgba(255,255,255,.06) }
-.nav-dropdown{ position:relative; display:inline-block }
+
+/* Dropdown placement on row 2 as well */
+.nav-dropdown{ position:relative; display:inline-block; grid-row:2 }
 .nav-submenu--row{
   display:none; position:absolute; top:100%; left:0; z-index:10;
   min-width: 12rem; background: rgba(8,10,18,.95);
@@ -58,11 +84,44 @@ a:hover{ text-decoration:underline }
 .nav-submenu--row a{ display:block; padding:.5rem .6rem; font-size:1rem }
 .nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column }
 
+/* SPECIAL: Centered "About" row with decorative lines (row 1) */
+.site-nav a[href$="about.html"]{
+  grid-row: 1;
+  grid-column: 1 / -1;     /* span full width */
+  justify-self: center;
+  color:#fff;
+  padding:.35rem 1rem;
+  position: relative;
+  text-decoration:none;
+  border: 1px solid transparent;
+}
+.site-nav a[href$="about.html"]:hover{ border-color:var(--border); background:rgba(255,255,255,.06) }
+
+/* the lines */
+.site-nav a[href$="about.html"]::before,
+.site-nav a[href$="about.html"]::after{
+  content:"";
+  display:inline-block;
+  vertical-align: middle;
+  width: min(18vw, 160px);
+  border-top: 1px solid var(--border);
+  margin: 0 .9rem;
+  transform: translateY(-.15em);
+}
+
+/* Responsive tweak: if very narrow, shorten the lines */
+@media (max-width: 520px){
+  .site-nav a[href$="about.html"]::before,
+  .site-nav a[href$="about.html"]::after{ width: 60px }
+}
+
 /* Intro line on home */
 .site-intro{ margin: 0 auto .75rem }
 .site-intro p{ margin:0; max-width: 60ch; color:var(--text); text-shadow: 0 1px 2px rgba(0,0,0,.35) }
 
-/* Posts list (home & categories) */
+/* =======================
+   Posts list (home & cats)
+   ======================= */
 .list-heading{ color:var(--muted); margin:0 0 .6rem; letter-spacing:.02em }
 .posts-grid{
   display:grid; gap: 1rem;
@@ -87,9 +146,11 @@ a:hover{ text-decoration:underline }
 .post-meta{ color:var(--muted); margin:.35rem 0 0; font-size:.92em }
 .post-card *{ word-break: normal; overflow-wrap: anywhere; }  /* no one-word-per-line */
 
-/* Article pages */
+/* =================
+   Article page bits
+   ================= */
 .page-main{ width:min(100% - 2rem, var(--maxw)); margin-inline:auto }
-article.post-card{ display:block } /* allow sidebar grid (below) */
+article.post-card{ display:block }
 .post-body{ font-size:1.02rem }
 .post-body p{ margin:.9rem 0; text-indent: .8em; }
 .post-body p:first-of-type,.post-body h2 + p,.post-body h3 + p{ text-indent:0 }
@@ -138,6 +199,6 @@ article.post-card{ display:block } /* allow sidebar grid (below) */
 .site-footer p{ margin:0 0 .25rem 0; color: var(--muted) }
 .site-footer small{ color: var(--muted) }
 
-/* Typewriter effect for site title + post titles */
+/* Typewriter effect */
 .typer{ border-right: 2px solid rgba(255,255,255,.85); white-space:nowrap; overflow:hidden }
 .caret-done{ border-right-color: transparent }
