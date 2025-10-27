@@ -16,34 +16,22 @@
 
 <body>
   <!-- Header -->
-  <header class="site-header container">
-    <a class="site-title" href="index.html">Thoughts In Silico</a>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="index.html">Home</a>
+  <header class="site-header container">…</header>
 
-      <div class="nav-dropdown">
-        <a href="categories.html?cat=Fiction">Fiction ▾</a>
-        <div class="nav-submenu nav-submenu--row">
-          <a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
-          <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
-        </div>
-      </div>
-
-      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
-      <a href="categories.html?cat=Mathematics">Mathematics</a>
-    </nav>
-  </header>
-
-  <!-- Full image hero: shows the entire image, page scrolls to fit -->
-<section class="full-hero" aria-label="Site banner">
-  <img src="img/banner.jpg" alt="Site banner" />
-</section>
-
-
-  <!-- One-line description UNDER the title, above the banner -->
   <section class="site-intro container">
     <p>Hi, it’s Reza. A quiet place to share my thoughts with those who listen.</p>
   </section>
+  
+  <!-- Full image hero (controls its own height; no crop) -->
+  <section class="full-hero">
+    <img src="img/banner.jpg" alt="Site banner">
+  </section>
+  
+  <main class="container posts-wrap">
+    <h2 class="list-heading">Newest posts</h2>
+    <section id="post-grid" class="post-grid"></section>
+  </main>
+
 
   <!-- Large transparent banner (image only, scrolls with page, fades at bottom) -->
   <section class="hero-banner" aria-label="Site banner">
