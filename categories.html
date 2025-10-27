@@ -38,33 +38,42 @@
   </footer>
   <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
 
+
   <script>
-  async function renderCategory() {
-    const params = new URLSearchParams(location.search);
-    const cat = params.get('cat');        // e.g. "Book Reviews"
-    const sub = params.get('sub');        // optional
-
-    const res   = await fetch('/posts/posts.json', { cache: 'no-store' });
-    let posts   = await res.json();
-
-    if (cat) posts = posts.filter(p => p.category === cat);
-    if (sub) posts = posts.filter(p => p.subcategory === sub);
-
-    posts.sort((a,b) => new Date(b.date) - new Date(a.date));
-    const fmt = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
-
-    document.title = (sub ? `${sub} — ` : '') + (cat || 'Browse') + ' — Thoughts In Silico';
-    document.querySelector('.hero h1').textContent = sub ? `${cat} / ${sub}` : (cat || 'Browse');
-
-    const list = document.getElementById('post-list');
-    list.innerHTML = posts.map(p => `
-      <article class="post-card">
-        <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
-        <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
-      </article>
-    `).join('') || `<p style="color:var(--muted)">No posts yet.</p>`;
-  }
-  renderCategory();
+    async function renderCategory() {
+      const params = new URLSearchParams(location.search);
+      const cat = params.get('cat');
+      const sub = params.get('sub');
+    
+      try {
+        // relative path, no leading slash
+        const res = await fetch('posts/posts.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('posts.json not found');
+        let posts = await res.json();
+    
+        if (cat) posts = posts.filter(p => p.category === cat);
+        if (sub) posts = posts.filter(p => p.subcategory === sub);
+        posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+    
+        const fmt = d => new Date(d).toLocaleString(undefined, {month:'long', year:'numeric'});
+        document.title = (sub ? `${sub} — ` : '') + (cat || 'Browse') + ' — Thoughts In Silico';
+        document.querySelector('.hero h1').textContent = sub ? `${cat} / ${sub}` : (cat || 'Browse');
+    
+        const list = document.getElementById('post-list');
+        list.innerHTML = posts.map(p => `
+          <article class="post-card">
+            <h2><a href="${p.url}">${p.titleHtml || p.title}</a></h2>
+            <time datetime="${p.date.slice(0,7)}">${fmt(p.date)}</time>
+          </article>
+        `).join('') || `<p style="color:var(--muted)">No posts yet.</p>`;
+      } catch (err) {
+        document.getElementById('post-list').innerHTML =
+          `<p style="color:var(--muted)">Couldn’t load posts. (${err.message})</p>`;
+        console.error(err);
+      }
+    }
+    renderCategory();
   </script>
+
 </body>
 </html>
