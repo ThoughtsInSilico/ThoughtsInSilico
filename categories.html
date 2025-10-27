@@ -7,17 +7,15 @@
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
   <script>
-    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-
 <body>
   <header class="site-header container">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
     <nav class="site-nav" aria-label="Primary">
       <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
-
       <div class="nav-dropdown">
         <a href="categories.html?cat=Fiction">Fiction ▾</a>
         <div class="nav-submenu nav-submenu--row">
@@ -25,15 +23,15 @@
           <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
         </div>
       </div>
-
       <a href="categories.html?cat=Mathematics">Mathematics</a>
       <a href="categories.html?cat=Technology">Technology</a>
       <a href="categories.html?cat=Music">Music</a>
       <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
+      <a href="about.html">About</a>
     </nav>
   </header>
 
-  <main class="container posts-wrap">
+  <main class="container">
     <h1 id="cat-title">Posts</h1>
     <div id="posts-grid" class="posts-grid"></div>
   </main>
@@ -43,23 +41,20 @@
   </footer>
 
   <script>
-    function getParams(){
-      const u = new URL(location.href);
-      return Object.fromEntries(u.searchParams.entries());
-    }
-    function titleCase(s){ return s ? s.replace(/%20/g,' ').replace(/\+/g,' ').replace(/\s+/g,' ').trim() : ''; }
+    const params = new URL(location.href).searchParams;
+    const catText = (params.get('cat')||'All').replace(/\+/g,' ');
+    const subText = (params.get('sub')||'').replace(/\+/g,' ');
+    document.getElementById('cat-title').textContent = subText ? `${catText} • ${subText}` : catText;
+
     async function renderCategory(){
-      const {cat, sub} = getParams();
-      const title = document.getElementById('cat-title');
       const grid = document.getElementById('posts-grid');
-      const catText = titleCase(cat)||'All';
-      const subText = titleCase(sub)||'';
-      title.textContent = subText ? `${catText} • ${subText}` : catText;
       try{
         const res = await fetch('posts/posts.json');
-        const posts = await res.json();
-        const filtered = posts.filter(p => (!cat || p.category===catText) && (!sub || p.subcategory===subText));
-        grid.innerHTML = filtered.map(p => `
+        let posts = await res.json();
+        posts = posts
+          .filter(p => (catText==='All' || p.category===catText) && (!subText || p.subcategory===subText))
+          .sort((a,b) => new Date(b.date) - new Date(a.date));
+        grid.innerHTML = posts.map(p => `
           <article class="post-card">
             <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
             <time class="post-time" datetime="${p.date}">${new Date(p.date).toLocaleString(undefined,{month:'short', year:'numeric'})}</time>
