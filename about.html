@@ -1,78 +1,86 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>About • Thoughts In Silico</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <meta name="theme-color" content="#000000" />
-</head>
-<body>
-  <!-- Header (consistent with the rest of the site) -->
-  <header class="site-header container">
-    <a class="site-title" href="index.html">Thoughts In Silico</a>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
-      <div class="nav-dropdown">
-        <a href="categories.html?cat=Fiction">Fiction ▾</a>
-        <div class="nav-submenu nav-submenu--row">
-          <a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
-          <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About • Thoughts In Silico</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <meta name="theme-color" content="#000000" />
+  </head>
+
+
+  
+  <body>
+    <!-- Header (consistent with the rest of the site) -->
+    <header class="site-header container">
+      <a class="site-title" href="index.html">Thoughts In Silico</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
+        <div class="nav-dropdown">
+          <a href="categories.html?cat=Fiction">Fiction ▾</a>
+          <div class="nav-submenu nav-submenu--row">
+            <a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
+            <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+          </div>
         </div>
-      </div>
-      <a href="categories.html?cat=Mathematics">Mathematics</a>
-      <a href="categories.html?cat=Technology">Technology</a>
-      <a href="categories.html?cat=Music">Music</a>
-      <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
-      <a href="about.html" aria-current="page">About</a>
-    </nav>
-  </header>
-
-  <main class="container page-main">
-    <article class="post-card">
-      <h1>About</h1>
-
-      <p class="muted" style="margin:.25rem 0 1rem;">
-        <a href="#about-me">About me</a> • <a href="#about-site">About the site</a>
-      </p>
-
-      <section id="about-me" class="post-body" aria-labelledby="about-me-heading">
-        <h2 id="about-me-heading">About me</h2>
-
-        <p>Hi, my name is Reza.</p>
-        <p>My first love was mathematics, and I'm an aspiring mathematician (that's what I'll do if I don't just run off to live in the Alps). I'm a true-blue technophile and posthumanist. And I've played saxophone since I was 12, mostly Third Stream artists, but also my own improvisations. When I'm not in a love affair with differential topology, I'm also an avid reader. Here, you'll get a bit of all that, and more.</p>
-        <p>I don't know if anyone reads this blog at all. Perhaps, I've coded this all for nothing. But if you do, you made my day with your curiosity.</p>
-        <p>If you want to reach out: message me on Discord or at <a href="mailto:non.ergodic.system@gmail.com">non.ergodic.system@gmail.com</a></p>
-      </section>
-
-      <hr />
-
-      <section id="about-site" class="post-body" aria-labelledby="about-site-heading">
-        <h2 id="about-site-heading">About the site</h2>
-      </section>
-
-      <p><a href="index.html">← Back to Home</a></p>
-    </article>
-  </main>
-
-  <footer class="site-footer container">
-    <small>© <span id="y"></span> Thoughts In Silico</small>
-  </footer>
-
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-    (function(){
-      const h1 = document.querySelector('article h1');
-      if(!h1) return;
-      const txt = h1.textContent.trim();
-      h1.textContent = "";
-      h1.classList.add('typer');
-      let i=0;
-      const id=setInterval(()=>{
-        h1.textContent = txt.slice(0, ++i);
-        if(i>=txt.length){ clearInterval(id); h1.classList.add('caret-done'); }
-      }, 45);
-    })();
-  </script>
-</body>
+        <a href="categories.html?cat=Mathematics">Mathematics</a>
+        <a href="categories.html?cat=Technology">Technology</a>
+        <a href="categories.html?cat=Music">Music</a>
+        <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
+        <a href="about.html" aria-current="page">About</a>
+      </nav>
+    </header>
+  
+    <main class="container page-main">
+      <article class="post-card">
+        <h1>About</h1>
+  
+        <p class="muted" style="margin:.25rem 0 1rem;">
+          <a href="#about-me">About me</a> • <a href="#about-site">About the site</a>
+        </p>
+  
+        <section id="about-me" class="post-body" aria-labelledby="about-me-heading">
+          <h2 id="about-me-heading">About me</h2>
+  
+          <p>Hi, my name is Reza</p>
+          <p>Where should I begin? Oh yes, I love mathematics: it's the first thing I think of when I think of what defines me. I'm generally interested in all ofthe hard sciences, though in particular I'd note that I'm a technophile — I've been coding for 7 years now. When I'm not in a steamy love affair with differential equations, you may catch me with a book in my hand, often something about philosophy, psychology, epic poetry or myths. Something people rarely know about me is that I've played saxophone since I was 12, both famous pieces and my own improvisations. I generally like Third Stream jazz and classical music from the late Romantics (Mahler, Sibelius, Scriabin...), although it's not exhaustive. I recently started composing a little. Lastly, I write fiction, on-and-off. Here, you'll get a bit of all that, and more.</p>
+          <p>I'm actually in my early twenties, despite what the home page background says (it's old, but represents me so well I decided to incorporate it into my personal blog). I'm a stranded exile from my country after evading military conscription. Speaking of my country, I grew up in Singapore, though I had an Iranian father (hence the name, <em>Reza</em>, which in Farsi means <em>contentment</em>) and a Malaysian mother. I speak three languages!</p>
+          <p>I'm often haunted by a vague sense of destiny and loss, and it's something that occurs cyclically in my dreams, both in conscious daydreams and where I sleepwalk at night (yes, I'm a parasomniac). I'm not sure if I'll ever resolve this but at least I will want to write about it here.</p>
+          <p>Some of the most mesmerizing experiences I've had were from running up hills at night, pumped with wonder and inspiration as I philosophize aloud to myself. If I don't end up a mathematician, trust me, I'll get a hideout in the Swiss Alps with wifi (last winter I went hiking up Matterhorn in the winter, solo, a 6 day trip through the silver river of the Milky Way just above my head).</p>
+        </section>
+  
+        <hr/>
+  
+        <section id="about-site" class="post-body" aria-labelledby="about-site-heading">
+          <h2 id="about-site-heading">About the site</h2>
+          <p>This is an informal, personal blog. I intentionally separated it from other sites and accounts I've made for various projects. I don't want any users coming from those places to reach this, in general, so don't expect it to be a complete compedium of all my research work. </p> 
+          <p>I'll probably add more stuff to this place. I was going for a 'minimalist' yet personalized vibe, trying to strike a balance between feeling clean and avoiding more corporate styles. I really just chose the main font because it felt funky and futuristic.</p>
+          <p>I don't know if anyone reads this blog at all. Perhaps, I've made a website for nothing. But if you do, thank you! You don't have to tell me, but you made my day with your curiosity :] </p>
+          <p>If you want to reach out: message me on Discord (if you know me) or at <a href="mailto:non.ergodic.system@gmail.com">non.ergodic.system@gmail.com</a></p>
+        </section>
+  
+        <p><a href="index.html">← Back to Home</a></p>
+      </article>
+    </main>
+  
+    <footer class="site-footer container">
+      <small>© <span id="y"></span> Thoughts In Silico</small>
+    </footer>
+  
+    <script>
+      document.getElementById('y').textContent = new Date().getFullYear();
+      (function(){
+        const h1 = document.querySelector('article h1');
+        if(!h1) return;
+        const txt = h1.textContent.trim();
+        h1.textContent = "";
+        h1.classList.add('typer');
+        let i=0;
+        const id=setInterval(()=>{
+          h1.textContent = txt.slice(0, ++i);
+          if(i>=txt.length){ clearInterval(id); h1.classList.add('caret-done'); }
+        }, 45);
+      })();
+    </script>
+  </body>
 </html>
