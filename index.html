@@ -1,67 +1,115 @@
-/* === Home fade-in posts + feature boxes === */
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thoughts In Silico</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="theme-color" content="#000000" />
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="home">
+  <header class="site-header container">
+    <a class="site-title" href="index.html">Thoughts In Silico</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="about.html">About</a>
+      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
+      <div class="nav-dropdown">
+        <a href="categories.html?cat=Fiction">Fiction ▾</a>
+        <div class="nav-submenu nav-submenu--row">
+          <a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
+          <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
+        </div>
+      </div>
+      <a href="categories.html?cat=Mathematics">Mathematics</a>
+      <a href="categories.html?cat=Technology">Technology</a>
+      <a href="categories.html?cat=Music">Music</a>
+      <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
+    </nav>
+  </header>
 
-/* Make home post cards a little more solid (but not fully) */
-body.home .post-card{
-  background: rgba(12,14,24,.32); /* was lighter; more readable now */
-  border-color: rgba(185,205,255,.20);
-}
+  <main class="container">
+    <h2 class="list-heading">Recent posts</h2>
+    <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-/* Reveal-on-scroll baseline */
-.reveal-card{
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity .5s ease-out, transform .5s ease-out;
-  will-change: opacity, transform;
-}
-.reveal-card.is-visible{
-  opacity: 1;
-  transform: translateY(0);
-}
+    <!-- Fully solid personal boxes -->
+    <section class="home-features" aria-label="Personal updates">
+      <article class="feature-card">
+        <h3 class="feature-title">Quote of the week</h3>
+        <blockquote class="feature-quote">
+          <p>“Mathematics is the art of giving the same name to different things.”</p>
+          <footer>— Henri Poincaré</footer>
+        </blockquote>
+      </article>
 
-/* Personal feature section under the posts grid */
-.home-features{
-  margin-top: 1.75rem;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-@media (min-width: 900px){
-  .home-features{
-    grid-template-columns: 1fr 1fr;
-  }
-}
+      <article class="feature-card">
+        <h3 class="feature-title">What I’m up to</h3>
+        <ul class="feature-list">
+          <li>Drafting a short piece on correlationism vs. symmetry.</li>
+          <li>Revisiting olympiad geometry (for fun, not speed).</li>
+          <li>Tinkering with a tiny JS library for footnotes.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
 
-/* Fully solid, larger cards */
-.feature-card{
-  background: rgba(8,10,18, .98); /* fully solid look */
-  border: 1px solid rgba(185,205,255,.28);
-  padding: 1.1rem 1.2rem;
-  border-radius: 0;              /* matches your square style */
-}
+  <footer class="site-footer container">
+    <p><small>© 2025 Thoughts In Silico.</small></p>
+  </footer>
 
-.feature-title{
-  margin: 0 0 .6rem 0;
-  font-size: 1.15rem;
-  letter-spacing: .01em;
-  color: var(--text);
-}
+  <script>
+    // Typewriter for the site title (layout is fixed in CSS, so no shifting)
+    (function(){
+      const el = document.querySelector('.site-title');
+      const txt = el.textContent.trim();
+      el.textContent = "";
+      el.classList.add('typer');
+      let i=0; const id=setInterval(()=>{
+        el.textContent = txt.slice(0, ++i);
+        if(i>=txt.length){ clearInterval(id); el.classList.add('caret-done'); }
+      }, 55);
+    })();
+  </script>
 
-/* Quote styling (clean, essay-like) */
-.feature-quote{
-  margin: .25rem 0 0;
-  padding-left: .9rem;
-  border-left: 3px solid rgba(158,193,255,.35);
-}
-.feature-quote p{ margin: .2rem 0 .4rem 0; }
-.feature-quote footer{
-  color: var(--muted);
-  font-size: .95rem;
-  margin-top: .35rem;
-}
+  <script>
+    // Render posts and mark each for reveal-on-scroll
+    (async function renderHome(){
+      const grid = document.getElementById('posts-grid');
+      try{
+        const res = await fetch('posts/posts.json');
+        let posts = await res.json();
+        posts = posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
+        grid.innerHTML = posts.map(p => `
+          <article class="post-card reveal-card">
+            <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
+            <time class="post-time" datetime="${p.date}">${new Date(p.date).toLocaleString(undefined,{month:'short',year:'numeric'})}</time>
+            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
+          </article>
+        `).join('');
+        if (window.MathJax?.typeset) MathJax.typeset();
+      }catch(e){
+        console.error(e);
+        grid.innerHTML = '<p class="muted">Could not load posts.</p>';
+      }
+    })();
+  </script>
 
-/* “What I’m up to” list */
-.feature-list{
-  margin: .2rem 0 0;
-  padding-left: 1.1rem;
-}
-.feature-list li{ margin: .35rem 0; }
+  <script>
+    // Fade/slide in on scroll
+    (function(){
+      const obs = new IntersectionObserver((ents)=>{
+        ents.forEach(e=>{
+          if(e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+        });
+      }, {threshold:0.12});
+      const start = ()=> document.querySelectorAll('.reveal-card').forEach(el=>obs.observe(el));
+      const mo = new MutationObserver(start);
+      mo.observe(document.getElementById('posts-grid'), {childList:true});
+      start();
+    })();
+  </script>
+</body>
+</html>
