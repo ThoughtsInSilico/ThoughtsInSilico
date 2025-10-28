@@ -14,9 +14,12 @@
 
 <body class="home">
   <div class="layout">
-    <!-- Sidebar -->
+    <!-- ===== Sidebar ===== -->
     <aside class="sidebar" role="navigation" aria-label="Primary">
-      <div class="brand"><a class="site-title" href="index.html">Silico: Book of Genesis</a></div>
+      <div class="brand">
+        <a class="site-title" href="index.html">Silico: Book of Genesis</a>
+      </div>
+
       <nav>
         <h3>Pages</h3>
         <ul>
@@ -44,24 +47,25 @@
       </nav>
     </aside>
 
-    <!-- Main -->
+    <!-- ===== Main ===== -->
     <main class="main">
-      <!-- Shorter hero (img/index-background.jpg) -->
+      <!-- Shorter hero using img/index-background.jpg -->
       <section class="hero" aria-label="Background art"></section>
 
       <section class="container section">
         <h2 class="list-heading">Recent posts</h2>
         <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-        <!-- Transparent cards -->
+        <!-- Trvthnukes (Cinzel via .roman) -->
         <article class="feature-card" style="margin-top:16px">
-          <h3 style="margin:0 0 6px">Trvthnukes</h3>
+          <h3 class="roman" style="margin:0 0 6px">Trvthnukes</h3>
           <hr class="hr-dots" />
           <blockquote id="trvthnuke" class="post-body" style="margin:0"></blockquote>
         </article>
 
+        <!-- Virtual History (Cinzel via .roman) -->
         <article class="feature-card" style="margin-top:12px">
-          <h3 style="margin:0 0 6px">Virtual History à la Last Thursdayism</h3>
+          <h3 class="roman" style="margin:0 0 6px">Virtual History à la Last Thursdayism</h3>
           <hr class="hr-dots" />
           <div id="virtual-history" class="post-body"></div>
         </article>
@@ -74,12 +78,14 @@
   </div>
 
   <script>
+    // Footer year
     document.getElementById('y').textContent = new Date().getFullYear();
 
+    // Load posts.json (works whether it's /posts.json or /posts/posts.json)
     async function loadPostsJSON(){
       const candidates = ['posts.json', 'posts/posts.json'];
       let lastErr;
-      for(const path of candidates){
+      for (const path of candidates){
         try{
           const res = await fetch(path, {cache:'no-store'});
           if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
@@ -109,11 +115,11 @@
       }
     })();
 
-    // Content slots
+    // Content slots for your own text (leave blank or fill)
     document.getElementById('trvthnuke').textContent = '';
     document.getElementById('virtual-history').textContent = '';
 
-    // Anthems (buttons visible when you add tracks)
+    // Anthems (buttons visible once you add tracks under /audio/)
     (function(){
       const ANTHEMS = [
         // { title: "Title", src: "audio/yourfile.mp3" }
