@@ -56,7 +56,7 @@ a:hover{text-decoration:underline}
 
 /* Blurb: one line, always present (created via ::after) */
 .site-header::after{
-  content:"Hi, it’s Reza. I write about math, tech, and fiction.";
+  content:"Where words don't get lost.";
   grid-row:2;
   justify-self:start;
   color:var(--muted);
