@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Zen+Tokyo+Zoo&display=swap');
 
+/* === Theme tokens === */
 :root{
   --bg:#0a0d1a;
   --panel:rgba(12,14,24,.20);
@@ -15,66 +16,69 @@
   --space:1.25rem;
 }
 
+/* === Base === */
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;color:var(--text);background:var(--bg);font:400 16px/1.65 var(--font);letter-spacing:.01em}
-
 .container{width:min(100% - 2rem,var(--maxw));margin-inline:auto}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 .muted{color:var(--muted)}
 
 /* =========================
-   HEADER (identical on all pages)
-   Row 1: [Title (fixed-width)] [Blurb]
-   Row 2: [Full-width menu (About + categories)]
+   Header (3 rows: title / blurb / menu)
    ========================= */
 .site-header{
   display:grid;
-  /* FIXED title column so typing cannot reflow layout */
-  grid-template-columns: clamp(240px, 26ch, 520px) 1fr;
-  grid-template-rows: auto auto;
-  column-gap:1rem;
-  row-gap:.45rem;
-  align-items:end;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
+  row-gap:.30rem;
+  align-items:center;
   margin: calc(var(--space)*1.2) auto var(--space);
 }
 
-/* Title (fixed width; typing happens inside but layout is reserved) */
+/* Title: one line, no layout shift */
 .site-title{
-  grid-column:1; grid-row:1;
-  width:100%;                 /* reserve the fixed column width */
+  justify-self:start;
   display:block;
-  font-family:"Zen Tokyo Zoo",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif!important;
+  margin:0;
+  font-family:"Zen Tokyo Zoo",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   font-weight:400;
   color:#fff;
-  font-size:clamp(1.6rem,4.2vw,2.8rem);
+  font-size:clamp(1.6rem,3.6vw,2.2rem);
   line-height:1.1;
-  letter-spacing:.01em;
-  text-shadow:0 1px 2px rgba(0,0,0,.45);
+  letter-spacing:.003em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 .site-title:visited{color:#fff}
 
-/* Blurb next to the title (Row 1, Col 2) — created via CSS so it exists on all pages */
+/* Blurb: one line, muted, below title */
 .site-header::after{
   content:"Hi, it’s Reza. I write about math, tech, and fiction.";
-  grid-column:2; grid-row:1;
-  align-self:end;
-  color:var(--text);
-  font-size:1rem;
-  opacity:.95;
+  grid-row:2;
+  justify-self:start;
+  color:var(--muted);
+  font-weight:400;
+  font-size:clamp(.95rem,1.8vw,1.05rem);
+  line-height:1.1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
-/* Hide any old HTML blurb */
+/* Hide any legacy HTML blurb */
 .site-intro{display:none !important}
 
-/* Menu (About + categories) spans full width on Row 2 */
+/* Menu row */
 .site-nav{
-  grid-column:1 / -1; grid-row:2;
-  display:flex; flex-wrap:wrap; align-items:center; gap:.2rem .45rem;
+  grid-row:3;
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:.15rem .40rem;
 }
 .site-nav a{
   color:var(--muted);
-  padding:.6rem .75rem;
+  padding:.40rem .55rem;
   border:1px solid transparent;
 }
 .site-nav a:hover{color:#fff;border-color:var(--border);background:rgba(255,255,255,.06)}
@@ -90,25 +94,15 @@ a:hover{text-decoration:underline}
 .nav-submenu--row a{display:block;padding:.5rem .6rem;font-size:1rem}
 .nav-dropdown:hover .nav-submenu--row{display:flex;flex-direction:column}
 
-/* ABOUT look: same level/size as others, with clean lines before/after */
+/* About: subtle boxed pill (no decorative lines) */
 .site-nav a[href$="about.html"]{
-  position:relative;
-  color:#fff;                 /* stands out a bit */
   font-family:"Zen Tokyo Zoo",var(--font);
   font-size:1.05rem;
-  padding:.35rem 1rem;
-  margin:0 .25rem;
-  border:1px solid transparent;
-}
-.site-nav a[href$="about.html"]::before,
-.site-nav a[href$="about.html"]::after{
-  content:""; display:inline-block; vertical-align:middle;
-  width:min(16vw,140px); border-top:1px solid var(--border);
-  margin:0 .6rem; transform:translateY(-.15em);
-}
-@media (max-width:620px){
-  .site-nav a[href$="about.html"]::before,
-  .site-nav a[href$="about.html"]::after{width:56px}
+  color:#fff;
+  padding:.32rem .62rem;
+  border:1px solid rgba(185,205,255,.28);
+  background:transparent;
+  box-shadow:none;
 }
 
 /* =======================
@@ -117,10 +111,18 @@ a:hover{text-decoration:underline}
 .list-heading{color:var(--muted);margin:0 0 .6rem;letter-spacing:.02em}
 .posts-grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .post-card{
-  background:var(--panel);border:1px solid var(--border);padding:1rem;border-radius:0;
-  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;text-decoration:none
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:1rem;
+  border-radius:0;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  text-decoration:none
 }
-.post-card:hover,.post-card:focus-within{transform:translateY(-2px);border-color:rgba(158,193,255,.30);box-shadow:0 16px 48px rgba(0,0,0,.55)}
+.post-card:hover,.post-card:focus-within{
+  transform:translateY(-2px);
+  border-color:rgba(158,193,255,.30);
+  box-shadow:0 16px 48px rgba(0,0,0,.55)
+}
 .post-title{margin:0 0 .35rem;font-weight:600;font-size:1.08rem;line-height:1.2}
 .post-title a{color:var(--text)}
 .post-time{color:var(--muted);font-size:.9em;display:block}
@@ -138,16 +140,25 @@ article.post-card{display:block}
 
 /* two-column layout inside the article border (no overlap) */
 .post-card.post-layout{
-  display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,300px); gap:1.25rem;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(220px,300px);
+  gap:1.25rem;
 }
 
 /* Blockquotes */
 .post-body blockquote{
-  margin:1.25rem 0;padding:.7rem .95rem 1rem 1rem;background:rgba(12,14,24,.18);
-  border:1px solid var(--border);position:relative;border-left:4px solid rgba(158,193,255,.35)
+  margin:1.25rem 0;
+  padding:.7rem .95rem 1rem 1rem;
+  background:rgba(12,14,24,.18);
+  border:1px solid var(--border);
+  position:relative;
+  border-left:4px solid rgba(158,193,255,.35)
 }
-.post-body blockquote::before,.post-body blockquote::after{
-  position:absolute;font-size:2.6rem;line-height:1;color:rgba(158,193,255,.35);
+.post-body blockquote::before,
+.post-body blockquote::after{
+  position:absolute;
+  font-size:2.6rem; line-height:1;
+  color:rgba(158,193,255,.35);
   font-family:Georgia,"Times New Roman",Times,serif
 }
 .post-body blockquote::before{content:"“";left:-.35rem;top:-.6rem}
@@ -167,257 +178,48 @@ article.post-card{display:block}
 .site-footer p{margin:0 0 .25rem 0;color:var(--muted)}
 .site-footer small{color:var(--muted)}
 
-/* Typewriter effect — cursor only; title width is fixed so no layout shift */
+/* Typewriter cursor */
 .typer{border-right:2px solid rgba(255,255,255,.85)}
 .caret-done{border-right-color:transparent}
 
-/* === Global image caps (optional; adjust if needed) === */
-.post-body img,.figure img{display:block;max-width:680px;width:100%;height:auto;max-height:420px;object-fit:contain;margin:0 auto;border:1px solid var(--border);background:rgba(0,0,0,.25)}
+/* === Global image caps === */
+.post-body img,.figure img{
+  display:block;max-width:680px;width:100%;height:auto;max-height:420px;
+  object-fit:contain;margin:0 auto;border:1px solid var(--border);
+  background:rgba(0,0,0,.25)
+}
 .figure--row{display:grid;grid-template-columns:1fr;gap:.75rem}
-@media (min-width:820px){.figure--row{grid-template-columns:1fr 1fr}.figure--row img{max-height:360px}}
-
-<p class="img-row">
-  <img src="../img/olympiads-problem.png">
-  <img src="../img/olympiads-notes.png">
-</p>
-
-/* === HEADER RESTRUCTURE: Title row, Blurb row, Menu row (no HTML changes) === */
-
-/* 3 stacked rows so nothing bumps anything else */
-.site-header{
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  grid-template-rows: auto auto auto !important;  /* Row 1: Title, Row 2: Blurb, Row 3: Menu */
-  row-gap: .55rem !important;
-  align-items: center !important;
+@media (min-width:820px){
+  .figure--row{grid-template-columns:1fr 1fr}
+  .figure--row img{max-height:360px}
 }
 
-/* Title occupies its own full-width row */
-.site-title{
-  grid-row: 1 !important;
-  grid-column: 1 !important;
-  justify-self: start !important;
-  display: block !important;
-  margin: 0 !important;
-}
-
-/* Blurb occupies its own full-width row, centered */
-.site-header::after{
-  grid-row: 2 !important;
-  grid-column: 1 !important;
-  justify-self: center !important;
-  text-align: center !important;
-  margin: 0 !important;
-}
-
-/* Menu occupies the third row */
-.site-nav{
-  grid-row: 3 !important;
-  grid-column: 1 / -1 !important;
-  justify-content: flex-start !important;
-  flex-wrap: wrap !important;
-  gap: .2rem .6rem !important;
-}
-
-/* ABOUT: slightly larger, boxed, first item in the row */
-.site-nav a[href$="about.html"]{
-  order: -1; /* show first */
-  font-family: "Zen Tokyo Zoo", var(--font);
-  font-size: 1.15rem;          /* slightly larger */
-  color: #fff;
-  padding: .4rem .9rem;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.05);
-  border-radius: 0;            /* square to match your style */
-}
-/* hover for About */
-.sit
-
-/* === Keep title & blurb to ONE line (auto-shrink on small screens) === */
-
-/* Site title: never wrap; scale down with viewport if needed */
-.site-title{
-  white-space: nowrap !important;
-  /* downsize smoothly on smaller widths so it still fits one line */
-  font-size: clamp(1.4rem, 5.6vw, 2.8rem) !important;
-  letter-spacing: .006em !important;     /* slightly tighter to help fit */
-  overflow: hidden;                       /* safety: avoid layout break */
-  text-overflow: ellipsis;                /* if it's impossibly narrow */
-}
-
-/* Blurb (the header ::after content): keep to one line & scale */
-.site-header::after{
-  white-space: nowrap !important;
-  font-size: clamp(.9rem, 2.2vw, 1.05rem) !important;
-  line-height: 1.1 !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* === ONE-LINE title + ONE-LINE blurb + tidy About (final overrides) === */
-
-/* Title: never wrap; auto-shrink so it fits on one line */
-.site-title{
-  white-space: nowrap !important;
-  /* scales with viewport until it fits; smaller max to prevent wrap */
-  font-size: clamp(1.4rem, 3.8vw, 2.4rem) !important;
-  letter-spacing: .006em !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-/* Blurb (the ::after text): keep to one line, align with title, never overflow */
-.site-header::after{
-  white-space: nowrap !important;
-  font-size: clamp(.9rem, 1.9vw, 1.05rem) !important;
-  line-height: 1.1 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  max-width: 100% !important;
-  justify-self: start !important;   /* line up under the title */
-}
-
-/* Make sure the header really has 3 rows (title / blurb / menu) */
-.site-header{
-  grid-template-columns: 1fr !important;
-  grid-template-rows: auto auto auto !important;
-}
-
-/* About: do NOT stretch; just a neat boxed button the size of its text */
-.site-nav a[href$="about.html"]{
-  flex: 0 0 auto !important;     /* stop flex-growing to full width */
-  display: inline-flex !important;
-  align-items: center !important;
-  font-size: 1.15rem !important; /* slightly larger than others */
-  padding: .4rem .9rem !important;
-  border: 1px solid var(--border) !important;
-  background: rgba(255,255,255,.05) !important;
-  border-radius: 0 !important;
-}
-
-/* === Sleeker header polish (no HTML edits) === */
-
-/* Tighter vertical rhythm for the 3 header rows */
-.site-header{ row-gap:.30rem !important; }
-
-/* Title: slightly smaller + tighter tracking, still one line */
-.site-title{
-  font-size: clamp(1.6rem, 3.6vw, 2.2rem) !important;
-  letter-spacing: .003em !important;
-}
-
-/* Blurb: lighter color/weight so it doesn’t fight the title; one line */
-.site-header::after{
-  color: var(--muted) !important;
-  font-weight: 400 !important;
-  font-size: clamp(.95rem, 1.8vw, 1.05rem) !important;
-  line-height: 1.1 !important;
-  white-space: nowrap !important;
-}
-
-/* Menu row: smaller paddings and tighter spacing */
-.site-nav{
-  gap: .15rem .40rem !important;
-  align-items: center !important;
-}
-.site-nav a{
-  padding: .40rem .55rem !important;
-}
-
-/* “About” — understated box: thin border, no fill until hover */
-.site-nav a[href$="about.html"]{
-  font-family: "Zen Tokyo Zoo", var(--font) !important;
-  font-size: 1.05rem !important;          /* just a touch bigger */
-  padding: .32rem .62rem !important;
-  border: 1px solid rgba(185,205,255,.28) !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  color: #fff !important;
-}
-.site-nav a[href$="about.html"]:hover{
-  background: rgba(255,255,255,.06) !important;
-  border-color: rgba(185,205,255,.42) !important;
-}
-
-/* Kill any old decorative lines that made it feel busy */
-.site-nav a[href$="about.html"]::before,
-.site-nav a[href$="about.html"]::after{ content:none !important; }
-
-
-/* If an older rule added decorative lines around About, kill them */
-.site-nav a[href$="about.html"]::before,
-.site-nav a[href$="about.html"]::after{ content:none !important; }
-
-
-/* === Home page banner background ===
-   Expects the image at /img/banner.jpg
-   (CSS file lives in /css/, so path is ../img/) */
+/* === Home banner background === */
 body.home{
-  /* dark overlay for readability + the banner image */
   background:
     linear-gradient(180deg, rgba(10,13,26,.50), rgba(10,13,26,.50)),
-    url("../img/banner.jpg") center / cover no-repeat fixed !important;
+    url("../img/banner.jpg") center / cover no-repeat fixed;
 }
-
-/* optional: make the overlay a touch lighter or darker by changing .78 above
-   e.g. .70 (lighter) or .85 (darker) */
-
 
 /* === Home layout: posts start below the fold, then features === */
+body.home .home-posts{ margin-top:100vh; }   /* one screen before posts */
+body.home .post-card{ background:rgba(12,14,24,.32); border-color:rgba(185,205,255,.20); }
 
-/* Push the posts section down by one full screen on first load */
-body.home .home-posts{
-  margin-top: 100vh;         /* one vertical screen */
-}
+/* reveal-on-scroll */
+.reveal-card{ opacity:0; transform:translateY(22px);
+  transition:opacity .5s ease-out, transform .5s ease-out; will-change:opacity,transform; }
+.reveal-card.is-visible{ opacity:1; transform:translateY(0); }
 
-/* Make home post cards a bit more solid (still not fully) */
-body.home .post-card{
-  background: rgba(12,14,24,.32);
-  border-color: rgba(185,205,255,.20);
-}
-
-/* Reveal-on-scroll effect (already used by index.html) */
-.reveal-card{
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity .5s ease-out, transform .5s ease-out;
-  will-change: opacity, transform;
-}
-.reveal-card.is-visible{
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Solid, larger boxes under posts */
+/* Solid feature boxes */
 .home-features{
-  margin-top: 1.75rem;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+  margin-top:1.75rem; display:grid; grid-template-columns:1fr; gap:1rem;
 }
-@media (min-width: 900px){
-  .home-features{ grid-template-columns: 1fr 1fr; }
-}
-
+@media (min-width:900px){ .home-features{ grid-template-columns:1fr 1fr; } }
 .feature-card{
-  background: rgba(8,10,18,.98);   /* fully solid */
-  border: 1px solid rgba(185,205,255,.28);
-  padding: 1.1rem 1.2rem;
-  border-radius: 0;
+  background:rgba(8,10,18,.98);
+  border:1px solid rgba(185,205,255,.28);
+  padding:1.1rem 1.2rem; border-radius:0;
 }
-
-.feature-title{
-  margin: 0 0 .6rem 0;
-  font-size: 1.15rem;
-  letter-spacing: .01em;
-  color: var(--text);
-}
-
-/* Empty areas (you’ll fill these in HTML later) */
-.feature-quote{ margin: 0; min-height: 3.25rem; }
-.feature-body{ min-height: 4.5rem; }
-
-/* Optional: if you want a subtle placeholder look, uncomment:
-.feature-quote::before{content:"Add a quote…"; color:var(--muted)}
-.feature-body::before{content:"Add an update…"; color:var(--muted)}
-*/
+.feature-title{ margin:0 0 .6rem 0; font-size:1.15rem; letter-spacing:.01em; color:var(--text); }
+.feature-quote{ margin:0; min-height:3.25rem; }
+.feature-body{ min-height:4.5rem; }
