@@ -14,16 +14,11 @@
   --font:"Iceberg",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   --maxw:1100px;
   --space:1.25rem;
-
-  /* Plane settings (can tweak) */
-  --flight-color: #f3f6ff;
-  --flight-speed: 18s;                 /* slower = more graceful */
-  --flight-path: path("M 40 120 C 260 40, 520 140, 760 70 S 940 170, 820 220 C 700 270, 560 260, 580 330 C 600 400, 760 420, 860 360 C 940 310, 880 260, 820 260 C 700 260, 620 360, 560 460 C 500 560, 520 660, 600 740 C 680 820, 780 860, 860 920 C 920 970, 900 1050, 820 1100 C 700 1180, 520 1180, 420 1260 C 320 1340, 320 1440, 420 1520");
 }
 
 /* === Base === */
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%; scroll-behavior:smooth}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;color:var(--text);background:var(--bg);font:400 16px/1.65 var(--font);letter-spacing:.01em}
 .container{width:min(100% - 2rem,var(--maxw));margin-inline:auto}
 a{color:var(--accent);text-decoration:none}
@@ -35,14 +30,14 @@ a:hover{text-decoration:underline}
    ========================= */
 .site-header{
   display:grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto auto;
+  grid-template-columns:1fr;
+  grid-template-rows:auto auto auto;
   row-gap:.30rem;
   align-items:center;
-  margin: calc(var(--space)*1.2) auto var(--space);
+  margin:calc(var(--space)*1.2) auto var(--space);
 }
 
-/* Title: one line, no layout shift */
+/* Title: single line, no shift */
 .site-title{
   justify-self:start;
   display:block;
@@ -59,7 +54,7 @@ a:hover{text-decoration:underline}
 }
 .site-title:visited{color:#fff}
 
-/* Blurb: one line, muted, below title (same on all pages) */
+/* Blurb: one line, always present (created via ::after) */
 .site-header::after{
   content:"Hi, it’s Reza. I write about math, tech, and fiction.";
   grid-row:2;
@@ -72,13 +67,15 @@ a:hover{text-decoration:underline}
   overflow:hidden;
   text-overflow:ellipsis;
 }
-/* Hide any legacy HTML blurb */
+/* If there’s an old HTML blurb, hide it */
 .site-intro{display:none !important}
 
 /* Menu row */
 .site-nav{
   grid-row:3;
-  display:flex; flex-wrap:wrap; align-items:center;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
   gap:.15rem .40rem;
 }
 .site-nav a{
@@ -86,20 +83,25 @@ a:hover{text-decoration:underline}
   padding:.40rem .55rem;
   border:1px solid transparent;
 }
-.site-nav a:hover{color:#fff;border-color:var(--border);background:rgba(255,255,255,.06)}
+.site-nav a:hover{
+  color:#fff;
+  border-color:var(--border);
+  background:rgba(255,255,255,.06);
+}
 
 /* Dropdown */
 .nav-dropdown{position:relative;display:inline-block}
 .nav-submenu--row{
-  display:none; position:absolute; top:100%; left:0; z-index:10;
-  min-width:12rem; background:rgba(8,10,18,.95);
-  border:1px solid var(--border); border-radius:.5rem; padding:.4rem;
+  display:none;
+  position:absolute;top:100%;left:0;z-index:10;
+  min-width:12rem;background:rgba(8,10,18,.95);
+  border:1px solid var(--border);border-radius:.5rem;padding:.4rem;
   box-shadow:0 16px 40px rgba(0,0,0,.6)
 }
 .nav-submenu--row a{display:block;padding:.5rem .6rem;font-size:1rem}
 .nav-dropdown:hover .nav-submenu--row{display:flex;flex-direction:column}
 
-/* About: subtle boxed pill (no heavy fill) */
+/* About: understated boxed link (same level as others) */
 .site-nav a[href$="about.html"]{
   font-family:"Zen Tokyo Zoo",var(--font);
   font-size:1.05rem;
@@ -118,8 +120,7 @@ a:hover{text-decoration:underline}
 .post-card{
   background:var(--panel);
   border:1px solid var(--border);
-  padding:1rem;
-  border-radius:0;
+  padding:1rem;border-radius:0;
   transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
   text-decoration:none
 }
@@ -141,9 +142,11 @@ a:hover{text-decoration:underline}
 article.post-card{display:block}
 .post-body{font-size:1.02rem}
 .post-body p{margin:.9rem 0;text-indent:.8em}
-.post-body p:first-of-type,.post-body h2 + p,.post-body h3 + p{text-indent:0}
+.post-body p:first-of-type,
+.post-body h2 + p,
+.post-body h3 + p{ text-indent:0 }
 
-/* two-column layout inside the article border (no overlap) */
+/* Inside-article two-column layout (content | sidebar) */
 .post-card.post-layout{
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(220px,300px);
@@ -162,7 +165,7 @@ article.post-card{display:block}
 .post-body blockquote::before,
 .post-body blockquote::after{
   position:absolute;
-  font-size:2.6rem; line-height:1;
+  font-size:2.6rem;line-height:1;
   color:rgba(158,193,255,.35);
   font-family:Georgia,"Times New Roman",Times,serif
 }
@@ -173,7 +176,11 @@ article.post-card{display:block}
 .similar-reads{margin-top:1.25rem;padding:.75rem;background:var(--panel);border:1px solid var(--border);border-radius:0}
 .similar-reads h2{margin:0 0 .5rem 0;font-size:1.05rem;color:var(--muted)}
 #similar-list{display:grid;gap:.5rem}
-.similar-card{display:flex;flex-direction:column;gap:.1rem;padding:.55rem .6rem;border:1px solid var(--border);border-radius:0;background:rgba(10,12,22,.22);text-decoration:none;color:var(--text)}
+.similar-card{
+  display:flex;flex-direction:column;gap:.1rem;
+  padding:.55rem .6rem;border:1px solid var(--border);border-radius:0;
+  background:rgba(10,12,22,.22);text-decoration:none;color:var(--text)
+}
 .similar-card:hover{border-color:rgba(158,193,255,.35)}
 .similar-card strong{font-size:.98rem}
 .similar-card span{color:var(--muted);font-size:.88rem}
@@ -207,77 +214,41 @@ body.home{
 }
 
 /* === Home layout: posts start below the fold, then features === */
-body.home .home-posts{ margin-top:100vh; }   /* one screen before posts */
+body.home .home-posts{ margin-top:100vh; }  /* one screen before posts */
 body.home .post-card{ background:rgba(12,14,24,.32); border-color:rgba(185,205,255,.20); }
 
-/* reveal-on-scroll */
-.reveal-card{ opacity:0; transform:translateY(22px);
-  transition:opacity .5s ease-out, transform .5s ease-out; will-change:opacity,transform; }
+/* Reveal-on-scroll for cards */
+.reveal-card{
+  opacity:0; transform:translateY(22px);
+  transition:opacity .5s ease-out, transform .5s ease-out;
+  will-change:opacity,transform;
+}
 .reveal-card.is-visible{ opacity:1; transform:translateY(0); }
 
 /* Solid feature boxes */
 .home-features{
-  margin-top:1.75rem; display:grid; grid-template-columns:1fr; gap:1rem;
+  margin-top:1.75rem;
+  display:grid;grid-template-columns:1fr;gap:1rem;
 }
 @media (min-width:900px){ .home-features{ grid-template-columns:1fr 1fr; } }
 .feature-card{
   background:rgba(8,10,18,.98);
   border:1px solid rgba(185,205,255,.28);
-  padding:1.1rem 1.2rem; border-radius:0;
+  padding:1.1rem 1.2rem;border-radius:0;
 }
 .feature-title{ margin:0 0 .6rem 0; font-size:1.15rem; letter-spacing:.01em; color:var(--text); }
 .feature-quote{ margin:0; min-height:3.25rem; }
 .feature-body{ min-height:4.5rem; }
 
 /* ============================
-   Fluid plane + dotted trace
+   Airy SVG plane + dotted trace
    ============================ */
-.flight-layer{ position:fixed; inset:0; pointer-events:none; z-index:60; }
-.flight-trace{ position:absolute; inset:0; }
-.flight-trace path{
-  fill:none;
-  stroke:var(--flight-color);
-  stroke-width:2;
-  stroke-linecap:round;
-  stroke-dasharray:0 9;                 /* dotted */
-  opacity:.9;
-  animation: trace-draw calc(var(--flight-speed) * .70) ease-in-out infinite;
+.flight-layer{
+  position:fixed;inset:0;z-index:60;pointer-events:none;
 }
-.flight-hint{
-  position:absolute;
-  width:56px; height:56px;               /* slightly larger */
-  color:var(--flight-color);
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.45));
-  pointer-events:auto;                   /* clickable nudge */
-  cursor:default;
-  /* follow the same path as the trace */
-  offset-path: var(--flight-path);
-  offset-rotate: auto 90deg;
-  animation: plane-fly var(--flight-speed) cubic-bezier(.22,.61,.36,1) infinite;
-}
-.flight-hint svg{ width:56px; height:56px; display:block }
+.flight-svg{width:100%;height:100%;display:block}
 
-/* fade out only at bottom (body.flight-done set by JS) */
-.flight-done .flight-hint,
-.flight-done .flight-trace{ opacity:0; transition:opacity .7s ease; }
-
-/* Reduce motion */
+/* Respect Reduce Motion */
 @media (prefers-reduced-motion: reduce){
-  .flight-hint{ animation:none; offset-path:none; top:12vh; left:10vw; }
-  .flight-trace path{ animation:none; opacity:.7 }
-}
-
-/* keyframes */
-@keyframes plane-fly{
-  0%   { offset-distance: 0%; }
-  18%  { offset-distance: 18%; }
-  34%  { offset-distance: 34%; }
-  50%  { offset-distance: 50%; }
-  68%  { offset-distance: 68%; }
-  84%  { offset-distance: 84%; }
-  100% { offset-distance: 100%; }
-}
-@keyframes trace-draw{
-  from { stroke-dashoffset: 1200; }
-  to   { stroke-dashoffset: 0; }
+  .flight-layer{display:none;}
 }
