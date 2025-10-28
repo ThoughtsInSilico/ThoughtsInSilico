@@ -11,6 +11,9 @@
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
+
+  
 <body class="home">
   <header class="site-header container">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
@@ -30,6 +33,18 @@
       <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
     </nav>
   </header>
+
+
+  <!-- Scroll hint: tiny paper airplane -->
+  <button class="scroll-hint" id="scrollHint" aria-label="Scroll to recent posts">
+    <svg viewBox="0 0 64 64" width="36" height="36" aria-hidden="true">
+      <!-- simple paper airplane -->
+      <path d="M60 8L6 30l16 6 8 14 8-10 16-32z" fill="none" stroke="currentColor" stroke-width="2" />
+      <path d="M22 36l14 6" fill="none" stroke="currentColor" stroke-width="2" />
+    </svg>
+  </button>
+  
+  
 
   <!-- POSTS SECTION (starts one full viewport below) -->
   <main class="container home-posts">
@@ -107,5 +122,33 @@
       start();
     })();
   </script>
+
+  <script>
+    // Smooth scroll when the plane is clicked
+    (function(){
+      const btn = document.getElementById('scrollHint');
+      const posts = document.querySelector('.home-posts');
+      if(!btn || !posts) return;
+  
+      // Click -> scroll to posts
+      btn.addEventListener('click', () => posts.scrollIntoView({behavior:'smooth', block:'start'}));
+  
+      // Hide after user scrolls a bit
+      const hide = () => btn.classList.add('is-hidden');
+      let hidden = false;
+      window.addEventListener('scroll', () => {
+        if (!hidden && window.scrollY > window.innerHeight * 0.15) { hidden = true; hide(); }
+      }, {passive:true});
+  
+      // If user taps the plane or finishes 3 loops, hide it
+      let loops = 0;
+      btn.addEventListener('animationiteration', () => {
+        loops++;
+        if (loops >= 3) hide();
+      });
+    })();
+  </script>
+
+  
 </body>
 </html>
