@@ -1,9 +1,10 @@
 /* =========================================================
-   Silico: Book of Genesis — medieval (Cinzel everywhere)
+   Silico: Book of Genesis — UnifrakturMaguntia site-wide
+   (normal casing everywhere)
    =======================================================*/
 
 /* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
 
 /* Tokens */
 :root{
@@ -19,21 +20,21 @@
   --r2: 14px;
 }
 
-/* Base + Type */
+/* Base + Type (Maguntia everywhere; NORMAL case) */
 *{ box-sizing:border-box }
 html,body{
   margin:0; padding:0; background:var(--bg); color:var(--ink);
-  font:18px/1.7 'Cinzel', serif;
+  font:18px/1.7 'UnifrakturMaguntia', serif;
+  letter-spacing:.01em; /* subtle tightening for readability */
 }
 a{ color:var(--ink); text-decoration:none }
 a:hover{ text-decoration:underline }
 img{ max-width:100%; display:block }
 hr{ border:0; height:1px; background:var(--stroke) }
 
-/* Title (same font, heavier weight) */
+/* Title (same font, just larger) */
 .site-title{
-  font-family:'Cinzel', serif;
-  font-weight:700;
+  font-family:'UnifrakturMaguntia', serif;
   font-size: clamp(28px, 5vw, 46px);
   line-height:1.1; margin:0;
   text-shadow:0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
@@ -59,6 +60,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .sidebar nav li{ margin:4px 0 }
 .sidebar nav a{
   display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent;
+  /* IMPORTANT: no text-transform here (normal casing) */
 }
 .sidebar nav a:hover, .sidebar nav a:focus-visible{
   border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
