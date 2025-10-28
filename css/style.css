@@ -141,18 +141,18 @@ a:hover{text-decoration:underline}
 .page-main{width:min(100% - 2rem,var(--maxw));margin-inline:auto}
 article.post-card{display:block}
 
-/* UNIVERSAL tidy reading: justified paragraphs with soft hyphenation */
-.post-body{font-size:1.02rem}
+/* UNIVERSAL: justified paragraphs across all posts */
 .post-body p{
   margin:.9rem 0;
-  text-indent:.8em;
-  text-align:justify;
+  text-indent:.8em;          /* first-line indent */
+  text-align:justify;        /* justify text */
   text-justify:inter-word;
-  hyphens:auto;
+  hyphens:auto;              /* soft hyphenation */
 }
 .post-body p:first-of-type,
 .post-body h2 + p,
-.post-body h3 + p{ text-indent:0 }
+.post-body h3 + p{ text-indent:0; }
+
 
 /* Inside-article two-column layout (content | sidebar) */
 .post-card.post-layout{
