@@ -11,9 +11,6 @@
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-
-
-  
 <body class="home">
   <header class="site-header container">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
@@ -34,42 +31,33 @@
     </nav>
   </header>
 
-
-  <!-- Scroll hint: tiny paper airplane -->
-  <!-- Scroll hint: paper airplane (sharper shape, opaque) -->
+  <!-- Scroll hint: paper airplane + dotted curve (curved, opaque, smoother) -->
   <button class="scroll-hint" id="scrollHint" aria-label="Scroll to recent posts">
     <svg viewBox="0 0 64 64" width="36" height="36" aria-hidden="true">
-      <!-- crisper paper airplane -->
+      <!-- crisp paper airplane -->
       <path d="M4 30L60 6 28 36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
       <path d="M28 36l4 20 6-14 22-36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
     </svg>
   </button>
-  
-  <!-- Dotted trace that gets drawn along a curve -->
   <svg class="scroll-trace" viewBox="0 0 120 420" width="120" height="420" aria-hidden="true">
-    <!-- tweak this curve anytime; the plane’s animation mirrors this arc -->
+    <!-- You can tweak this curve anytime -->
     <path d="M10 10 C 70 80, 30 240, 20 360" />
   </svg>
 
-  
-  
-
-  <!-- POSTS SECTION (starts one full viewport below) -->
+  <!-- POSTS SECTION (starts one full viewport below; CSS sets margin-top:100vh) -->
   <main class="container home-posts">
     <h2 class="list-heading">Recent posts</h2>
     <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-    <!-- Solid, larger personal boxes BELOW the posts -->
+    <!-- Fully solid personal boxes BELOW the posts (you fill them) -->
     <section class="home-features" aria-label="Personal updates">
       <article class="feature-card">
         <h3 class="feature-title">Quote of the week</h3>
-        <!-- Add your quote inside this blockquote -->
         <blockquote class="feature-quote"></blockquote>
       </article>
 
       <article class="feature-card">
         <h3 class="feature-title">What I’m up to</h3>
-        <!-- Add whatever you like below (list or paragraphs) -->
         <div class="feature-body"></div>
       </article>
     </section>
@@ -79,8 +67,8 @@
     <p><small>© 2025 Thoughts In Silico.</small></p>
   </footer>
 
+  <!-- Typewriter for the site title (header layout is fixed in CSS; no shifting) -->
   <script>
-    // Typewriter for the site title (header layout is fixed, no shifting)
     (function(){
       const el = document.querySelector('.site-title');
       const txt = el.textContent.trim();
@@ -93,8 +81,8 @@
     })();
   </script>
 
+  <!-- Render posts (newest first) -->
   <script>
-    // Render posts and mark each for reveal-on-scroll
     (async function renderHome(){
       const grid = document.getElementById('posts-grid');
       try{
@@ -116,9 +104,10 @@
     })();
   </script>
 
+  <!-- Fade/slide in on scroll + airplane/trace interactions -->
   <script>
-    // Fade/slide in on scroll
     (function(){
+      // Reveal posts on scroll
       const obs = new IntersectionObserver((ents)=>{
         ents.forEach(e=>{
           if(e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
@@ -128,35 +117,27 @@
       const mo = new MutationObserver(start);
       mo.observe(document.getElementById('posts-grid'), {childList:true});
       start();
-    })();
-  </script>
 
-  <script>
-    (function () {
+      // Airplane & dotted trace behavior
       const btn = document.getElementById('scrollHint');
       const trace = document.querySelector('.scroll-trace');
       const posts = document.querySelector('.home-posts');
-      if (!btn || !trace || !posts) return;
-  
-      // Click -> scroll to posts
-      btn.addEventListener('click', () => posts.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-  
-      // Hide plane + trace together
+      if(!btn || !trace || !posts) return;
+
       const hide = () => { btn.classList.add('is-hidden'); trace.classList.add('is-hidden'); };
       let hidden = false;
-  
-      // Hide once the user starts scrolling a bit
+
+      btn.addEventListener('click', () => posts.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+
+      // Hide if user starts scrolling a bit
       window.addEventListener('scroll', () => {
         if (!hidden && window.scrollY > window.innerHeight * 0.12) { hidden = true; hide(); }
       }, { passive: true });
-  
-      // Hide when the animations finish
+
+      // Hide after animations complete
       btn.addEventListener('animationend', hide, { once: true });
       trace.addEventListener('animationend', hide, { once: true });
     })();
   </script>
-
-
-  
 </body>
 </html>
