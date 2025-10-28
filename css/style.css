@@ -1,11 +1,14 @@
 /* =========================================================
-   Thoughts In Silico — layout/theme refresh (no wording changes)
-   - Left sidebar + scrollable main column
-   - UnifrakturCook on the site title only
-   - Dark, quiet palette; keeps your post card/grid classes
+   Thoughts In Silico — layout/theme (words untouched)
+   - Body font: Iceberg
+   - Site title font: UnifrakturMaguntia (medieval)
+   - Roman inscription font (Cinzel) for "Trvthnukes" subtitle
    =======================================================*/
 
-/* ---------- 1) Tokens ---------- */
+/* ---------- Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&family=UnifrakturMaguntia&family=Cinzel:wght@400;600&display=swap');
+
+/* ---------- Tokens ---------- */
 :root{
   --bg: #0b0e10;
   --bg-soft: #0f1418;
@@ -20,93 +23,129 @@
   --s1: 6px;  --s2: 10px; --s3: 14px; --s4: 18px; --s5: 28px;
 }
 
-/* ---------- 2) Base + Type ---------- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=UnifrakturCook:wght@700&display=swap');
+/* ---------- Base + Type ---------- */
+*{ box-sizing: border-box; }
+html,body{
+  margin:0; padding:0; background:var(--bg); color:var(--ink);
+  font:16px/1.6 'Iceberg', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+a{ color:var(--accent); text-decoration:none; }
+a:hover{ text-decoration:underline; }
+img{ max-width:100%; display:block; }
+hr{ border:0; height:1px; background:var(--stroke); }
 
-*{ box-sizing:border-box }
-html,body{ margin:0; padding:0; background:var(--bg); color:var(--ink);
-  font:16px/1.55 'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
-a{ color:var(--accent); text-decoration:none }
-a:hover{ text-decoration:underline }
-img{ max-width:100%; display:block }
-hr{ border:0; height:1px; background:var(--stroke) }
-
+/* Site title: medieval blackletter */
 .site-title{
-  font-family:'UnifrakturCook', serif;
-  font-size: clamp(28px,5vw,46px);
-  line-height:1.1; margin:0;
-  text-shadow:0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: clamp(28px, 5vw, 46px);
+  line-height: 1.1; margin: 0;
+  text-shadow: 0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
 
-/* ---------- 3) Layout: Sidebar + Main ---------- */
+/* Roman inscription font (for Trvthnukes subtitle) */
+.roman{ font-family: 'Cinzel', serif; letter-spacing: .02em; }
+
+/* ---------- Layout: Sidebar + Main ---------- */
 .layout{
   display:grid; grid-template-columns:280px 1fr; min-height:100vh;
 }
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
-  background:linear-gradient(180deg,var(--bg-soft),var(--bg));
+  background:linear-gradient(180deg, var(--bg-soft), var(--bg));
   border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
   padding:22px 18px 28px;
 }
-.sidebar .brand{ display:flex; align-items:center; gap:10px; margin-bottom:var(--s2) }
+.sidebar .brand{ display:flex; align-items:center; gap:10px; margin-bottom:var(--s2); }
 .sidebar .sig{
   width:22px; height:22px; border:1px dashed var(--stroke); border-radius:50%;
   display:grid; place-items:center; font-size:11px; color:var(--ink-dim);
 }
 .sidebar nav h3{
-  font-size:12px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.12em;
+  font-size:12px; color:var(--ink-dim);
+  text-transform:uppercase; letter-spacing:.12em;
   margin:18px 0 8px;
 }
-.sidebar nav ul{ list-style:none; margin:0; padding:0 }
-.sidebar nav li{ margin:4px 0 }
-.sidebar nav a{ display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent }
+.sidebar nav ul{ list-style:none; margin:0; padding:0; }
+.sidebar nav li{ margin:4px 0; }
+.sidebar nav a{ display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent; }
 .sidebar nav a:hover, .sidebar nav a:focus-visible{
   border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
 }
-.anthems .anthem-item{ margin:8px 0; font-size:13px; color:var(--ink-dim) }
-.sidebar audio{ width:100% }
+.anthems .anthem-item{ margin:8px 0; font-size:13px; color:var(--ink-dim); }
+.sidebar audio{ width:100%; }
 
-.main{ min-height:100vh; overflow:hidden }
+.main{ min-height:100vh; overflow:hidden; }
 
-/* ---------- 4) Home hero (background showcase) ---------- */
+/* ---------- Hero: keep your banner image ---------- */
 .hero{
-  min-height:100vh; /* full viewport to preserve your “scroll down” vibe */
+  min-height:100vh;             /* show off art; keeps scroll */
   background:url('img/banner.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
 
-/* ---------- 5) Grid/cards (keeps your class names) ---------- */
-.container{ width:min(1100px, 100% - 40px); margin:0 auto }
-.section{ padding:28px 0 }
+/* ---------- Cards / grids (as before) ---------- */
+.container{ width:min(1100px, 100% - 40px); margin:0 auto; }
+.section{ padding:28px 0; }
 .posts-grid{
-  display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:16px;
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px;
 }
 .post-card, .feature-card, .anthem-card, .card{
   background:linear-gradient(180deg,#0d1116,#0a0d11);
   border:1px dashed var(--stroke); border-radius:var(--r2); padding:14px; box-shadow:var(--shadow);
 }
-.post-card h3{ margin:8px 0 6px }
-.post-time{ color:var(--ink-dim) }
-.post-meta{ color:var(--ink-dim); margin:.25rem 0 0 }
+.post-card h3{ margin:8px 0 6px; }
+.post-time, .post-meta{ color:var(--ink-dim); }
+.list-heading{ margin:0 0 10px; }
 
-/* “Recent posts” heading on home */
-.list-heading{ margin: 0 0 10px }
+/* ---------- Post body justification ---------- */
+.post-body p, .card p, .post-card p{ text-align: justify; }
 
-/* About cards */
-.cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px }
+/* ---------- About: uneven, gapless masonry grid ---------- */
+.about-grid{
+  display:grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 0;                       /* no gaps, borders will touch */
+  border:1px solid var(--stroke);
+}
+.about-cell{
+  border-right:1px solid var(--stroke);
+  border-bottom:1px solid var(--stroke);
+  padding:16px;
+  background:linear-gradient(180deg,#0d1116,#0a0d11);
+}
+.about-cell h4{
+  margin:0 0 10px;
+  font-size:14px; text-transform:uppercase; letter-spacing:.12em;
+}
+.about-cell:last-child{ border-right:0; }
+.about-row:last-child .about-cell{ border-bottom:0; }
+
+/* quick area sizing (uneven boxes) */
+.span-3{ grid-column: span 3; }
+.span-2{ grid-column: span 2; }
+.span-1{ grid-column: span 1; }
+.tall-2{ grid-row: span 2; }
+
+/* ---------- Dividers ---------- */
 .hr-dots{
-  width:100%; height:1px; background:repeating-linear-gradient(90deg,transparent 0 6px, var(--stroke) 6px 7px);
+  width:100%; height:1px;
+  background:repeating-linear-gradient(90deg, transparent 0 6px, var(--stroke) 6px 7px);
   border:0; margin:14px 0 18px;
 }
 
-/* ---------- 6) Responsive ---------- */
+/* ---------- Responsive ---------- */
 @media (max-width: 900px){
-  .layout{ grid-template-columns:1fr }
-  .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke) }
+  .layout{ grid-template-columns:1fr; }
+  .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke); }
+  .about-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px){
+  .about-grid{ grid-template-columns: 1fr; }
 }
 
-/* ---------- 7) Motion comfort ---------- */
+/* ---------- Motion comfort ---------- */
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
 }
