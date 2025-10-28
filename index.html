@@ -20,7 +20,7 @@
       <nav>
         <h3>Pages</h3>
         <ul>
-          <li><a href="about.html">About</a></li> <!-- moved to top -->
+          <li><a href="about.html">The Brain-vat Speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
             <a href="categories.html?cat=Fiction">Fiction ▾</a>
@@ -46,21 +46,22 @@
 
     <!-- Main -->
     <main class="main">
+      <!-- New, shorter hero using img/index-background.jpg -->
       <section class="hero" aria-label="Background art"></section>
 
       <section class="container section">
         <h2 class="list-heading">Recent posts</h2>
         <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-        <!-- Separate Roman boxes -->
+        <!-- Transparent Roman boxes -->
         <article class="feature-card" style="margin-top:16px">
-          <h3 class="roman" style="margin:0 0 6px">Trvthnukes</h3>
+          <h3 style="margin:0 0 6px">Trvthnukes</h3>
           <hr class="hr-dots" />
           <blockquote id="trvthnuke" class="post-body" style="margin:0"></blockquote>
         </article>
 
         <article class="feature-card" style="margin-top:12px">
-          <h3 class="roman" style="margin:0 0 6px">Virtual History à la Last Thursdayism</h3>
+          <h3 style="margin:0 0 6px">Virtual History à la Last Thursdayism</h3>
           <hr class="hr-dots" />
           <div id="virtual-history" class="post-body"></div>
         </article>
@@ -75,6 +76,7 @@
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
 
+    // Load posts.json (works at /posts.json or /posts/posts.json)
     async function loadPostsJSON(){
       const candidates = ['posts.json', 'posts/posts.json'];
       let lastErr;
@@ -108,13 +110,15 @@
       }
     })();
 
-    // Your content slots (no filler)
+    // Content slots (leave empty or fill)
     document.getElementById('trvthnuke').textContent = '';
     document.getElementById('virtual-history').textContent = '';
 
-    // Anthems (src paths are yours)
+    // Anthems (buttons visible)
     (function(){
-      const ANTHEMS = []; // fill with your tracks later
+      const ANTHEMS = [
+        // { title: "Title", src: "audio/yourfile.mp3" }
+      ];
       const list  = document.getElementById('anthems-list');
       const audio = document.getElementById('anthem-audio');
       list.innerHTML = ANTHEMS.map((a,i)=>`
@@ -122,7 +126,7 @@
           <button class="anthem-btn" type="button">Play</button>
           <span class="anthem-title">${a.title}</span>
         </div>
-      `).join('');
+      `).join('') || '<div class="anthem-item">Add tracks in audio/…</div>';
       list.addEventListener('click', e=>{
         const btn = e.target.closest('.anthem-btn'); if(!btn) return;
         const i = +btn.parentElement.dataset.i;
