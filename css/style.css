@@ -155,18 +155,19 @@ body.home{
     url("../img/banner.jpg") center / cover no-repeat fixed;
 }
 
-/* === Home layout: posts start below the fold, then features === */
-body.home .home-posts{ margin-top:100vh; }  /* one screen before posts */
-body.home .post-card{ background:rgba(12,14,24,.32); border-color:rgba(185,205,255,.20); }
+/* === Home: 2-column layout (content | right sidebar) === */
+.home-2col{display:grid;gap:1.25rem}
+@media (min-width:1024px){
+  .home-2col{grid-template-columns:minmax(0,1fr) 320px}
+}
+.sidebar{
+  display:grid;gap:1rem;
+  position:sticky; top:1rem; align-self:start;
+}
 
-/* Reveal-on-scroll for cards */
-.reveal-card{opacity:0; transform:translateY(22px); transition:opacity .5s ease-out, transform .5s ease-out; will-change:opacity,transform;}
-.reveal-card.is-visible{ opacity:1; transform:translateY(0); }
-
-/* Solid feature boxes */
-.home-features{ margin-top:1.75rem; display:grid;grid-template-columns:1fr;gap:1rem; }
+/* Home features (left column content boxes) */
+.home-features{ margin-top:1.25rem; display:grid;grid-template-columns:1fr;gap:1rem; }
 @media (min-width:900px){ .home-features{ grid-template-columns:1fr 1fr; } }
-@media (min-width:1200px){ .home-features{ grid-template-columns:1fr 1fr 1fr; } }
 .feature-card{
   background:rgba(8,10,18,.98);
   border:1px solid rgba(185,205,255,.28);
@@ -176,10 +177,20 @@ body.home .post-card{ background:rgba(12,14,24,.32); border-color:rgba(185,205,2
 .feature-quote{ margin:0; min-height:3.25rem; }
 .feature-body{ min-height:4.5rem; }
 
-/* === Anthems (music) === */
+/* === Anthems (distinct, italic, music notes) === */
+.anthem-card{
+  font-style:italic;
+  background:rgba(14,16,28,.95);
+  border:1px solid rgba(185,205,255,.50);
+  padding:1rem 1.1rem;
+}
+.anthem-card .feature-title{font-style:italic}
+.anthem-card .feature-title::before{content:"♫ "; opacity:.9}
+.anthem-card .feature-title::after{content:" ♪"; opacity:.9}
 .anthems-list{display:grid;gap:.6rem}
 .anthem-item{display:flex;align-items:center;gap:.65rem}
 .anthem-btn{
+  font-style:normal; /* keep buttons readable */
   border:1px solid var(--border);background:rgba(12,14,24,.4);color:var(--text);
   padding:.45rem .7rem;border-radius:.35rem;cursor:pointer;font:inherit
 }
@@ -187,3 +198,11 @@ body.home .post-card{ background:rgba(12,14,24,.32); border-color:rgba(185,205,2
 .anthem-title{opacity:0;transition:opacity .35s ease; color:var(--muted)}
 .anthem-title.show{opacity:1}
 .now-playing{color:#fff}
+
+/* === Home layout extras === */
+body.home .home-posts{ margin-top:100vh; }  /* one screen before posts */
+body.home .post-card{ background:rgba(12,14,24,.32); border-color:rgba(185,205,255,.20); }
+
+/* Reveal-on-scroll for cards */
+.reveal-card{opacity:0; transform:translateY(22px); transition:opacity .5s ease-out, transform .5s ease-out; will-change:opacity,transform;}
+.reveal-card.is-visible{ opacity:1; transform:translateY(0); }
