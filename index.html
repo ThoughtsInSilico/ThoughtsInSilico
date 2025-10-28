@@ -24,4 +24,195 @@
           <a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
           <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
         </div>
-      <
+      </div>
+      <a href="categories.html?cat=Mathematics">Mathematics</a>
+      <a href="categories.html?cat=Technology">Technology</a>
+      <a href="categories.html?cat=Music">Music</a>
+      <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
+    </nav>
+  </header>
+
+  <!-- SINGLE airy SVG overlay: randomized path each load -->
+  <div class="flight-layer" aria-hidden="true">
+    <svg class="flight-svg" viewBox="0 0 1000 1700" preserveAspectRatio="none">
+      <!-- path is randomized by JS -->
+      <path id="flightPath" d="" fill="none" />
+      <!-- dotted trace (draws quick, then fades out) -->
+      <path id="tracePath"
+            d=""
+            fill="none"
+            stroke="#f3f6ff"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-dasharray="0 9"
+            stroke-dashoffset="1200">
+        <!-- quick draw -->
+        <animate attributeName="stroke-dashoffset"
+                 from="1200" to="0"
+                 dur="0.8s" begin="0s" fill="freeze"
+                 calcMode="spline" keySplines=".22 .61 .36 1"/>
+        <!-- fade away shortly after -->
+        <animate attributeName="opacity"
+                 from="1" to="0"
+                 dur="1s" begin="0.6s" fill="freeze"/>
+      </path>
+
+      <!-- solid milky plane (larger), follows the path -->
+      <g id="plane" stroke="#f3f6ff" fill="none" stroke-width="2.8" stroke-linejoin="round">
+        <path d="M4 30L60 6 28 36"/>
+        <path d="M28 36l4 20 6-14 22-36"/>
+        <animateMotion id="planeMotion" dur="12s" rotate="auto" repeatCount="indefinite"
+                       calcMode="spline" keySplines=".22 .61 .36 1">
+          <mpath href="#flightPath"/>
+        </animateMotion>
+      </g>
+    </svg>
+  </div>
+
+  <!-- POSTS (start one full viewport down; CSS adds margin-top: 100vh) -->
+  <main class="container home-posts">
+    <h2 class="list-heading">Recent posts</h2>
+    <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
+
+    <!-- Solid, larger personal boxes (you fill them) -->
+    <section class="home-features" aria-label="Personal updates">
+      <article class="feature-card">
+        <h3 class="feature-title">Quote of the week</h3>
+        <blockquote class="feature-quote"></blockquote>
+      </article>
+
+      <article class="feature-card">
+        <h3 class="feature-title">What I’m up to</h3>
+        <div class="feature-body"></div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p><small>© 2025 Thoughts In Silico.</small></p>
+  </footer>
+
+  <!-- Typed site title (no shifting) -->
+  <script>
+    (function(){
+      const el = document.querySelector('.site-title');
+      const txt = el.textContent.trim();
+      el.textContent = "";
+      el.classList.add('typer');
+      let i=0; const id=setInterval(()=>{
+        el.textContent = txt.slice(0, ++i);
+        if(i>=txt.length){ clearInterval(id); el.classList.add('caret-done'); }
+      }, 55);
+    })();
+  </script>
+
+  <!-- Render posts (newest first) -->
+  <script>
+    (async function(){
+      const grid = document.getElementById('posts-grid');
+      try{
+        const res = await fetch('posts/posts.json');
+        let posts = await res.json();
+        posts = posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
+        grid.innerHTML = posts.map(p => `
+          <article class="post-card reveal-card">
+            <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
+            <time class="post-time" datetime="${p.date}">${new Date(p.date).toLocaleString(undefined,{month:'short',year:'numeric'})}</time>
+            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
+          </article>
+        `).join('');
+        if (window.MathJax?.typeset) MathJax.typeset();
+      }catch(e){
+        console.error(e);
+        grid.innerHTML = '<p class="muted">Could not load posts.</p>';
+      }
+    })();
+  </script>
+
+  <!-- Reveal on scroll + plane fade at bottom + RANDOM PATH -->
+  <script>
+    (function(){
+      /* Reveal cards when they enter */
+      const obs = new IntersectionObserver((es)=>es.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+      }),{threshold:0.12});
+      const start = ()=> document.querySelectorAll('.reveal-card').forEach(el=>obs.observe(el));
+      const mo = new MutationObserver(start);
+      mo.observe(document.getElementById('posts-grid'), {childList:true});
+      start();
+
+      /* Fade out the SVG overlay near the bottom */
+      const layer = document.querySelector('.flight-layer');
+      const thresh = 60;
+      const onScroll = () => {
+        const atBottom = window.innerHeight + window.scrollY >= (document.documentElement.scrollHeight - thresh);
+        layer.style.opacity = atBottom ? 0 : 1;
+        layer.style.transition = 'opacity .7s ease';
+      };
+      window.addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+
+      /* -------- Randomize the plane path each load -------- */
+      const svg = document.querySelector('.flight-svg');
+      const path = document.getElementById('flightPath');
+      const trace = document.getElementById('tracePath');
+
+      // Utility: clamp
+      const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+
+      // Generate airy downward path with one subtle loop
+      function randomPath() {
+        const W = 1000, H = 1700;         // SVG viewBox size
+        const topY = 60 + Math.random()*80;
+        const startX = 780 + Math.random()*120; // start near right-top
+
+        // helper to get random point
+        const rp = (x0, x1, y0, y1) => [
+          clamp(x0 + Math.random()*(x1-x0), 40, 960),
+          clamp(y0 + Math.random()*(y1-y0), 40, H-40)
+        ];
+
+        // airy sweep across
+        const c1 = rp(600, 860, 40, 160);
+        const p1 = rp(520, 760, 120, 220);
+
+        // small loop (two curves that cross slightly)
+        const c2 = rp(620, 900, 200, 340);
+        const p2 = rp(760, 900, 300, 380);
+        const c3 = rp(880, 960, 340, 430);
+        const p3 = rp(760, 860, 420, 470);
+
+        // descend with gentle S-turns
+        const c4 = rp(640, 860, 460, 560);
+        const p4 = rp(700, 900, 560, 620);
+
+        const c5 = rp(580, 820, 620, 740);
+        const p5 = rp(760, 920, 700, 790);
+
+        const c6 = rp(700, 900, 780, 920);
+        const p6 = rp(820, 940, 870, 980);
+
+        const c7 = rp(700, 900, 960, 1140);
+        const p7 = rp(760, 940, 1060, 1180);
+
+        const c8 = rp(540, 820, 1180, 1320);
+        const p8 = rp(420, 640, 1450, 1580); // end lower-leftish
+
+        return [
+          `M ${startX} ${topY}`,
+          `C ${c1[0]} ${c1[1]}, ${p1[0]} ${p1[1]}, ${c2[0]} ${c2[1]}`,
+          `C ${p2[0]} ${p2[1]}, ${c3[0]} ${c3[1]}, ${p3[0]} ${p3[1]}`,
+          `C ${c4[0]} ${c4[1]}, ${p4[0]} ${p4[1]}, ${c5[0]} ${c5[1]}`,
+          `C ${p5[0]} ${p5[1]}, ${c6[0]} ${c6[1]}, ${p6[0]} ${p6[1]}`,
+          `C ${c7[0]} ${c7[1]}, ${p7[0]} ${p7[1]}, ${c8[0]} ${c8[1]}`,
+          `C ${p8[0]} ${p8[1]}, ${p8[0]-120} ${p8[1]}, ${p8[0]} ${p8[1]}`
+        ].join(' ');
+      }
+
+      const d = randomPath();
+      path.setAttribute('d', d);
+      trace.setAttribute('d', d);
+    })();
+  </script>
+</body>
+</html>
