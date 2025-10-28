@@ -31,27 +31,23 @@
     </nav>
   </header>
 
-  <main class="container">
+  <!-- POSTS SECTION (starts one full viewport below) -->
+  <main class="container home-posts">
     <h2 class="list-heading">Recent posts</h2>
     <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-    <!-- Fully solid personal boxes -->
+    <!-- Solid, larger personal boxes BELOW the posts -->
     <section class="home-features" aria-label="Personal updates">
       <article class="feature-card">
         <h3 class="feature-title">Quote of the week</h3>
-        <blockquote class="feature-quote">
-          <p>“Mathematics is the art of giving the same name to different things.”</p>
-          <footer>— Henri Poincaré</footer>
-        </blockquote>
+        <!-- Add your quote inside this blockquote -->
+        <blockquote class="feature-quote"></blockquote>
       </article>
 
       <article class="feature-card">
         <h3 class="feature-title">What I’m up to</h3>
-        <ul class="feature-list">
-          <li>Drafting a short piece on correlationism vs. symmetry.</li>
-          <li>Revisiting olympiad geometry (for fun, not speed).</li>
-          <li>Tinkering with a tiny JS library for footnotes.</li>
-        </ul>
+        <!-- Add whatever you like below (list or paragraphs) -->
+        <div class="feature-body"></div>
       </article>
     </section>
   </main>
@@ -61,7 +57,7 @@
   </footer>
 
   <script>
-    // Typewriter for the site title (layout is fixed in CSS, so no shifting)
+    // Typewriter for the site title (header layout is fixed, no shifting)
     (function(){
       const el = document.querySelector('.site-title');
       const txt = el.textContent.trim();
