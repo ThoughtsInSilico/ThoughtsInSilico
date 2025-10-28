@@ -34,23 +34,28 @@
     </nav>
   </header>
 
-  <main class="container home-posts">
-    <h2 class="list-heading">Recent posts</h2>
-    <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
+  <!-- NEW: two-column layout (content | right sidebar) -->
+  <main class="container home-2col">
+    <section>
+      <h2 class="list-heading">Recent posts</h2>
+      <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-    <section class="home-features" aria-label="Personal updates">
-      <article class="feature-card">
-        <h3 class="feature-title">Quote of the week</h3>
-        <blockquote class="feature-quote"></blockquote>
-      </article>
+      <section class="home-features" aria-label="Personal updates">
+        <article class="feature-card">
+          <h3 class="feature-title">Quote of the week</h3>
+          <blockquote class="feature-quote"></blockquote>
+        </article>
 
-      <article class="feature-card">
-        <h3 class="feature-title">What I’m up to</h3>
-        <div class="feature-body"></div>
-      </article>
+        <article class="feature-card">
+          <h3 class="feature-title">What I’m up to</h3>
+          <div class="feature-body"></div>
+        </article>
+      </section>
+    </section>
 
-      <!-- NEW: Anthems (music snippets) -->
-      <article class="feature-card" id="anthems">
+    <!-- Right sidebar -->
+    <aside class="sidebar" aria-label="Sidebar">
+      <article class="feature-card anthem-card" id="anthems">
         <h3 class="feature-title">Anthems</h3>
         <div class="anthems-list" id="anthems-list">
           <!-- populated by JS -->
@@ -58,7 +63,7 @@
         <!-- one shared audio element -->
         <audio id="anthem-audio" preload="none"></audio>
       </article>
-    </section>
+    </aside>
   </main>
 
   <footer class="site-footer container">
@@ -138,18 +143,16 @@
   <!-- Anthems logic -->
   <script>
     (function(){
-      // 1) Put your audio files in /audio and rename below.
-      //    You can also use full URLs (e.g., from SoundCloud direct MP3/CDN links).
+      // Put your audio files in /audio and rename below.
       const ANTHEMS = [
-        { title: "Allegra (solo sketch)", src: "audio/anthem1.mp3" },
-        { title: "Third Stream Study in D", src: "audio/anthem2.mp3" },
-        { title: "Nocturne for Two Tenors", src: "audio/anthem3.mp3" }
+        { title: "Allegra (solo sketch)",  src: "audio/anthem1.mp3" },
+        { title: "Third Stream Study in D",src: "audio/anthem2.mp3" },
+        { title: "Nocturne for Two Tenors",src: "audio/anthem3.mp3" }
       ];
 
-      const list = document.getElementById('anthems-list');
+      const list  = document.getElementById('anthems-list');
       const audio = document.getElementById('anthem-audio');
 
-      // make list
       list.innerHTML = ANTHEMS.map((a,i)=>`
         <div class="anthem-item" data-i="${i}">
           <button class="anthem-btn" type="button">Play me</button>
@@ -159,25 +162,22 @@
 
       let current = -1;
 
-      // helper to show/hide titles with fade
       function showTitle(i){
         document.querySelectorAll('.anthem-title').forEach(t => {
           t.classList.remove('show','now-playing');
         });
         if(i>=0){
-          const t = list.querySelector(`.anthem-item[data-i="${i}"] .anthem-title`);
+          const t = list.querySelector(\`.anthem-item[data-i="\${i}"] .anthem-title\`);
           t.classList.add('show','now-playing');
         }
       }
 
-      // click handlers
       list.addEventListener('click', (e)=>{
         const btn = e.target.closest('.anthem-btn');
         if(!btn) return;
         const item = e.target.closest('.anthem-item');
         const i = +item.dataset.i;
 
-        // if clicking the same item, toggle play/pause
         if(i === current && !audio.paused){
           audio.pause();
           return;
@@ -189,9 +189,7 @@
         showTitle(i);
       });
 
-      // when a track ends, clear highlight
       audio.addEventListener('ended', ()=>{ showTitle(-1); current = -1; });
-      audio.addEventListener('pause', ()=>{ /* keep title visible on pause; do nothing */ });
     })();
   </script>
 </body>
