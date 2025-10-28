@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Categories • Thoughts In Silico</title>
+  <title>Categories • Silico: Book of Genesis</title>
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
   <script>
@@ -13,12 +13,13 @@
 </head>
 <body>
   <div class="layout">
-    <!-- Sidebar -->
+    <!-- ===== Sidebar ===== -->
     <aside class="sidebar" role="navigation" aria-label="Primary">
       <div class="brand">
         <div class="sig">◇</div>
-        <a class="site-title" href="index.html" style="color:inherit;text-decoration:none;">Thoughts In Silico</a>
+        <a class="site-title" href="index.html" style="color:inherit;text-decoration:none;">Silico: Book of Genesis</a>
       </div>
+
       <nav>
         <h3>Pages</h3>
         <ul>
@@ -49,7 +50,7 @@
       </nav>
     </aside>
 
-    <!-- Main -->
+    <!-- ===== Main ===== -->
     <main class="main">
       <section class="container section">
         <h1 id="cat-title" class="site-title" style="font-size: clamp(28px,5vw,46px);">Posts</h1>
@@ -58,17 +59,22 @@
       </section>
 
       <footer class="container" style="padding:18px 0 30px">
-        <p><small>© 2025 Thoughts In Silico.</small></p>
+        <p><small>© <span id="y"></span> Silico: Book of Genesis.</small></p>
       </footer>
     </main>
   </div>
 
   <script>
-    const params = new URL(location.href).searchParams;
-    const catText = (params.get('cat')||'All').replace(/\+/g,' ');
-    const subText = (params.get('sub')||'').replace(/\+/g,' ');
-    document.getElementById('cat-title').textContent = subText ? `${catText} • ${subText}` : (catText==='All' ? 'Posts' : catText);
+    document.getElementById('y').textContent = new Date().getFullYear();
 
+    // Read category/subcategory from query string
+    const params = new URL(location.href).searchParams;
+    const catText = (params.get('cat') || 'All').replace(/\+/g,' ');
+    const subText = (params.get('sub') || '').replace(/\+/g,' ');
+    document.getElementById('cat-title').textContent =
+      subText ? `${catText} • ${subText}` : (catText === 'All' ? 'Posts' : catText);
+
+    // Load posts.json (works if it's at /posts.json or /posts/posts.json)
     async function loadPostsJSON(){
       const candidates = ['posts.json', 'posts/posts.json'];
       let lastErr;
@@ -98,12 +104,12 @@
             </time>
             <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
           </article>
-        `).join('') || '<p class="muted">No posts yet.</p>';
+        `).join('') || '<p class="post-body" style="color:#b7b3ac">No posts yet.</p>';
 
         if (window.MathJax?.typeset) MathJax.typeset();
       }catch(e){
         console.error('Failed to load posts.json:', e);
-        grid.innerHTML = '<p class="muted">Could not load posts.</p>';
+        grid.innerHTML = '<p class="post-body" style="color:#b7b3ac">Could not load posts.</p>';
       }
     })();
   </script>
