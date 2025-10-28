@@ -6,13 +6,21 @@
   <title>Thoughts In Silico</title>
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
+
+  <!-- MathJax (for titles or snippets that include LaTeX) -->
   <script>
-    /* MathJax site-wide */
-    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']]
+      }
+    };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
 <body class="home">
+  <!-- Header (title / blurb handled in CSS ::after / menu) -->
   <header class="site-header container">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
     <nav class="site-nav" aria-label="Primary">
@@ -32,66 +40,12 @@
     </nav>
   </header>
 
-  <!-- SINGLE airy SVG overlay: solid 3D-ish plane + short-lived dotted trail -->
-  <div class="flight-layer" aria-hidden="true">
-    <svg class="flight-svg" viewBox="0 0 1000 1700" preserveAspectRatio="none">
-      <defs>
-        <!-- Subtle 3D-ish gradient for the filled paper plane -->
-        <linearGradient id="planeGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%"  stop-color="#ffffff"/>
-          <stop offset="55%" stop-color="#eef2ff"/>
-          <stop offset="100%" stop-color="#dfe6ff"/>
-        </linearGradient>
-
-        <!-- soft drop shadow -->
-        <filter id="planeShadow" x="-50%" y="-50%" width="200%" height="200%">
-          <feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-color="#000000" flood-opacity=".35"/>
-        </filter>
-      </defs>
-
-      <!-- Path is set by JS for smooth sweep → loop → descend -->
-      <path id="flightPath" d="" fill="none" />
-
-      <!-- Short-lived dotted trace (draws fast then fades in ~0.5s) -->
-      <path id="tracePath"
-            d=""
-            fill="none"
-            stroke="#f3f6ff"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-dasharray="0 9"
-            stroke-dashoffset="1200"
-            opacity="0">
-        <!-- quick draw -->
-        <animate attributeName="stroke-dashoffset"
-                 from="1200" to="0"
-                 dur="0.35s" begin="0s" fill="freeze"
-                 calcMode="spline" keySplines=".22 .61 .36 1"/>
-        <!-- appear briefly then fade -->
-        <animate attributeName="opacity"
-                 from="1" to="0"
-                 dur="0.5s" begin="0.15s" fill="freeze"/>
-      </path>
-
-      <!-- Solid, slightly 3D paper plane following the path -->
-      <g id="plane" fill="url(#planeGrad)" stroke="#e9efff" stroke-width="1.2" filter="url(#planeShadow)">
-        <!-- a filled folded plane + a crease for 3D look -->
-        <path d="M2 28 L58 6 L36 34 L46 58 Z"/>
-        <path d="M36 34 L8 22" fill="none" stroke="#cfd9ff" stroke-width="1.2"/>
-        <animateMotion id="planeMotion" dur="10s" rotate="auto" repeatCount="indefinite"
-                       calcMode="spline" keySplines=".22 .61 .36 1">
-          <mpath href="#flightPath"/>
-        </animateMotion>
-      </g>
-    </svg>
-  </div>
-
-  <!-- POSTS (start one full viewport down; CSS adds margin-top: 100vh) -->
+  <!-- Main (Recent posts start one full viewport down; see CSS margin-top:100vh) -->
   <main class="container home-posts">
     <h2 class="list-heading">Recent posts</h2>
     <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-    <!-- Solid, larger personal boxes (you fill them) -->
+    <!-- Personal feature cards (solid; you fill these) -->
     <section class="home-features" aria-label="Personal updates">
       <article class="feature-card">
         <h3 class="feature-title">Quote of the week</h3>
@@ -109,119 +63,74 @@
     <p><small>© 2025 Thoughts In Silico.</small></p>
   </footer>
 
-  <!-- Typed site title (layout is fixed; no shifting) -->
+  <!-- Typewriter effect for site title (header layout is fixed in CSS; no shifting) -->
   <script>
     (function(){
       const el = document.querySelector('.site-title');
       const txt = el.textContent.trim();
       el.textContent = "";
       el.classList.add('typer');
-      let i=0; const id=setInterval(()=>{
+      let i = 0;
+      const id = setInterval(()=>{
         el.textContent = txt.slice(0, ++i);
-        if(i>=txt.length){ clearInterval(id); el.classList.add('caret-done'); }
+        if(i >= txt.length){
+          clearInterval(id);
+          el.classList.add('caret-done');
+        }
       }, 55);
     })();
   </script>
 
-  <!-- Render posts (newest first) -->
+  <!-- Render “Recent posts” (newest first) -->
   <script>
     (async function(){
       const grid = document.getElementById('posts-grid');
       try{
-        const res = await fetch('posts/posts.json');
+        const res = await fetch('posts/posts.json');   /* adjust if your JSON path differs */
         let posts = await res.json();
-        posts = posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
+        posts = posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+
         grid.innerHTML = posts.map(p => `
           <article class="post-card reveal-card">
-            <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
-            <time class="post-time" datetime="${p.date}">${new Date(p.date).toLocaleString(undefined,{month:'short',year:'numeric'})}</time>
-            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
+            <h3 class="post-title">
+              <a href="${p.url}">${p.titleHtml || p.title}</a>
+            </h3>
+            <time class="post-time" datetime="${p.date}">
+              ${new Date(p.date).toLocaleString(undefined,{month:'short',year:'numeric'})}
+            </time>
+            <p class="post-meta">
+              ${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}
+            </p>
           </article>
         `).join('');
+
         if (window.MathJax?.typeset) MathJax.typeset();
-      }catch(e){
+      } catch (e) {
         console.error(e);
         grid.innerHTML = '<p class="muted">Could not load posts.</p>';
       }
     })();
   </script>
 
-  <!-- Reveal on scroll + set smooth path + fade plane at bottom -->
+  <!-- Reveal-on-scroll for cards -->
   <script>
     (function(){
-      /* Reveal cards */
-      const obs = new IntersectionObserver((es)=>es.forEach(e=>{
-        if(e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
-      }),{threshold:0.12});
-      const start = ()=> document.querySelectorAll('.reveal-card').forEach(el=>obs.observe(el));
+      const obs = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add('is-visible');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      const start = () =>
+        document.querySelectorAll('.reveal-card').forEach(el => obs.observe(el));
+
+      // In case posts render after load
       const mo = new MutationObserver(start);
-      mo.observe(document.getElementById('posts-grid'), {childList:true});
+      mo.observe(document.getElementById('posts-grid'), { childList: true });
       start();
-
-      /* Build a controlled-smooth path:
-         - start near site title (upper-left)
-         - sweep horizontally across to right
-         - small airy loop in the middle
-         - glide down to below the first screen */
-      const pathEl  = document.getElementById('flightPath');
-      const traceEl = document.getElementById('tracePath');
-
-      function clamp(v, lo, hi){ return Math.min(Math.max(v, lo), hi); }
-      function rnd(n){ return (Math.random()*2-1)*n; } // small gentle noise
-
-      // ViewBox size
-      const W = 1000, H = 1700;
-
-      // Start near the site title
-      const startX = clamp(220 + rnd(20), 120, 300);
-      const startY = clamp(90  + rnd(12),  60, 140);
-
-      // Cross to the right side (ensures a horizontal sweep)
-      const crossX  = clamp(860 + rnd(30), 800, 940);
-      const crossY  = clamp(150 + rnd(20), 120, 200);
-
-      // Mid loop center
-      const loopX   = clamp(600 + rnd(40), 540, 660);
-      const loopY   = clamp(320 + rnd(40), 280, 380);
-      const r       = 64; // loop "radius"
-
-      // End well below the fold
-      const endX    = clamp(420 + rnd(60), 320, 520);
-      const endY    = clamp(1150 + rnd(60), 1080, 1230);
-
-      // Helper: cubic arc for a loop (approximate circle using two beziers)
-      const loopUp   = `C ${loopX-r} ${loopY-r*0.3}, ${loopX-r*0.3} ${loopY-r}, ${loopX} ${loopY-r}`;
-      const loopDown = `C ${loopX+r*0.3} ${loopY-r}, ${loopX+r} ${loopY-r*0.3}, ${loopX+r} ${loopY}
-                         C ${loopX+r} ${loopY+r*0.3}, ${loopX+r*0.3} ${loopY+r}, ${loopX} ${loopY+r}
-                         C ${loopX-r*0.3} ${loopY+r}, ${loopX-r} ${loopY+r*0.3}, ${loopX-r} ${loopY}`;
-
-      // Compose path: start → sweep across → loop → descend smoothly
-      const d = [
-        `M ${startX} ${startY}`,
-        // wide sweep to the right
-        `C ${startX+220} ${startY-30}, ${crossX-200} ${crossY-10}, ${crossX} ${crossY}`,
-        // gentle slide toward loop entry
-        `S ${loopX-140} ${loopY-60}, ${loopX-30} ${loopY-10}`,
-        // airy loop
-        loopUp,
-        loopDown,
-        // exit loop and descend with S-curve, landing below fold
-        `C ${loopX+120} ${loopY+140}, ${endX+180} ${endY-220}, ${endX} ${endY}`
-      ].join(' ');
-
-      pathEl.setAttribute('d', d);
-      traceEl.setAttribute('d', d);
-
-      /* Fade out the whole SVG overlay near the bottom */
-      const layer = document.querySelector('.flight-layer');
-      const thresh = 60;
-      const onScroll = () => {
-        const atBottom = window.innerHeight + window.scrollY >= (document.documentElement.scrollHeight - thresh);
-        layer.style.opacity = atBottom ? 0 : 1;
-        layer.style.transition = 'opacity .7s ease';
-      };
-      window.addEventListener('scroll', onScroll, {passive:true});
-      onScroll();
     })();
   </script>
 </body>
