@@ -8,10 +8,11 @@
   <meta name="theme-color" content="#000000" />
 </head>
 <body>
+  <!-- Header (matches site layout) -->
   <header class="site-header container">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
     <nav class="site-nav" aria-label="Primary">
-      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
+      <a href="index.html">Home</a>
       <div class="nav-dropdown">
         <a href="categories.html?cat=Fiction">Fiction ▾</a>
         <div class="nav-submenu nav-submenu--row">
@@ -19,31 +20,56 @@
           <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
         </div>
       </div>
+      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
       <a href="categories.html?cat=Mathematics">Mathematics</a>
-      <a href="categories.html?cat=Technology">Technology</a>
-      <a href="categories.html?cat=Music">Music</a>
-      <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
-      <a href="about.html">About</a>
+      <a href="about.html" aria-current="page">About</a>
     </nav>
   </header>
 
   <main class="container page-main">
     <article class="post-card">
       <h1>About</h1>
-      <div class="post-body">
-        <p>Hi, my name is Reza. </p>
-        <p>My first love was mathematics, and I'm an aspiring mathematician (that's what I'll do if I don't just run off to live in the Alps).  I'm a true-blue technophile and posthumanist. And I've played saxophone since I was 12, mostly Third Stream artists, but also my own improvisations. When I'm not in a love affair with differential topology, I'm also an avid reader. Here, you'll get a bit of all that, and more. </p>
-        <p>I don't know if anyone reads this blog at all. Perhaps, I've coded this all for nothing. But if you do, you made my day with your curiosity. </p>
-        <p>If you want to reach out: message me on Discord or at non.ergodic.system@gmail.com </p>
-      </div>
+
+      <!-- quick-jump links (optional) -->
+      <p class="muted" style="margin:.25rem 0 1rem;">
+        <a href="#about-me">About me</a> • <a href="#about-site">About the site</a>
+      </p>
+
+      <!-- ===== About Me (TOP) ===== -->
+      <section id="about-me" class="post-body" aria-labelledby="about-me-heading">
+        <h2 id="about-me-heading">About me</h2>
+
+        <p>Hi, my name is Reza.</p>
+        <p>My first love was mathematics, and I'm an aspiring mathematician (that's what I'll do if I don't just run off to live in the Alps). I'm a true-blue technophile and posthumanist. And I've played saxophone since I was 12, mostly Third Stream artists, but also my own improvisations. When I'm not in a love affair with differential topology, I'm also an avid reader. Here, you'll get a bit of all that, and more.</p>
+        <p>I don't know if anyone reads this blog at all. Perhaps, I've coded this all for nothing. But if you do, you made my day with your curiosity.</p>
+        <p>If you want to reach out: message me on Discord or at <a href="mailto:non.ergodic.system@gmail.com">non.ergodic.system@gmail.com</a></p>
+      </section>
+
+      <hr />
+
+      <!-- ===== About the Site (BOTTOM) ===== -->
+      <section id="about-site" class="post-body" aria-labelledby="about-site-heading">
+        <h2 id="about-site-heading">About the site</h2>
+
+        <!-- Write your site blurb here. Example placeholders you can overwrite: -->
+        <!--
+        <p>What this blog is about, posting cadence, how categories are organized, any tech notes about the theme or stack, and how to cite or share posts.</p>
+        <p>Policy on edits/errata, and where to find updates (RSS, email, etc.).</p>
+        -->
+      </section>
+
+      <p><a href="index.html">← Back to Home</a></p>
     </article>
   </main>
 
   <footer class="site-footer container">
-    <p><small>© 2025 Thoughts In Silico.</small></p>
+    <small>© <span id="y"></span> Thoughts In Silico</small>
   </footer>
 
   <script>
+    // Footer year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
     // Typewriter for page title
     (function(){
       const h1 = document.querySelector('article h1');
