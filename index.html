@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
   <script>
-    /* MathJax stays available site-wide */
+    /* MathJax site-wide */
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -32,12 +32,27 @@
     </nav>
   </header>
 
-  <!-- SINGLE airy SVG overlay: randomized path each load -->
+  <!-- SINGLE airy SVG overlay: solid 3D-ish plane + short-lived dotted trail -->
   <div class="flight-layer" aria-hidden="true">
     <svg class="flight-svg" viewBox="0 0 1000 1700" preserveAspectRatio="none">
-      <!-- path is randomized by JS -->
+      <defs>
+        <!-- Subtle 3D-ish gradient for the filled paper plane -->
+        <linearGradient id="planeGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"  stop-color="#ffffff"/>
+          <stop offset="55%" stop-color="#eef2ff"/>
+          <stop offset="100%" stop-color="#dfe6ff"/>
+        </linearGradient>
+
+        <!-- soft drop shadow -->
+        <filter id="planeShadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-color="#000000" flood-opacity=".35"/>
+        </filter>
+      </defs>
+
+      <!-- Path is set by JS for smooth sweep → loop → descend -->
       <path id="flightPath" d="" fill="none" />
-      <!-- dotted trace (draws quick, then fades out) -->
+
+      <!-- Short-lived dotted trace (draws fast then fades in ~0.5s) -->
       <path id="tracePath"
             d=""
             fill="none"
@@ -45,23 +60,25 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-dasharray="0 9"
-            stroke-dashoffset="1200">
+            stroke-dashoffset="1200"
+            opacity="0">
         <!-- quick draw -->
         <animate attributeName="stroke-dashoffset"
                  from="1200" to="0"
-                 dur="0.8s" begin="0s" fill="freeze"
+                 dur="0.35s" begin="0s" fill="freeze"
                  calcMode="spline" keySplines=".22 .61 .36 1"/>
-        <!-- fade away shortly after -->
+        <!-- appear briefly then fade -->
         <animate attributeName="opacity"
                  from="1" to="0"
-                 dur="1s" begin="0.6s" fill="freeze"/>
+                 dur="0.5s" begin="0.15s" fill="freeze"/>
       </path>
 
-      <!-- solid milky plane (larger), follows the path -->
-      <g id="plane" stroke="#f3f6ff" fill="none" stroke-width="2.8" stroke-linejoin="round">
-        <path d="M4 30L60 6 28 36"/>
-        <path d="M28 36l4 20 6-14 22-36"/>
-        <animateMotion id="planeMotion" dur="12s" rotate="auto" repeatCount="indefinite"
+      <!-- Solid, slightly 3D paper plane following the path -->
+      <g id="plane" fill="url(#planeGrad)" stroke="#e9efff" stroke-width="1.2" filter="url(#planeShadow)">
+        <!-- a filled folded plane + a crease for 3D look -->
+        <path d="M2 28 L58 6 L36 34 L46 58 Z"/>
+        <path d="M36 34 L8 22" fill="none" stroke="#cfd9ff" stroke-width="1.2"/>
+        <animateMotion id="planeMotion" dur="10s" rotate="auto" repeatCount="indefinite"
                        calcMode="spline" keySplines=".22 .61 .36 1">
           <mpath href="#flightPath"/>
         </animateMotion>
@@ -92,7 +109,7 @@
     <p><small>© 2025 Thoughts In Silico.</small></p>
   </footer>
 
-  <!-- Typed site title (no shifting) -->
+  <!-- Typed site title (layout is fixed; no shifting) -->
   <script>
     (function(){
       const el = document.querySelector('.site-title');
@@ -129,10 +146,10 @@
     })();
   </script>
 
-  <!-- Reveal on scroll + plane fade at bottom + RANDOM PATH -->
+  <!-- Reveal on scroll + set smooth path + fade plane at bottom -->
   <script>
     (function(){
-      /* Reveal cards when they enter */
+      /* Reveal cards */
       const obs = new IntersectionObserver((es)=>es.forEach(e=>{
         if(e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
       }),{threshold:0.12});
@@ -141,7 +158,61 @@
       mo.observe(document.getElementById('posts-grid'), {childList:true});
       start();
 
-      /* Fade out the SVG overlay near the bottom */
+      /* Build a controlled-smooth path:
+         - start near site title (upper-left)
+         - sweep horizontally across to right
+         - small airy loop in the middle
+         - glide down to below the first screen */
+      const pathEl  = document.getElementById('flightPath');
+      const traceEl = document.getElementById('tracePath');
+
+      function clamp(v, lo, hi){ return Math.min(Math.max(v, lo), hi); }
+      function rnd(n){ return (Math.random()*2-1)*n; } // small gentle noise
+
+      // ViewBox size
+      const W = 1000, H = 1700;
+
+      // Start near the site title
+      const startX = clamp(220 + rnd(20), 120, 300);
+      const startY = clamp(90  + rnd(12),  60, 140);
+
+      // Cross to the right side (ensures a horizontal sweep)
+      const crossX  = clamp(860 + rnd(30), 800, 940);
+      const crossY  = clamp(150 + rnd(20), 120, 200);
+
+      // Mid loop center
+      const loopX   = clamp(600 + rnd(40), 540, 660);
+      const loopY   = clamp(320 + rnd(40), 280, 380);
+      const r       = 64; // loop "radius"
+
+      // End well below the fold
+      const endX    = clamp(420 + rnd(60), 320, 520);
+      const endY    = clamp(1150 + rnd(60), 1080, 1230);
+
+      // Helper: cubic arc for a loop (approximate circle using two beziers)
+      const loopUp   = `C ${loopX-r} ${loopY-r*0.3}, ${loopX-r*0.3} ${loopY-r}, ${loopX} ${loopY-r}`;
+      const loopDown = `C ${loopX+r*0.3} ${loopY-r}, ${loopX+r} ${loopY-r*0.3}, ${loopX+r} ${loopY}
+                         C ${loopX+r} ${loopY+r*0.3}, ${loopX+r*0.3} ${loopY+r}, ${loopX} ${loopY+r}
+                         C ${loopX-r*0.3} ${loopY+r}, ${loopX-r} ${loopY+r*0.3}, ${loopX-r} ${loopY}`;
+
+      // Compose path: start → sweep across → loop → descend smoothly
+      const d = [
+        `M ${startX} ${startY}`,
+        // wide sweep to the right
+        `C ${startX+220} ${startY-30}, ${crossX-200} ${crossY-10}, ${crossX} ${crossY}`,
+        // gentle slide toward loop entry
+        `S ${loopX-140} ${loopY-60}, ${loopX-30} ${loopY-10}`,
+        // airy loop
+        loopUp,
+        loopDown,
+        // exit loop and descend with S-curve, landing below fold
+        `C ${loopX+120} ${loopY+140}, ${endX+180} ${endY-220}, ${endX} ${endY}`
+      ].join(' ');
+
+      pathEl.setAttribute('d', d);
+      traceEl.setAttribute('d', d);
+
+      /* Fade out the whole SVG overlay near the bottom */
       const layer = document.querySelector('.flight-layer');
       const thresh = 60;
       const onScroll = () => {
@@ -151,67 +222,6 @@
       };
       window.addEventListener('scroll', onScroll, {passive:true});
       onScroll();
-
-      /* -------- Randomize the plane path each load -------- */
-      const svg = document.querySelector('.flight-svg');
-      const path = document.getElementById('flightPath');
-      const trace = document.getElementById('tracePath');
-
-      // Utility: clamp
-      const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
-
-      // Generate airy downward path with one subtle loop
-      function randomPath() {
-        const W = 1000, H = 1700;         // SVG viewBox size
-        const topY = 60 + Math.random()*80;
-        const startX = 780 + Math.random()*120; // start near right-top
-
-        // helper to get random point
-        const rp = (x0, x1, y0, y1) => [
-          clamp(x0 + Math.random()*(x1-x0), 40, 960),
-          clamp(y0 + Math.random()*(y1-y0), 40, H-40)
-        ];
-
-        // airy sweep across
-        const c1 = rp(600, 860, 40, 160);
-        const p1 = rp(520, 760, 120, 220);
-
-        // small loop (two curves that cross slightly)
-        const c2 = rp(620, 900, 200, 340);
-        const p2 = rp(760, 900, 300, 380);
-        const c3 = rp(880, 960, 340, 430);
-        const p3 = rp(760, 860, 420, 470);
-
-        // descend with gentle S-turns
-        const c4 = rp(640, 860, 460, 560);
-        const p4 = rp(700, 900, 560, 620);
-
-        const c5 = rp(580, 820, 620, 740);
-        const p5 = rp(760, 920, 700, 790);
-
-        const c6 = rp(700, 900, 780, 920);
-        const p6 = rp(820, 940, 870, 980);
-
-        const c7 = rp(700, 900, 960, 1140);
-        const p7 = rp(760, 940, 1060, 1180);
-
-        const c8 = rp(540, 820, 1180, 1320);
-        const p8 = rp(420, 640, 1450, 1580); // end lower-leftish
-
-        return [
-          `M ${startX} ${topY}`,
-          `C ${c1[0]} ${c1[1]}, ${p1[0]} ${p1[1]}, ${c2[0]} ${c2[1]}`,
-          `C ${p2[0]} ${p2[1]}, ${c3[0]} ${c3[1]}, ${p3[0]} ${p3[1]}`,
-          `C ${c4[0]} ${c4[1]}, ${p4[0]} ${p4[1]}, ${c5[0]} ${c5[1]}`,
-          `C ${p5[0]} ${p5[1]}, ${c6[0]} ${c6[1]}, ${p6[0]} ${p6[1]}`,
-          `C ${c7[0]} ${c7[1]}, ${p7[0]} ${p7[1]}, ${c8[0]} ${c8[1]}`,
-          `C ${p8[0]} ${p8[1]}, ${p8[0]-120} ${p8[1]}, ${p8[0]} ${p8[1]}`
-        ].join(' ');
-      }
-
-      const d = randomPath();
-      path.setAttribute('d', d);
-      trace.setAttribute('d', d);
     })();
   </script>
 </body>
