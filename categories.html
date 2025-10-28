@@ -3,86 +3,91 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Categories • Thoughts In Silico</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <meta name="theme-color" content="#000000" />
-  <script>
-    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
-  </script>
-  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <title>Categories — ThoughtsInSilico</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <meta name="description" content="Browse posts by topic." />
 </head>
 <body>
-  <header class="site-header container">
-    <a class="site-title" href="index.html">Thoughts In Silico</a>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
-      <div class="nav-dropdown">
-        <a href="categories.html?cat=Fiction">Fiction ▾</a>
-        <div class="nav-submenu nav-submenu--row">
-          <a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a>
-          <a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a>
-        </div>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" role="navigation" aria-label="Primary">
+      <div class="brand">
+        <div class="sig">◇</div>
+        <h1 class="site-title"><a href="/" style="color:inherit;text-decoration:none;">ThoughtsInSilico</a></h1>
       </div>
-      <a href="categories.html?cat=Mathematics">Mathematics</a>
-      <a href="categories.html?cat=Technology">Technology</a>
-      <a href="categories.html?cat=Music">Music</a>
-      <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
-      <a href="about.html">About</a>
-    </nav>
-  </header>
+      <nav>
+        <h3>Pages</h3>
+        <ul>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/categories.html" aria-current="page">Categories</a></li>
+          <li><a href="/library.html">My Library</a></li>
+        </ul>
 
-  <main class="container">
-    <h1 id="cat-title">Posts</h1>
-    <div id="posts-grid" class="posts-grid"></div>
-  </main>
+        <h3>Anthems</h3>
+        <div class="anthems">
+          <div class="anthem-item">1. <audio controls preload="none"><source src="/audio/anthem1.mp3" type="audio/mpeg"></audio></div>
+          <div class="anthem-item">2. <audio controls preload="none"><source src="/audio/anthem2.mp3" type="audio/mpeg"></audio></div>
+          <div class="anthem-item">3. <audio controls preload="none"><source src="/audio/anthem3.mp3" type="audio/mpeg"></audio></div>
+        </div>
+      </nav>
+    </aside>
 
-  <footer class="site-footer container">
-    <p><small>© 2025 Thoughts In Silico.</small></p>
-  </footer>
+    <!-- Main -->
+    <main class="main">
+      <section class="section">
+        <h1 class="site-title" style="font-size: clamp(34px,6vw,64px);">Categories</h1>
+        <hr class="hr-dots" />
+        <div id="cats"></div>
+      </section>
+    </main>
+  </div>
 
+  <!-- Simple JS to read /posts/posts.json and render lists. -->
   <script>
-    const params = new URL(location.href).searchParams;
-    const catText = (params.get('cat')||'All').replace(/\+/g,' ');
-    const subText = (params.get('sub')||'').replace(/\+/g,' ');
-    document.getElementById('cat-title').textContent = subText ? `${catText} • ${subText}` : catText;
+    // posts.json is expected to be an array of objects like:
+    // { "title": "...", "path": "/posts/some-post.html", "category": "Math" }
+    fetch('/posts/posts.json')
+      .then(r => r.json())
+      .then(posts => {
+        // group by category
+        const byCat = {};
+        posts.forEach(p => {
+          const c = p.category || 'Misc';
+          byCat[c] = byCat[c] || [];
+          byCat[c].push(p);
+        });
 
-    async function loadPostsJSON(){
-      const candidates = ['posts.json', 'posts/posts.json'];
-      let lastErr;
-      for(const path of candidates){
-        try{
-          const res = await fetch(path, {cache:'no-store'});
-          if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-          return await res.json();
-        }catch(e){ lastErr = e; }
-      }
-      throw lastErr;
-    }
+        // render
+        const container = document.getElementById('cats');
+        Object.keys(byCat).sort().forEach(cat => {
+          const section = document.createElement('section');
+          section.style.marginBottom = '22px';
 
-    (async function(){
-      const grid = document.getElementById('posts-grid');
-      try{
-        let posts = await loadPostsJSON();
-        posts = posts
-          .filter(p => (catText==='All' || p.category===catText) && (!subText || p.subcategory===subText))
-          .sort((a,b) => new Date(b.date) - new Date(a.date));
+          const h = document.createElement('h2');
+          h.textContent = cat;
+          h.style.margin = '0 0 10px';
+          section.appendChild(h);
 
-        grid.innerHTML = posts.map(p => `
-          <article class="post-card">
-            <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
-            <time class="post-time" datetime="${p.date}">
-              ${new Date(p.date).toLocaleString(undefined,{month:'short', year:'numeric'})}
-            </time>
-            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
-          </article>
-        `).join('') || '<p class="muted">No posts yet.</p>';
+          const ul = document.createElement('ul');
+          ul.style.margin = '0';
+          ul.style.paddingLeft = '18px';
 
-        if (window.MathJax?.typeset) MathJax.typeset();
-      }catch(e){
-        console.error('Failed to load posts.json:', e);
-        grid.innerHTML = '<p class="muted">Could not load posts.</p>';
-      }
-    })();
+          byCat[cat].forEach(p => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = p.path;
+            a.textContent = p.title;
+            li.appendChild(a);
+            ul.appendChild(li);
+          });
+
+          section.appendChild(ul);
+          container.appendChild(section);
+        });
+      })
+      .catch(() => {
+        document.getElementById('cats').innerHTML = '<p style="color:#b7b3ac">Could not load posts.json.</p>';
+      });
   </script>
 </body>
 </html>
