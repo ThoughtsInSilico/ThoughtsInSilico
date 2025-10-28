@@ -355,7 +355,7 @@ article.post-card{display:block}
 body.home{
   /* dark overlay for readability + the banner image */
   background:
-    linear-gradient(180deg, rgba(10,13,26,.78), rgba(10,13,26,.78)),
+    linear-gradient(180deg, rgba(10,13,26,.50), rgba(10,13,26,.50)),
     url("../img/banner.jpg") center / cover no-repeat fixed !important;
 }
 
