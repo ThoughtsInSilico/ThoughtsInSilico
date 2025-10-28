@@ -6,7 +6,6 @@
   <title>Thoughts In Silico</title>
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
-
   <script>
     window.MathJax = {
       tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] }
@@ -47,7 +46,17 @@
 
       <article class="feature-card">
         <h3 class="feature-title">What I’m up to</h3>
-        <div class="feature-body">Reading <em>Godel, Escher, Bach</em></div>
+        <div class="feature-body"></div>
+      </article>
+
+      <!-- NEW: Anthems (music snippets) -->
+      <article class="feature-card" id="anthems">
+        <h3 class="feature-title">Anthems</h3>
+        <div class="anthems-list" id="anthems-list">
+          <!-- populated by JS -->
+        </div>
+        <!-- one shared audio element -->
+        <audio id="anthem-audio" preload="none"></audio>
       </article>
     </section>
   </main>
@@ -79,7 +88,7 @@
     (async function(){
       const grid = document.getElementById('posts-grid');
       try{
-        const res = await fetch('posts/posts.json'); /* FIXED PATH */
+        const res = await fetch('posts/posts.json'); /* correct path */
         let posts = await res.json();
         posts = posts.sort((a,b) => new Date(b.date) - new Date(a.date));
 
@@ -123,6 +132,66 @@
       const mo = new MutationObserver(start);
       mo.observe(document.getElementById('posts-grid'), { childList: true });
       start();
+    })();
+  </script>
+
+  <!-- Anthems logic -->
+  <script>
+    (function(){
+      // 1) Put your audio files in /audio and rename below.
+      //    You can also use full URLs (e.g., from SoundCloud direct MP3/CDN links).
+      const ANTHEMS = [
+        { title: "Allegra (solo sketch)", src: "audio/anthem1.mp3" },
+        { title: "Third Stream Study in D", src: "audio/anthem2.mp3" },
+        { title: "Nocturne for Two Tenors", src: "audio/anthem3.mp3" }
+      ];
+
+      const list = document.getElementById('anthems-list');
+      const audio = document.getElementById('anthem-audio');
+
+      // make list
+      list.innerHTML = ANTHEMS.map((a,i)=>`
+        <div class="anthem-item" data-i="${i}">
+          <button class="anthem-btn" type="button">Play me</button>
+          <span class="anthem-title" aria-live="polite">${a.title}</span>
+        </div>
+      `).join('');
+
+      let current = -1;
+
+      // helper to show/hide titles with fade
+      function showTitle(i){
+        document.querySelectorAll('.anthem-title').forEach(t => {
+          t.classList.remove('show','now-playing');
+        });
+        if(i>=0){
+          const t = list.querySelector(`.anthem-item[data-i="${i}"] .anthem-title`);
+          t.classList.add('show','now-playing');
+        }
+      }
+
+      // click handlers
+      list.addEventListener('click', (e)=>{
+        const btn = e.target.closest('.anthem-btn');
+        if(!btn) return;
+        const item = e.target.closest('.anthem-item');
+        const i = +item.dataset.i;
+
+        // if clicking the same item, toggle play/pause
+        if(i === current && !audio.paused){
+          audio.pause();
+          return;
+        }
+
+        current = i;
+        audio.src = ANTHEMS[i].src;
+        audio.play().catch(console.error);
+        showTitle(i);
+      });
+
+      // when a track ends, clear highlight
+      audio.addEventListener('ended', ()=>{ showTitle(-1); current = -1; });
+      audio.addEventListener('pause', ()=>{ /* keep title visible on pause; do nothing */ });
     })();
   </script>
 </body>
