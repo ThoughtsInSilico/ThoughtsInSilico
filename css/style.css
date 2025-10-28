@@ -1,26 +1,27 @@
 /* =========================================================
-   Thoughts In Silico — layout/theme (words untouched)
+   Silico: Book of Genesis — layout/theme (words untouched)
    - Body font: Iceberg
-   - Site title font: UnifrakturMaguntia (medieval)
-   - Roman inscription font (Cinzel) for "Trvthnukes" subtitle
+   - Site title font: UnifrakturCook (clearer medieval S/C)
+   - Roman (Cinzel) only for the Trvthnukes subtitle
+   - Sidebar everywhere (also styles legacy .site-header)
    =======================================================*/
 
 /* ---------- Fonts ---------- */
-@import url('https://fonts.googleapis.com/css2?family=Iceberg&family=UnifrakturMaguntia&family=Cinzel:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&family=UnifrakturCook:wght@700&family=Cinzel:wght@400;600&display=swap');
 
 /* ---------- Tokens ---------- */
 :root{
   --bg: #0b0e10;
-  --bg-soft: #0f1418;
-  --ink: #e8e6e3;
-  --ink-dim: #b7b3ac;
+  --ink: #e8e6e3;              /* single text color everywhere */
+  --ink-dim: #cfcac3;
   --stroke: #232831;
-  --accent: #8da3ff;
-  --accent-2: #f2a9ff;
-  --shadow: 0 10px 30px rgba(0,0,0,.45);
 
-  --r1: 10px; --r2: 14px;
-  --s1: 6px;  --s2: 10px; --s3: 14px; --s4: 18px; --s5: 28px;
+  /* sidebar tinted toward title hue (deep indigo) */
+  --sidebar-top: #0d0f1a;
+  --sidebar-bot: #0a0d12;
+
+  --shadow: 0 10px 30px rgba(0,0,0,.45);
+  --r2: 14px;
 }
 
 /* ---------- Base + Type ---------- */
@@ -29,38 +30,34 @@ html,body{
   margin:0; padding:0; background:var(--bg); color:var(--ink);
   font:16px/1.6 'Iceberg', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
-a{ color:var(--accent); text-decoration:none; }
-a:hover{ text-decoration:underline; }
+a{ color:var(--ink); text-decoration: none; }
+a:hover{ text-decoration: underline; }
 img{ max-width:100%; display:block; }
 hr{ border:0; height:1px; background:var(--stroke); }
 
-/* Site title: medieval blackletter */
+/* Site title: clearer blackletter */
 .site-title{
-  font-family: 'UnifrakturMaguntia', serif;
+  font-family: 'UnifrakturCook', serif;
   font-size: clamp(28px, 5vw, 46px);
   line-height: 1.1; margin: 0;
   text-shadow: 0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
 
-/* Roman inscription font (for Trvthnukes subtitle) */
+/* Roman inscription font (for Trvthnukes subtitle only) */
 .roman{ font-family: 'Cinzel', serif; letter-spacing: .02em; }
 
-/* ---------- Layout: Sidebar + Main ---------- */
+/* ---------- New layout (index/categories/about) ---------- */
 .layout{
   display:grid; grid-template-columns:280px 1fr; min-height:100vh;
 }
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
-  background:linear-gradient(180deg, var(--bg-soft), var(--bg));
+  background:linear-gradient(180deg, var(--sidebar-top), var(--sidebar-bot));
   border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
   padding:22px 18px 28px;
 }
-.sidebar .brand{ display:flex; align-items:center; gap:10px; margin-bottom:var(--s2); }
-.sidebar .sig{
-  width:22px; height:22px; border:1px dashed var(--stroke); border-radius:50%;
-  display:grid; place-items:center; font-size:11px; color:var(--ink-dim);
-}
+.sidebar .brand{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
 .sidebar nav h3{
   font-size:12px; color:var(--ink-dim);
   text-transform:uppercase; letter-spacing:.12em;
@@ -74,21 +71,22 @@ hr{ border:0; height:1px; background:var(--stroke); }
 }
 .anthems .anthem-item{ margin:8px 0; font-size:13px; color:var(--ink-dim); }
 .sidebar audio{ width:100%; }
-
 .main{ min-height:100vh; overflow:hidden; }
 
-/* ---------- Hero: keep your banner image ---------- */
+/* ---------- HERO: keep your banner image ---------- */
 .hero{
-  min-height:100vh;             /* show off art; keeps scroll */
+  min-height:100vh;                               /* full screen */
   background:url('img/banner.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
 
-/* ---------- Cards / grids (as before) ---------- */
+/* ---------- Cards / grids ---------- */
 .container{ width:min(1100px, 100% - 40px); margin:0 auto; }
 .section{ padding:28px 0; }
+
 .posts-grid{
-  display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px;
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+  gap:16px;
 }
 .post-card, .feature-card, .anthem-card, .card{
   background:linear-gradient(180deg,#0d1116,#0a0d11);
@@ -96,18 +94,41 @@ hr{ border:0; height:1px; background:var(--stroke); }
 }
 .post-card h3{ margin:8px 0 6px; }
 .post-time, .post-meta{ color:var(--ink-dim); }
+.post-body p, .post-card p, .card p{ text-align: justify; } /* keep justified */
 .list-heading{ margin:0 0 10px; }
 
-/* ---------- Post body justification ---------- */
-.post-body p, .card p, .post-card p{ text-align: justify; }
+/* ---------- SIDE NAV for legacy post pages ---------------
+   Your old posts have a top .site-header/.site-nav.
+   These rules restyle that header AS A SIDEBAR so you
+   don’t have to edit each post file.
+--------------------------------------------------------- */
+.site-header{
+  position: fixed; top:0; left:0; width:280px; height:100vh;
+  padding:22px 18px 28px;
+  background:linear-gradient(180deg, var(--sidebar-top), var(--sidebar-bot));
+  border-right:1px solid var(--stroke);
+  box-shadow: inset 0 0 24px rgba(0,0,0,.35);
+  display:flex; flex-direction:column; gap:8px; z-index: 10;
+}
+.site-header .site-title{ color:var(--ink); text-decoration:none; }
+.site-nav{ display:block; }
+.site-nav > a,
+.site-nav .nav-dropdown > a{ display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent; }
+.site-nav > a:hover,
+.site-nav .nav-dropdown > a:hover{ border-color:var(--stroke); background:rgba(255,255,255,.03); }
 
-/* ---------- About: uneven, gapless masonry grid ---------- */
+/* dropdown row becomes vertical inline list */
+.nav-dropdown{ margin:8px 0 0; }
+.nav-submenu{ display:block; margin:6px 0 0 10px; }
+.nav-submenu a{ display:block; margin:2px 0; }
+
+/* push main content to the right of fixed sidebar */
+.page-main{ margin-left: 280px; padding-top: 14px; }
+
+/* ---------- About: uneven, gapless favorite boxes ---------- */
 .about-grid{
-  display:grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-auto-rows: 1fr;
-  gap: 0;                       /* no gaps, borders will touch */
-  border:1px solid var(--stroke);
+  display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
+  gap:0; border:1px solid var(--stroke);
 }
 .about-cell{
   border-right:1px solid var(--stroke);
@@ -116,29 +137,30 @@ hr{ border:0; height:1px; background:var(--stroke); }
   background:linear-gradient(180deg,#0d1116,#0a0d11);
 }
 .about-cell h4{
-  margin:0 0 10px;
-  font-size:14px; text-transform:uppercase; letter-spacing:.12em;
+  margin:0 0 10px; font-size:14px; text-transform:uppercase; letter-spacing:.12em;
 }
-.about-cell:last-child{ border-right:0; }
-.about-row:last-child .about-cell{ border-bottom:0; }
-
-/* quick area sizing (uneven boxes) */
-.span-3{ grid-column: span 3; }
-.span-2{ grid-column: span 2; }
-.span-1{ grid-column: span 1; }
+.span-3{ grid-column: span 3; } .span-2{ grid-column: span 2; } .span-1{ grid-column: span 1; }
 .tall-2{ grid-row: span 2; }
 
-/* ---------- Dividers ---------- */
+/* Full-screen banner with soft top+bottom fade */
+.about-banner{
+  height:100vh; background:url('img/banner.jpg') center/cover no-repeat fixed;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+  margin:0;           /* touches edges; no abrupt border */
+}
+
+/* ---------- Dividers & responsive ---------- */
 .hr-dots{
   width:100%; height:1px;
   background:repeating-linear-gradient(90deg, transparent 0 6px, var(--stroke) 6px 7px);
   border:0; margin:14px 0 18px;
 }
-
-/* ---------- Responsive ---------- */
 @media (max-width: 900px){
   .layout{ grid-template-columns:1fr; }
   .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke); }
+  .site-header{ position:relative; width:auto; height:auto; }
+  .page-main{ margin-left:0; }
   .about-grid{ grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 520px){
