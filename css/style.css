@@ -1,176 +1,112 @@
 /* =========================================================
-   ThoughtsInSilico — dark, personal, intellectual theme
-   Author: you
-   Notes:
-   - Uses a left sidebar and a scrollable main column.
-   - Uses UnifrakturCook for the site title.
-   - Keep your images in /img and audio in /audio.
+   Thoughts In Silico — layout/theme refresh (no wording changes)
+   - Left sidebar + scrollable main column
+   - UnifrakturCook on the site title only
+   - Dark, quiet palette; keeps your post card/grid classes
    =======================================================*/
 
-/* ---------- 1) Design tokens (colors, spacing, radii) --- */
+/* ---------- 1) Tokens ---------- */
 :root{
-  --bg: #0b0e10;          /* page background */
-  --bg-soft: #0f1418;      /* panels, cards */
-  --ink: #e8e6e3;          /* main text */
-  --ink-dim: #b7b3ac;      /* secondary text */
-  --stroke: #232831;       /* separators / borders */
-  --accent: #8da3ff;       /* indigo accent */
-  --accent-2: #f2a9ff;     /* magenta accent (sparingly) */
-
-  --space-1: 6px;
-  --space-2: 10px;
-  --space-3: 14px;
-  --space-4: 18px;
-  --space-5: 28px;
-
-  --radius-1: 10px;
-  --radius-2: 14px;
+  --bg: #0b0e10;
+  --bg-soft: #0f1418;
+  --ink: #e8e6e3;
+  --ink-dim: #b7b3ac;
+  --stroke: #232831;
+  --accent: #8da3ff;
+  --accent-2: #f2a9ff;
   --shadow: 0 10px 30px rgba(0,0,0,.45);
+
+  --r1: 10px; --r2: 14px;
+  --s1: 6px;  --s2: 10px; --s3: 14px; --s4: 18px; --s5: 28px;
 }
 
-/* ---------- 2) Base + typography ------------------------ */
+/* ---------- 2) Base + Type ---------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=UnifrakturCook:wght@700&display=swap');
 
-* { box-sizing: border-box; }
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font: 16px/1.55 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
+*{ box-sizing:border-box }
+html,body{ margin:0; padding:0; background:var(--bg); color:var(--ink);
+  font:16px/1.55 'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
+a{ color:var(--accent); text-decoration:none }
+a:hover{ text-decoration:underline }
+img{ max-width:100%; display:block }
+hr{ border:0; height:1px; background:var(--stroke) }
 
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-img { max-width: 100%; display: block; }
-hr { border: 0; height: 1px; background: var(--stroke); }
-
-/* site title uses UnifrakturCook */
 .site-title{
-  font-family: 'UnifrakturCook', serif;
-  font-size: clamp(28px, 5vw, 46px);
-  letter-spacing: .5px;
-  margin: 0;
-  line-height: 1.1;
-  text-shadow: 0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
+  font-family:'UnifrakturCook', serif;
+  font-size: clamp(28px,5vw,46px);
+  line-height:1.1; margin:0;
+  text-shadow:0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
 
-/* dotted divider used on About */
-.hr-dots{
-  width: 100%; height: 1px;
-  background: repeating-linear-gradient(90deg, transparent 0 6px, var(--stroke) 6px 7px);
-  border: 0; margin: var(--space-3) 0 var(--space-4);
-}
-
-/* ---------- 3) Layout: sidebar + main ------------------- */
+/* ---------- 3) Layout: Sidebar + Main ---------- */
 .layout{
-  display: grid;
-  grid-template-columns: 280px 1fr; /* left column = sidebar */
-  min-height: 100vh;
+  display:grid; grid-template-columns:280px 1fr; min-height:100vh;
 }
-
 .sidebar{
-  position: sticky; top: 0; height: 100vh; overflow-y: auto;
-  background: linear-gradient(180deg, var(--bg-soft), var(--bg));
-  border-right: 1px solid var(--stroke);
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+  background:linear-gradient(180deg,var(--bg-soft),var(--bg));
+  border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
-  padding: 22px 18px 28px;
+  padding:22px 18px 28px;
 }
-
-.sidebar .brand{
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: var(--space-2);
-}
-
+.sidebar .brand{ display:flex; align-items:center; gap:10px; margin-bottom:var(--s2) }
 .sidebar .sig{
-  width: 22px; height: 22px; border: 1px dashed var(--stroke);
-  border-radius: 50%; display: grid; place-items: center;
-  font-size: 11px; color: var(--ink-dim);
+  width:22px; height:22px; border:1px dashed var(--stroke); border-radius:50%;
+  display:grid; place-items:center; font-size:11px; color:var(--ink-dim);
 }
-
-/* nav */
 .sidebar nav h3{
-  font-size: 12px; color: var(--ink-dim);
-  text-transform: uppercase; letter-spacing: .12em;
-  margin: 18px 0 8px;
+  font-size:12px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:.12em;
+  margin:18px 0 8px;
 }
-.sidebar nav ul{ list-style: none; padding: 0; margin: 0; }
-.sidebar nav li{ margin: 4px 0; }
-.sidebar nav a{
-  display: block; padding: 6px 8px; border-radius: 8px;
-  border: 1px dashed transparent;
-}
+.sidebar nav ul{ list-style:none; margin:0; padding:0 }
+.sidebar nav li{ margin:4px 0 }
+.sidebar nav a{ display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent }
 .sidebar nav a:hover, .sidebar nav a:focus-visible{
-  border-color: var(--stroke);
-  background: rgba(255,255,255,.03);
-  outline: none;
+  border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
 }
+.anthems .anthem-item{ margin:8px 0; font-size:13px; color:var(--ink-dim) }
+.sidebar audio{ width:100% }
 
-/* Anthems inside sidebar */
-.anthems{ margin-top: 6px; }
-.anthem-item{ margin-bottom: 8px; color: var(--ink-dim); font-size: 13px; }
-.sidebar audio{ width: 100%; }
+.main{ min-height:100vh; overflow:hidden }
 
-/* main column */
-.main{ min-height: 100vh; overflow: hidden; }
-
-/* ---------- 4) Home hero (full-bleed background art) ---- */
+/* ---------- 4) Home hero (background showcase) ---------- */
 .hero{
-  min-height: 80vh;                         /* big canvas to “show off” art */
-  background: url('/img/banner.jpg') center/cover no-repeat fixed;
-  display: grid; place-items: end start;
-  padding: var(--space-5);
-  border-bottom: 1px solid var(--stroke);
-}
-.hero h1{
-  margin: 0 0 var(--space-1);
-  font-size: clamp(32px, 6vw, 72px);
-}
-.hero p{ margin: 0; color: var(--ink-dim); }
-
-/* scroll cue */
-.scroll-cue{
-  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
-  font-size: 13px; color: var(--ink-dim);
+  min-height:100vh; /* full viewport to preserve your “scroll down” vibe */
+  background:url('img/banner.jpg') center/cover no-repeat fixed;
+  border-bottom:1px solid var(--stroke);
 }
 
-/* ---------- 5) Home: grid of recent posts --------------- */
-.section{
-  padding: 28px 24px; max-width: 1100px; margin: 0 auto;
+/* ---------- 5) Grid/cards (keeps your class names) ---------- */
+.container{ width:min(1100px, 100% - 40px); margin:0 auto }
+.section{ padding:28px 0 }
+.posts-grid{
+  display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:16px;
 }
-.grid{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+.post-card, .feature-card, .anthem-card, .card{
+  background:linear-gradient(180deg,#0d1116,#0a0d11);
+  border:1px dashed var(--stroke); border-radius:var(--r2); padding:14px; box-shadow:var(--shadow);
 }
-.card{
-  background: linear-gradient(180deg, #0d1116, #0a0d11);
-  border: 1px dashed var(--stroke);
-  border-radius: var(--radius-2);
-  padding: 14px;
-  box-shadow: var(--shadow);
+.post-card h3{ margin:8px 0 6px }
+.post-time{ color:var(--ink-dim) }
+.post-meta{ color:var(--ink-dim); margin:.25rem 0 0 }
+
+/* “Recent posts” heading on home */
+.list-heading{ margin: 0 0 10px }
+
+/* About cards */
+.cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px }
+.hr-dots{
+  width:100%; height:1px; background:repeating-linear-gradient(90deg,transparent 0 6px, var(--stroke) 6px 7px);
+  border:0; margin:14px 0 18px;
 }
-.card h4{ margin: 8px 0 6px; }
-.card p{ margin: 0; color: var(--ink-dim); }
 
-/* ---------- 6) About page: info cards ------------------- */
-.cards{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
-.cards .card ul{ margin: 0; padding-left: 18px; }
-
-/* ---------- 7) Library page: simple book grid ----------- */
-.books{ display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; }
-.book{ text-align: center; }
-.book img{ border-radius: 8px; border: 1px solid var(--stroke); }
-.book small{ color: var(--ink-dim); }
-
-/* ---------- 8) Responsiveness --------------------------- */
+/* ---------- 6) Responsive ---------- */
 @media (max-width: 900px){
-  .layout{ grid-template-columns: 1fr; }
-  .sidebar{ position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--stroke); }
+  .layout{ grid-template-columns:1fr }
+  .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke) }
 }
 
-/* ---------- 9) Motion comfort --------------------------- */
+/* ---------- 7) Motion comfort ---------- */
 @media (prefers-reduced-motion: reduce){
-  *{ animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
 }
