@@ -1,23 +1,18 @@
 /* =========================================================
-   Silico: Book of Genesis — medieval vibe
-   - Body font: MedievalSharp
-   - Title font: UnifrakturCook (bold)
-   - Sidebar everywhere; single text color
-   - Home hero uses img/index-background.jpg (shorter)
-   - Transparent post/feature cards on Home
+   Silico: Book of Genesis — medieval (Cinzel everywhere)
    =======================================================*/
 
 /* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=UnifrakturCook:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
 
 /* Tokens */
 :root{
   --bg: #0b0e10;
-  --ink: #e8e6e3;          /* one text color */
+  --ink: #e8e6e3;
   --ink-dim: #cfcac3;
   --stroke: #232831;
 
-  --sidebar-top: #0d0f1a;  /* deep indigo tint */
+  --sidebar-top: #0d0f1a;
   --sidebar-bot: #0a0d12;
 
   --shadow: 0 10px 30px rgba(0,0,0,.45);
@@ -28,23 +23,23 @@
 *{ box-sizing:border-box }
 html,body{
   margin:0; padding:0; background:var(--bg); color:var(--ink);
-  font:18px/1.7 'MedievalSharp', serif; /* medieval hand vibe */
+  font:18px/1.7 'Cinzel', serif;
 }
 a{ color:var(--ink); text-decoration:none }
 a:hover{ text-decoration:underline }
 img{ max-width:100%; display:block }
 hr{ border:0; height:1px; background:var(--stroke) }
 
-/* Site title (thicker medieval) */
+/* Title (same font, heavier weight) */
 .site-title{
-  font-family:'UnifrakturCook', serif;
+  font-family:'Cinzel', serif;
   font-weight:700;
   font-size: clamp(28px, 5vw, 46px);
   line-height:1.1; margin:0;
   text-shadow:0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
 
-/* Layout: sidebar + main */
+/* Layout */
 .layout{
   display:grid; grid-template-columns:280px 1fr; min-height:100vh;
 }
@@ -72,22 +67,21 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .sidebar audio{ width:100% }
 .main{ min-height:100vh; overflow:hidden }
 
-/* Home hero: new background, less height but still scrolly */
+/* Home hero (shorter) uses img/index-background.jpg */
 .hero{
-  min-height: 62vh; /* shorter than full screen */
+  min-height: 62vh;
   background:url('img/index-background.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
 
-/* Containers / grids */
+/* Containers / cards */
 .container{ width:min(1100px, 100% - 40px); margin:0 auto }
 .section{ padding:28px 0 }
-
 .posts-grid{
   display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px;
 }
 
-/* Transparent cards on Home */
+/* Transparent cards on Home; solid cards elsewhere via .card */
 .post-card, .feature-card, .anthem-card{
   background: transparent;
   border:1px dashed var(--stroke);
@@ -95,7 +89,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
   padding:14px;
   box-shadow:none;
 }
-.card{ /* for other non-home cards */
+.card{
   background:linear-gradient(180deg,#0d1116,#0a0d11);
   border:1px dashed var(--stroke); border-radius:var(--r2); padding:14px; box-shadow:var(--shadow);
 }
@@ -103,7 +97,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .post-time, .post-meta{ color:var(--ink-dim) }
 .post-body p, .post-card p, .card p{ text-align: justify }
 
-/* Legacy post pages → convert top header into a sidebar (no file edits) */
+/* Legacy post pages → sidebarify their top header without editing each file */
 .site-header{
   position: fixed; top:0; left:0; width:280px; height:100vh;
   padding:22px 18px 28px;
@@ -125,7 +119,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .nav-submenu a{ display:block; margin:2px 0 }
 .page-main{ margin-left:280px; padding-top:14px }
 
-/* About: uneven, gapless favorites grid */
+/* About grid */
 .about-grid{
   display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
   gap:0; border:1px solid var(--stroke);
@@ -140,13 +134,13 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 }
 .tall-2{ grid-row: span 2 }
 
-/* Right-column banner tile inside grid (your original banner) */
+/* Right-column banner tile (original banner) */
 .banner-tile{
   background:url('img/banner.jpg') center/cover no-repeat;
   min-height: 260px;
 }
 
-/* Full-screen banner with soft fade (between boxes and long text) */
+/* One-screen original banner with soft fade (between boxes & long text) */
 .about-banner{
   height: 100vh;
   background:url('img/banner.jpg') center/cover no-repeat fixed;
@@ -155,7 +149,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
   margin:0;
 }
 
-/* Dotted divider */
+/* Divider */
 .hr-dots{
   width:100%; height:1px;
   background:repeating-linear-gradient(90deg, transparent 0 6px, var(--stroke) 6px 7px);
