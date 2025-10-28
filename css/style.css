@@ -362,3 +362,62 @@ body.home{
 /* optional: make the overlay a touch lighter or darker by changing .78 above
    e.g. .70 (lighter) or .85 (darker) */
 
+
+/* === Home layout: posts start below the fold, then features === */
+
+/* Push the posts section down by one full screen on first load */
+body.home .home-posts{
+  margin-top: 100vh;         /* one vertical screen */
+}
+
+/* Make home post cards a bit more solid (still not fully) */
+body.home .post-card{
+  background: rgba(12,14,24,.32);
+  border-color: rgba(185,205,255,.20);
+}
+
+/* Reveal-on-scroll effect (already used by index.html) */
+.reveal-card{
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .5s ease-out, transform .5s ease-out;
+  will-change: opacity, transform;
+}
+.reveal-card.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Solid, larger boxes under posts */
+.home-features{
+  margin-top: 1.75rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 900px){
+  .home-features{ grid-template-columns: 1fr 1fr; }
+}
+
+.feature-card{
+  background: rgba(8,10,18,.98);   /* fully solid */
+  border: 1px solid rgba(185,205,255,.28);
+  padding: 1.1rem 1.2rem;
+  border-radius: 0;
+}
+
+.feature-title{
+  margin: 0 0 .6rem 0;
+  font-size: 1.15rem;
+  letter-spacing: .01em;
+  color: var(--text);
+}
+
+/* Empty areas (you’ll fill these in HTML later) */
+.feature-quote{ margin: 0; min-height: 3.25rem; }
+.feature-body{ min-height: 4.5rem; }
+
+/* Optional: if you want a subtle placeholder look, uncomment:
+.feature-quote::before{content:"Add a quote…"; color:var(--muted)}
+.feature-body::before{content:"Add an update…"; color:var(--muted)}
+*/
