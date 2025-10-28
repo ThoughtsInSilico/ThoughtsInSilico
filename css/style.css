@@ -1,160 +1,176 @@
-/* ====== Fonts ====== */
-@import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Zen+Tokyo+Zoo&display=swap');
+/* =========================================================
+   ThoughtsInSilico — dark, personal, intellectual theme
+   Author: you
+   Notes:
+   - Uses a left sidebar and a scrollable main column.
+   - Uses UnifrakturCook for the site title.
+   - Keep your images in /img and audio in /audio.
+   =======================================================*/
 
-/* ====== Theme ====== */
+/* ---------- 1) Design tokens (colors, spacing, radii) --- */
 :root{
-  --bg:#0a0d1a;                  /* deep night */
-  --ink:#ececf1;                 /* paper ink */
-  --muted:#a2a8bb;               /* quiet ink */
-  --accent:#d6c28e;              /* warm parchment gold */
-  --accent-2:#8fd2ff;            /* cool note */
-  --line:rgba(214,194,142,.45);  /* hairline gold */
-  --line-2:rgba(143,210,255,.40);
+  --bg: #0b0e10;          /* page background */
+  --bg-soft: #0f1418;      /* panels, cards */
+  --ink: #e8e6e3;          /* main text */
+  --ink-dim: #b7b3ac;      /* secondary text */
+  --stroke: #232831;       /* separators / borders */
+  --accent: #8da3ff;       /* indigo accent */
+  --accent-2: #f2a9ff;     /* magenta accent (sparingly) */
 
-  --font:"Iceberg",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  --maxw:1100px;
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 14px;
+  --space-4: 18px;
+  --space-5: 28px;
+
+  --radius-1: 10px;
+  --radius-2: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,.45);
 }
 
-/* ====== Base ====== */
-*{ box-sizing:border-box }
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
-body{ margin:0; color:var(--ink); background:var(--bg); font:400 17px/1.72 var(--font); letter-spacing:.01em }
-.container{ width:min(100% - 2rem, var(--maxw)); margin-inline:auto }
-a{ color:var(--accent-2); text-decoration:none }
-a:hover{ text-decoration:underline }
-.muted{ color:var(--muted) }
+/* ---------- 2) Base + typography ------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=UnifrakturCook:wght@700&display=swap');
 
-/* ====== Header ====== */
-.site-header{
-  display:grid; grid-template-columns:1fr; grid-template-rows:auto auto auto;
-  row-gap:.3rem; align-items:center; margin:2.2rem auto .8rem;
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+img { max-width: 100%; display: block; }
+hr { border: 0; height: 1px; background: var(--stroke); }
+
+/* site title uses UnifrakturCook */
 .site-title{
-  justify-self:start; margin:0; color:#fff;
-  font-family:"Zen Tokyo Zoo", var(--font); font-size:clamp(1.7rem,3.8vw,2.35rem); line-height:1.05;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.site-title:visited{ color:#fff }
-.site-header::after{
-  content:"Where words don’t get lost.";
-  grid-row:2; justify-self:start; color:var(--muted);
-  font-size:clamp(.95rem,1.8vw,1.05rem); letter-spacing:.02em
-}
-.site-nav{ grid-row:3; display:flex; flex-wrap:wrap; gap:.2rem .5rem; align-items:center }
-.site-nav a{
-  color:var(--muted); padding:.35rem .55rem; border:1px dashed transparent
-}
-.site-nav a:hover{ color:#fff; border-color:var(--line); background:transparent }
-
-/* dropdown */
-.nav-dropdown{ position:relative; display:inline-block }
-.nav-submenu--row{
-  display:none; position:absolute; top:100%; left:0; z-index:12; min-width:12rem;
-  padding:.35rem; background:rgba(10,13,26,.96); border:1px dashed var(--line);
-  box-shadow:0 14px 36px rgba(0,0,0,.6)
-}
-.nav-submenu--row a{ display:block; padding:.5rem .6rem }
-.nav-dropdown:hover .nav-submenu--row{ display:flex; flex-direction:column }
-
-/* keep About visually special but in-line */
-.site-nav a[href$="about.html"]{
-  color:#fff; border:1px dashed var(--line); background:transparent;
-  font-family:"Zen Tokyo Zoo", var(--font); padding:.28rem .62rem
+  font-family: 'UnifrakturCook', serif;
+  font-size: clamp(28px, 5vw, 46px);
+  letter-spacing: .5px;
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
 
-/* ====== Reading defaults (universal) ====== */
-.post-body{ font-size:1.02rem }
-.post-body p{
-  margin:.9rem 0; text-align:justify; text-justify:inter-word; hyphens:auto; text-indent:1.0em;
-}
-.post-body p:first-of-type, .post-body h2 + p, .post-body h3 + p{ text-indent:0 }
-
-/* blockquotes → thin lines + soft paper */
-.post-body blockquote{
-  margin:1.25rem 0; padding:.8rem 1rem;
-  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.00));
-  border:1px dashed var(--line);
-}
-.post-body blockquote footer{ color:var(--muted) }
-
-/* images: framed prints */
-.post-body img, .figure img{
-  display:block; width:100%; max-width:740px; margin:0 auto;
-  height:auto; max-height:520px; object-fit:contain;
-  border:1px dashed var(--line); background:rgba(255,255,255,.04)
-}
-.figure--row{ display:grid; grid-template-columns:1fr; gap:.75rem }
-@media (min-width:820px){ .figure--row{ grid-template-columns:1fr 1fr } }
-
-/* ====== Lists / cards ====== */
-.list-heading{ color:var(--muted); margin:0 0 .6rem }
-.posts-grid{ display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)) }
-.post-card{
-  background:transparent; border:1px dashed var(--line); padding:1rem;
-  text-decoration:none; transition:transform .15s ease
-}
-.post-card:hover{ transform:translateY(-2px) }
-.post-title{ margin:0 0 .35rem; font-weight:600; font-size:1.08rem }
-.post-title a{ color:var(--ink) }
-.post-time{ color:var(--muted); font-size:.9em; display:block }
-.post-meta{ color:var(--muted); margin:.35rem 0 0; font-size:.92em }
-
-/* ====== Footer ====== */
-.site-footer{ margin:1.25rem auto }
-.site-footer small, .site-footer p{ color:var(--muted); margin:0 }
-
-/* typewriter caret */
-.typer{ border-right:2px solid rgba(255,255,255,.9) }
-.caret-done{ border-right-color:transparent }
-
-/* ====== Home background ====== */
-body.home{
-  background:
-    linear-gradient(180deg, rgba(10,13,26,.48), rgba(10,13,26,.48)),
-    url("../img/banner.jpg") center / cover no-repeat fixed;
+/* dotted divider used on About */
+.hr-dots{
+  width: 100%; height: 1px;
+  background: repeating-linear-gradient(90deg, transparent 0 6px, var(--stroke) 6px 7px);
+  border: 0; margin: var(--space-3) 0 var(--space-4);
 }
 
-/* ====== Keep the “one screen before posts” effect ====== */
-body.home .home-posts{ margin-top:100vh }
+/* ---------- 3) Layout: sidebar + main ------------------- */
+.layout{
+  display: grid;
+  grid-template-columns: 280px 1fr; /* left column = sidebar */
+  min-height: 100vh;
+}
 
-/* ====== Anthems: small right-aligned strip above posts ====== */
-.anthems-hero{ margin:.7rem auto 0 }
-.anthems-hero .inner{
-  display:flex; justify-content:flex-end; /* right side */
+.sidebar{
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  background: linear-gradient(180deg, var(--bg-soft), var(--bg));
+  border-right: 1px solid var(--stroke);
+  box-shadow: inset 0 0 24px rgba(0,0,0,.35);
+  padding: 22px 18px 28px;
 }
-.anthem-card{
-  width:min(100%, 440px);
-  font-style:italic;
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  border:1px dashed var(--line);
-  padding:.9rem 1rem;
-}
-.anthem-card .feature-title{ margin:0 0 .5rem; font-style:italic; letter-spacing:.02em }
-.anthem-card .feature-title::before{ content:"♫ "; color:var(--accent-2) }
-.anthem-card .feature-title::after{ content:" ♪"; color:var(--accent-2) }
-.anthems-list{ display:grid; gap:.55rem }
-.anthem-item{ display:flex; align-items:center; gap:.65rem }
-.anthem-btn{
-  font-style:normal; cursor:pointer; font:inherit;
-  padding:.42rem .72rem; border:1px dashed var(--line-2); background:transparent; color:var(--ink);
-}
-.anthem-btn:hover{ border-color:var(--accent-2) }
-.anthem-title{ opacity:0; transition:opacity .35s ease; color:var(--muted) }
-.anthem-title.show{ opacity:1 }
-.now-playing{ color:#fff }
 
-/* ====== Personal feature boxes (home, under posts) ====== */
-.home-features{ margin-top:1.6rem; display:grid; grid-template-columns:1fr; gap:1rem }
-@media (min-width:900px){ .home-features{ grid-template-columns:1fr 1fr } }
-.feature-card{
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  border:1px dashed var(--line);
-  padding:1rem 1.1rem;
+.sidebar .brand{
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: var(--space-2);
 }
-.feature-title{ margin:0 0 .55rem; color:var(--ink) }
-.feature-quote,.feature-body{ color:var(--ink) }
 
-/* ====== Reveal-on-scroll for post cards ====== */
-.reveal-card{ opacity:0; transform:translateY(22px); transition:opacity .5s ease-out, transform .5s ease-out }
-.reveal-card.is-visible{ opacity:1; transform:translateY(0) }
+.sidebar .sig{
+  width: 22px; height: 22px; border: 1px dashed var(--stroke);
+  border-radius: 50%; display: grid; place-items: center;
+  font-size: 11px; color: var(--ink-dim);
+}
+
+/* nav */
+.sidebar nav h3{
+  font-size: 12px; color: var(--ink-dim);
+  text-transform: uppercase; letter-spacing: .12em;
+  margin: 18px 0 8px;
+}
+.sidebar nav ul{ list-style: none; padding: 0; margin: 0; }
+.sidebar nav li{ margin: 4px 0; }
+.sidebar nav a{
+  display: block; padding: 6px 8px; border-radius: 8px;
+  border: 1px dashed transparent;
+}
+.sidebar nav a:hover, .sidebar nav a:focus-visible{
+  border-color: var(--stroke);
+  background: rgba(255,255,255,.03);
+  outline: none;
+}
+
+/* Anthems inside sidebar */
+.anthems{ margin-top: 6px; }
+.anthem-item{ margin-bottom: 8px; color: var(--ink-dim); font-size: 13px; }
+.sidebar audio{ width: 100%; }
+
+/* main column */
+.main{ min-height: 100vh; overflow: hidden; }
+
+/* ---------- 4) Home hero (full-bleed background art) ---- */
+.hero{
+  min-height: 80vh;                         /* big canvas to “show off” art */
+  background: url('/img/banner.jpg') center/cover no-repeat fixed;
+  display: grid; place-items: end start;
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--stroke);
+}
+.hero h1{
+  margin: 0 0 var(--space-1);
+  font-size: clamp(32px, 6vw, 72px);
+}
+.hero p{ margin: 0; color: var(--ink-dim); }
+
+/* scroll cue */
+.scroll-cue{
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  font-size: 13px; color: var(--ink-dim);
+}
+
+/* ---------- 5) Home: grid of recent posts --------------- */
+.section{
+  padding: 28px 24px; max-width: 1100px; margin: 0 auto;
+}
+.grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.card{
+  background: linear-gradient(180deg, #0d1116, #0a0d11);
+  border: 1px dashed var(--stroke);
+  border-radius: var(--radius-2);
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.card h4{ margin: 8px 0 6px; }
+.card p{ margin: 0; color: var(--ink-dim); }
+
+/* ---------- 6) About page: info cards ------------------- */
+.cards{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.cards .card ul{ margin: 0; padding-left: 18px; }
+
+/* ---------- 7) Library page: simple book grid ----------- */
+.books{ display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; }
+.book{ text-align: center; }
+.book img{ border-radius: 8px; border: 1px solid var(--stroke); }
+.book small{ color: var(--ink-dim); }
+
+/* ---------- 8) Responsiveness --------------------------- */
+@media (max-width: 900px){
+  .layout{ grid-template-columns: 1fr; }
+  .sidebar{ position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--stroke); }
+}
+
+/* ---------- 9) Motion comfort --------------------------- */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
