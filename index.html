@@ -34,36 +34,33 @@
     </nav>
   </header>
 
-  <!-- NEW: two-column layout (content | right sidebar) -->
-  <main class="container home-2col">
-    <section>
-      <h2 class="list-heading">Recent posts</h2>
-      <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
-
-      <section class="home-features" aria-label="Personal updates">
-        <article class="feature-card">
-          <h3 class="feature-title">Quote of the week</h3>
-          <blockquote class="feature-quote"></blockquote>
-        </article>
-
-        <article class="feature-card">
-          <h3 class="feature-title">What I’m up to</h3>
-          <div class="feature-body"></div>
-        </article>
-      </section>
-    </section>
-
-    <!-- Right sidebar -->
-    <aside class="sidebar" aria-label="Sidebar">
-      <article class="feature-card anthem-card" id="anthems">
+  <!-- Anthems (only thing above the one-screen scroll posts) -->
+  <section class="anthems-hero container">
+    <div class="inner">
+      <article class="anthem-card" id="anthems">
         <h3 class="feature-title">Anthems</h3>
-        <div class="anthems-list" id="anthems-list">
-          <!-- populated by JS -->
-        </div>
-        <!-- one shared audio element -->
+        <div class="anthems-list" id="anthems-list"><!-- populated by JS --></div>
         <audio id="anthem-audio" preload="none"></audio>
       </article>
-    </aside>
+    </div>
+  </section>
+
+  <!-- Posts and the rest start after one full screen -->
+  <main class="container home-posts">
+    <h2 class="list-heading">Recent posts</h2>
+    <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
+
+    <section class="home-features" aria-label="Personal updates">
+      <article class="feature-card">
+        <h3 class="feature-title">Quote of the week</h3>
+        <blockquote class="feature-quote"></blockquote>
+      </article>
+
+      <article class="feature-card">
+        <h3 class="feature-title">What I’m up to</h3>
+        <div class="feature-body"></div>
+      </article>
+    </section>
   </main>
 
   <footer class="site-footer container">
@@ -88,7 +85,7 @@
     })();
   </script>
 
-  <!-- Render “Recent posts” (newest first) -->
+  <!-- Render “Recent posts” -->
   <script>
     (async function(){
       const grid = document.getElementById('posts-grid');
@@ -99,9 +96,7 @@
 
         grid.innerHTML = posts.map(p => `
           <article class="post-card reveal-card">
-            <h3 class="post-title">
-              <a href="${p.url}">${p.titleHtml || p.title}</a>
-            </h3>
+            <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
             <time class="post-time" datetime="${p.date}">
               ${new Date(p.date).toLocaleString(undefined,{month:'short',year:'numeric'})}
             </time>
@@ -119,7 +114,7 @@
     })();
   </script>
 
-  <!-- Reveal-on-scroll for cards -->
+  <!-- Reveal animation hookup -->
   <script>
     (function(){
       const obs = new IntersectionObserver((entries)=>{
@@ -143,7 +138,7 @@
   <!-- Anthems logic -->
   <script>
     (function(){
-      // Put your audio files in /audio and rename below.
+      // Change the list to your own tracks (files live in /audio).
       const ANTHEMS = [
         { title: "Allegra (solo sketch)",  src: "audio/anthem1.mp3" },
         { title: "Third Stream Study in D",src: "audio/anthem2.mp3" },
@@ -163,9 +158,7 @@
       let current = -1;
 
       function showTitle(i){
-        document.querySelectorAll('.anthem-title').forEach(t => {
-          t.classList.remove('show','now-playing');
-        });
+        document.querySelectorAll('.anthem-title').forEach(t => t.classList.remove('show','now-playing'));
         if(i>=0){
           const t = list.querySelector(\`.anthem-item[data-i="\${i}"] .anthem-title\`);
           t.classList.add('show','now-playing');
@@ -178,10 +171,7 @@
         const item = e.target.closest('.anthem-item');
         const i = +item.dataset.i;
 
-        if(i === current && !audio.paused){
-          audio.pause();
-          return;
-        }
+        if(i === current && !audio.paused){ audio.pause(); return; }
 
         current = i;
         audio.src = ANTHEMS[i].src;
