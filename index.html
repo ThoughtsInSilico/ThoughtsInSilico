@@ -86,7 +86,7 @@
     (async function(){
       const grid = document.getElementById('posts-grid');
       try{
-        const res = await fetch('posts/posts.json');   /* adjust if your JSON path differs */
+        const res = await fetch('posts.json');   /* root-level JSON */
         let posts = await res.json();
         posts = posts.sort((a,b) => new Date(b.date) - new Date(a.date));
 
