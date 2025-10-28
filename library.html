@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Library — ThoughtsInSilico</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <meta name="description" content="A bookshelf of books I like or am reading." />
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" role="navigation" aria-label="Primary">
+      <div class="brand">
+        <div class="sig">◇</div>
+        <h1 class="site-title"><a href="/" style="color:inherit;text-decoration:none;">ThoughtsInSilico</a></h1>
+      </div>
+      <nav>
+        <h3>Pages</h3>
+        <ul>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/categories.html">Categories</a></li>
+          <li><a href="/library.html" aria-current="page">My Library</a></li>
+        </ul>
+
+        <h3>Anthems</h3>
+        <div class="anthems">
+          <div class="anthem-item">1. <audio controls preload="none"><source src="/audio/anthem1.mp3" type="audio/mpeg"></audio></div>
+          <div class="anthem-item">2. <audio controls preload="none"><source src="/audio/anthem2.mp3" type="audio/mpeg"></audio></div>
+          <div class="anthem-item">3. <audio controls preload="none"><source src="/audio/anthem3.mp3" type="audio/mpeg"></audio></div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <section class="section">
+        <h1 class="site-title" style="font-size: clamp(34px,6vw,64px);">My Library</h1>
+        <hr class="hr-dots" />
+        <p style="color:var(--ink-dim)">Drop cover images into <code>/img/books/</code> and duplicate the items below.</p>
+
+        <div class="books">
+          <!-- Example items; replace with your own -->
+          <div class="book">
+            <img src="/img/image1.png" alt="Book cover">
+            <small>After Finitude</small>
+          </div>
+          <div class="book">
+            <img src="/img/image2.png" alt="Book cover">
+            <small>Shadows of the Mind</small>
+          </div>
+          <div class="book">
+            <img src="/img/olympiads-notes.png" alt="Book cover">
+            <small>Times Arrow</small>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
