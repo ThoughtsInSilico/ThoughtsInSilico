@@ -14,15 +14,13 @@
 
 <body class="home">
   <div class="layout">
-    <!-- ===== Sidebar ===== -->
+    <!-- Sidebar -->
     <aside class="sidebar" role="navigation" aria-label="Primary">
-      <div class="brand">
-        <a class="site-title" href="index.html" style="color:inherit;text-decoration:none;">Silico: Book of Genesis</a>
-      </div>
-
+      <div class="brand"><a class="site-title" href="index.html">Silico: Book of Genesis</a></div>
       <nav>
         <h3>Pages</h3>
         <ul>
+          <li><a href="about.html">About</a></li> <!-- moved to top -->
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
             <a href="categories.html?cat=Fiction">Fiction ▾</a>
@@ -35,7 +33,6 @@
           <li><a href="categories.html?cat=Technology">Technology</a></li>
           <li><a href="categories.html?cat=Music">Music</a></li>
           <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
-          <li><a href="about.html">About</a></li>
           <li><a href="library.html">My Library</a></li>
         </ul>
 
@@ -47,23 +44,21 @@
       </nav>
     </aside>
 
-    <!-- ===== Main ===== -->
+    <!-- Main -->
     <main class="main">
-      <!-- Full-screen banner (background image lives in CSS) -->
       <section class="hero" aria-label="Background art"></section>
 
       <section class="container section">
         <h2 class="list-heading">Recent posts</h2>
         <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-        <!-- Trvthnukes box -->
+        <!-- Separate Roman boxes -->
         <article class="feature-card" style="margin-top:16px">
           <h3 class="roman" style="margin:0 0 6px">Trvthnukes</h3>
           <hr class="hr-dots" />
           <blockquote id="trvthnuke" class="post-body" style="margin:0"></blockquote>
         </article>
 
-        <!-- Virtual History box (separate, same font) -->
         <article class="feature-card" style="margin-top:12px">
           <h3 class="roman" style="margin:0 0 6px">Virtual History à la Last Thursdayism</h3>
           <hr class="hr-dots" />
@@ -80,7 +75,6 @@
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Load posts.json (works if at /posts.json or /posts/posts.json)
     async function loadPostsJSON(){
       const candidates = ['posts.json', 'posts/posts.json'];
       let lastErr;
@@ -114,17 +108,13 @@
       }
     })();
 
-    // Optional: seed the two feature boxes with content you control
-    document.getElementById('trvthnuke').textContent = '…';
-    document.getElementById('virtual-history').textContent = '…';
+    // Your content slots (no filler)
+    document.getElementById('trvthnuke').textContent = '';
+    document.getElementById('virtual-history').textContent = '';
 
-    // Anthems (same IDs; change src when files exist)
+    // Anthems (src paths are yours)
     (function(){
-      const ANTHEMS = [
-        { title: "Allegra (solo sketch)",  src: "audio/anthem1.mp3" },
-        { title: "Third Stream Study in D",src: "audio/anthem2.mp3" },
-        { title: "Nocturne for Two Tenors",src: "audio/anthem3.mp3" }
-      ];
+      const ANTHEMS = []; // fill with your tracks later
       const list  = document.getElementById('anthems-list');
       const audio = document.getElementById('anthem-audio');
       list.innerHTML = ANTHEMS.map((a,i)=>`
