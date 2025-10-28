@@ -1,134 +1,181 @@
 /* =========================================================
-   Silico: Book of Genesis — clean medieval + Roman look
-   - Title: Germania One (clearer S/C)
-   - Body + everything else: Cinzel (Roman)
-   - Sidebar everywhere; unified text color
+   Silico: Book of Genesis — clean Roman vibe
+   - Title + site font: Cinzel (crisp S/C)
+   - Sidebar everywhere; single text color
+   - Nav & post titles: UPPERCASE via CSS (visual only)
+   - About grid includes a right banner tile + full-screen fade banner
    =======================================================*/
 
 /* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Germania+One&family=Cinzel:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
 
 /* Tokens */
 :root{
   --bg: #0b0e10;
-  --ink: #e8e6e3;          /* one color for all text/links */
+  --ink: #e8e6e3;          /* single text color */
   --ink-dim: #cfcac3;
   --stroke: #232831;
 
-  /* Sidebar tint aligned with title vibe */
-  --sidebar-top: #0e1020;
+  /* sidebar tint that matches the title vibe */
+  --sidebar-top: #0d0f1a;
   --sidebar-bot: #0a0d12;
-
-  --panel-top: #0d1116;
-  --panel-bot: #0a0d11;
 
   --shadow: 0 10px 30px rgba(0,0,0,.45);
   --r2: 14px;
 }
 
-/* Base */
-*{ box-sizing:border-box; }
+/* Base + Type */
+*{ box-sizing:border-box }
 html,body{
   margin:0; padding:0; background:var(--bg); color:var(--ink);
-  font:16px/1.6 'Cinzel', serif;     /* Roman across the site */
+  font:16px/1.7 'Cinzel', serif;                 /* Roman across the site */
 }
-a{ color:var(--ink); text-decoration:none; }
-a:hover{ text-decoration:underline; }
-img{ max-width:100%; display:block; }
-hr{ border:0; height:1px; background:var(--stroke); }
+a{ color:var(--ink); text-decoration:none }
+a:hover{ text-decoration:underline }
+img{ max-width:100%; display:block }
+hr{ border:0; height:1px; background:var(--stroke) }
 
-/* Title: clearer medieval */
+/* Title (same font; bigger weight) */
 .site-title{
-  font-family:'Germania One', serif;
-  font-size: clamp(28px,5vw,46px);
+  font-family:'Cinzel', serif;
+  font-weight:700;
+  font-size: clamp(28px, 5vw, 46px);
   line-height:1.1; margin:0;
   text-shadow:0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
 
-/* Roman helper (still Cinzel; kept for semantics) */
-.roman{ font-family:'Cinzel', serif; }
+/* Roman label class for small headings (Trvthnukes/Virtual History) */
+.roman{ font-family:'Cinzel', serif; letter-spacing:.02em }
 
-/* Layout */
+/* Layout: sidebar + main */
 .layout{
   display:grid; grid-template-columns:280px 1fr; min-height:100vh;
 }
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
-  background:linear-gradient(180deg,var(--sidebar-top),var(--sidebar-bot));
+  background:linear-gradient(180deg, var(--sidebar-top), var(--sidebar-bot));
   border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
   padding:22px 18px 28px;
 }
-.sidebar .brand{ margin-bottom:6px; }
+.sidebar .brand{ margin-bottom:6px }
 .sidebar nav h3{
   font-size:12px; color:var(--ink-dim);
   text-transform:uppercase; letter-spacing:.12em;
   margin:18px 0 8px;
 }
-.sidebar nav ul{ list-style:none; margin:0; padding:0; }
-.sidebar nav li{ margin:4px 0; }
+.sidebar nav ul{ list-style:none; margin:0; padding:0 }
+.sidebar nav li{ margin:4px 0 }
 .sidebar nav a{
   display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent;
-  text-transform:uppercase; letter-spacing:.06em;   /* NAV: CAPITALIZED */
+  text-transform:uppercase; letter-spacing:.08em;  /* UPPERCASE nav */
 }
 .sidebar nav a:hover, .sidebar nav a:focus-visible{
   border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
 }
-.anthems .anthem-item{ margin:8px 0; font-size:13px; color:var(--ink-dim); }
-.sidebar audio{ width:100%; }
-.main{ min-height:100vh; overflow:hidden; }
+.anthems .anthem-item{ margin:8px 0; font-size:13px; color:var(--ink-dim) }
+.sidebar audio{ width:100% }
+.main{ min-height:100vh; overflow:hidden }
 
-/* Home hero: keep your banner */
+/* Hero keeps your banner (home) */
 .hero{
   min-height:100vh;
   background:url('img/banner.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
 
-/* Containers / Cards */
-.container{ width:min(1100px, 100% - 40px); margin:0 auto; }
-.section{ padding:28px 0; }
+/* Containers / cards */
+.container{ width:min(1100px, 100% - 40px); margin:0 auto }
+.section{ padding:28px 0 }
 .posts-grid{
   display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px;
 }
 .post-card, .feature-card, .anthem-card, .card{
-  background:linear-gradient(180deg,var(--panel-top),var(--panel-bot));
+  background:linear-gradient(180deg,#0d1116,#0a0d11);
   border:1px dashed var(--stroke); border-radius:var(--r2); padding:14px; box-shadow:var(--shadow);
 }
-.post-title a{ text-transform:uppercase; letter-spacing:.04em; } /* POST TITLES: CAPS */
-.post-time, .post-meta{ color:var(--ink-dim); }
-.post-body p, .post-card p, .card p{ text-align: justify; }
+.post-card h3{ margin:8px 0 6px }
+.post-time, .post-meta{ color:var(--ink-dim) }
+.post-body p, .post-card p, .card p{ text-align: justify }
 
-/* Legacy post pages -> convert their header into a sidebar */
+/* UPPERCASE for visible post titles (cards & post pages) */
+.post-title a, .post-title, .posts-grid .post-card h3 a,
+h1.post-title, article h1{ text-transform:uppercase; letter-spacing:.06em }
+
+/* Legacy post pages → convert top header into a sidebar */
 .site-header{
   position: fixed; top:0; left:0; width:280px; height:100vh;
   padding:22px 18px 28px;
-  background:linear-gradient(180deg,var(--sidebar-top),var(--sidebar-bot));
+  background:linear-gradient(180deg, var(--sidebar-top), var(--sidebar-bot));
   border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
-  z-index:10;
+  z-index: 10;
 }
-.site-header .site-title{ color:var(--ink); text-decoration:none; }
-.site-nav a{ display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent;
-  text-transform:uppercase; letter-spacing:.06em; }
-.site-nav a:hover{ border-color:var(--stroke); background:rgba(255,255,255,.03); }
-.page-main{ margin-left:280px; padding-top:14px; }
+.site-header .site-title{ color:var(--ink); text-decoration:none }
+.site-nav{ display:block }
+.site-nav > a, .site-nav .nav-dropdown > a{
+  display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent;
+  text-transform:uppercase; letter-spacing:.08em
+}
+.site-nav > a:hover, .site-nav .nav-dropdown > a:hover{
+  border-color:var(--stroke); background:rgba(255,255,255,.03)
+}
+.nav-dropdown{ margin:8px 0 0 }
+.nav-submenu{ display:block; margin:6px 0 0 10px }
+.nav-submenu a{ display:block; margin:2px 0; text-transform:uppercase; letter-spacing:.08em }
+.page-main{ margin-left:280px; padding-top:14px }
 
-/* About: gapless grid + banner in right section */
+/* About: uneven, gapless favorites grid */
 .about-grid{
-  display:grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-auto-rows: 1fr;
+  display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
   gap:0; border:1px solid var(--stroke);
 }
 .about-cell{
   border-right:1px solid var(--stroke);
   border-bottom:1px solid var(--stroke);
   padding:16px;
-  background:linear-gradient(180deg,var(--panel-top),var(--panel-bot));
+  background:linear-gradient(180deg,#0d1116,#0a0d11);
 }
 .about-cell h4{
   margin:0 0 10px; font-size:14px; text-transform:uppercase; letter-spacing:.12em;
 }
-/* spans for uneven boxes */
-.span-3{ grid-column: span 3; } .span-2{ grid-column: span
+.span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 }
+.tall-2{ grid-row: span 2 }
+
+/* Right-column banner tile inside grid */
+.banner-tile{
+  background:url('img/banner.jpg') center/cover no-repeat;
+  min-height: 260px;
+}
+
+/* Full-screen banner with soft fade (after grid) */
+.about-banner{
+  height:100vh; background:url('img/banner.jpg') center/cover no-repeat fixed;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+  margin:0;
+}
+
+/* Dotted divider */
+.hr-dots{
+  width:100%; height:1px;
+  background:repeating-linear-gradient(90deg, transparent 0 6px, var(--stroke) 6px 7px);
+  border:0; margin:14px 0 18px;
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .layout{ grid-template-columns:1fr }
+  .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke) }
+  .site-header{ position:relative; width:auto; height:auto }
+  .page-main{ margin-left:0 }
+  .about-grid{ grid-template-columns: repeat(2, 1fr) }
+}
+@media (max-width: 520px){
+  .about-grid{ grid-template-columns: 1fr }
+}
+
+/* Motion comfort */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important }
+}
