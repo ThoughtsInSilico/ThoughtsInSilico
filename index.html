@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
   <script>
+    /* MathJax stays available site-wide */
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -31,25 +32,41 @@
     </nav>
   </header>
 
-  <!-- Scroll hint: paper airplane + dotted curve (curved, opaque, smoother) -->
-  <button class="scroll-hint" id="scrollHint" aria-label="Scroll to recent posts">
-    <svg viewBox="0 0 64 64" width="36" height="36" aria-hidden="true">
-      <!-- crisp paper airplane -->
-      <path d="M4 30L60 6 28 36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-      <path d="M28 36l4 20 6-14 22-36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- ONE plane + ONE dotted trace (fluid, airy curve) -->
+  <div class="flight-layer" aria-hidden="true">
+    <!-- Dotted trace -->
+    <svg class="flight-trace" viewBox="0 0 1000 1600" preserveAspectRatio="none">
+      <path id="tsiFlightPath"
+            d="M 40 120 
+               C 260 40, 520 140, 760 70 
+               S 940 170, 820 220
+               C 700 270, 560 260, 580 330
+               C 600 400, 760 420, 860 360
+               C 940 310, 880 260, 820 260
+               C 700 260, 620 360, 560 460
+               C 500 560, 520 660, 600 740
+               C 680 820, 780 860, 860 920
+               C 920 970, 900 1050, 820 1100
+               C 700 1180, 520 1180, 420 1260
+               C 320 1340, 320 1440, 420 1520" />
     </svg>
-  </button>
-  <svg class="scroll-trace" viewBox="0 0 120 420" width="120" height="420" aria-hidden="true">
-    <!-- You can tweak this curve anytime -->
-    <path d="M10 10 C 70 80, 30 240, 20 360" />
-  </svg>
 
-  <!-- POSTS SECTION (starts one full viewport below; CSS sets margin-top:100vh) -->
+    <!-- Plane (solid milky color, slightly larger) -->
+    <div class="flight-hint" id="flightPlane">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <!-- crisp paper airplane -->
+        <path d="M4 30L60 6 28 36" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M28 36l4 20 6-14 22-36" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- POSTS SECTION (starts one full viewport below; CSS adds margin-top: 100vh) -->
   <main class="container home-posts">
     <h2 class="list-heading">Recent posts</h2>
     <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-    <!-- Fully solid personal boxes BELOW the posts (you fill them) -->
+    <!-- Solid, larger personal boxes BELOW the posts (you fill them) -->
     <section class="home-features" aria-label="Personal updates">
       <article class="feature-card">
         <h3 class="feature-title">Quote of the week</h3>
@@ -67,7 +84,7 @@
     <p><small>© 2025 Thoughts In Silico.</small></p>
   </footer>
 
-  <!-- Typewriter for the site title (header layout is fixed in CSS; no shifting) -->
+  <!-- Typed site title (layout is fixed; no shifting) -->
   <script>
     (function(){
       const el = document.querySelector('.site-title');
@@ -104,92 +121,27 @@
     })();
   </script>
 
-  <!-- Fade/slide in on scroll + airplane/trace interactions -->
+  <!-- Reveal on scroll + plane behavior -->
   <script>
     (function(){
-      // Reveal posts on scroll
-      const obs = new IntersectionObserver((ents)=>{
-        ents.forEach(e=>{
-          if(e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
-        });
-      }, {threshold:0.12});
+      /* Reveal cards */
+      const obs = new IntersectionObserver((es)=>es.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+      }),{threshold:0.12});
       const start = ()=> document.querySelectorAll('.reveal-card').forEach(el=>obs.observe(el));
       const mo = new MutationObserver(start);
       mo.observe(document.getElementById('posts-grid'), {childList:true});
       start();
 
-      // Airplane & dotted trace behavior
-      const btn = document.getElementById('scrollHint');
-      const trace = document.querySelector('.scroll-trace');
-      const posts = document.querySelector('.home-posts');
-      if(!btn || !trace || !posts) return;
+      /* Plane follows the same SVG path via CSS motion path */
+      const path = document.getElementById('tsiFlightPath');
+      const plane = document.getElementById('flightPlane');
+      if(path && plane){
+        const d = path.getAttribute('d');
+        document.documentElement.style.setProperty('--flight-path', `path("${d}")`);
+      }
 
-      const hide = () => { btn.classList.add('is-hidden'); trace.classList.add('is-hidden'); };
-      let hidden = false;
-
-      btn.addEventListener('click', () => posts.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-
-      // Hide if user starts scrolling a bit
-      window.addEventListener('scroll', () => {
-        if (!hidden && window.scrollY > window.innerHeight * 0.12) { hidden = true; hide(); }
-      }, { passive: true });
-
-      // Hide after animations complete
-      btn.addEventListener('animationend', hide, { once: true });
-      trace.addEventListener('animationend', hide, { once: true });
-    })();
-  </script>
-
-
-  <script>
-    /* === Fluid looping paper airplane — injects itself on any page === */
-    (function(){
-      // 1) Create elements
-      const plane = document.createElement('div');
-      plane.className = 'flight-hint';
-      plane.innerHTML = `
-        <svg viewBox="0 0 64 64" aria-hidden="true">
-          <!-- solid, crisp paper airplane -->
-          <path d="M4 30L60 6 28 36" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>
-          <path d="M28 36l4 20 6-14 22-36" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>
-        </svg>`;
-    
-      const trace = document.createElement('div');
-      trace.className = 'flight-trace';
-      trace.innerHTML = `
-        <svg viewBox="0 0 1000 1600" preserveAspectRatio="none" aria-hidden="true">
-          <path id="tsiFlightPath"
-                d="M 80 100
-                   C 360 40, 180 300, 120 420
-                   c 80 -40, 160 -80, 210 -20
-                   c 60 70, -100 130, -160 170
-                   c 150 -40, 260 80, 180 140
-                   c -60 46, -120 62, -180 110
-                   c 140 -20, 260 60, 220 130
-                   c -40 70, -160 110, -220 150
-                   c 180 -30, 300 120, 260 180
-                   c -40 60, -160 100, -240 150" />
-        </svg>`;
-    
-      document.body.appendChild(plane);
-      document.body.appendChild(trace);
-    
-      // 2) Tie CSS motion path to this path (so plane follows the same curve)
-      const path = trace.querySelector('#tsiFlightPath');
-      const d = path.getAttribute('d');
-      document.documentElement.style.setProperty('--flight-path', `path("${d}")`);
-    
-      // 3) Place plane at start of path
-      plane.style.offsetDistance = '0%';
-    
-      // 4) Pause/Resume when tab visibility changes (saves battery)
-      document.addEventListener('visibilitychange', () => {
-        const paused = document.hidden ? 'paused' : 'running';
-        plane.style.animationPlayState = paused;
-        trace.querySelector('path').style.animationPlayState = paused;
-      });
-    
-      // 5) Fade away only when user reaches near bottom
+      /* Fade out plane + trace only when near bottom */
       const thresh = 60; // px from bottom
       const onScroll = () => {
         const atBottom = window.innerHeight + window.scrollY >= (document.documentElement.scrollHeight - thresh);
@@ -197,13 +149,17 @@
       };
       window.addEventListener('scroll', onScroll, {passive:true});
       onScroll();
-    
-      // Optional: click plane to nudge downward a screen
-      plane.addEventListener('click', () => window.scrollBy({top: window.innerHeight * 0.9, behavior: 'smooth'}));
+
+      /* Click plane nudges one screen down (optional) */
+      plane?.addEventListener('click', () => window.scrollBy({top: window.innerHeight * 0.9, behavior: 'smooth'}));
+
+      /* Pause animations when tab not visible */
+      document.addEventListener('visibilitychange', () => {
+        const paused = document.hidden ? 'paused' : 'running';
+        plane?.style && (plane.style.animationPlayState = paused);
+        path && (path.style.animationPlayState = paused);
+      });
     })();
-    </script>
-
-
-  
+  </script>
 </body>
 </html>
