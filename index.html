@@ -17,7 +17,6 @@
     <!-- ===== Sidebar ===== -->
     <aside class="sidebar" role="navigation" aria-label="Primary">
       <div class="brand">
-        <div class="sig">◇</div>
         <a class="site-title" href="index.html" style="color:inherit;text-decoration:none;">Silico: Book of Genesis</a>
       </div>
 
@@ -50,24 +49,25 @@
 
     <!-- ===== Main ===== -->
     <main class="main">
-      <!-- Banner stays (hero keeps banner.jpg) -->
+      <!-- Full-screen banner (background image lives in CSS) -->
       <section class="hero" aria-label="Background art"></section>
 
       <section class="container section">
         <h2 class="list-heading">Recent posts</h2>
         <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-        <!-- Trvthnukes block -->
+        <!-- Trvthnukes box -->
         <article class="feature-card" style="margin-top:16px">
-          <h3 style="margin:0 0 6px">Trvthnukes</h3>
-          <div class="roman" style="opacity:.9">Virtual History à la Last Thursdayism</div>
+          <h3 class="roman" style="margin:0 0 6px">Trvthnukes</h3>
           <hr class="hr-dots" />
           <blockquote id="trvthnuke" class="post-body" style="margin:0"></blockquote>
         </article>
 
+        <!-- Virtual History box (separate, same font) -->
         <article class="feature-card" style="margin-top:12px">
-          <h3 style="margin:0">What I’m up to</h3>
-          <div class="feature-body post-body"></div>
+          <h3 class="roman" style="margin:0 0 6px">Virtual History à la Last Thursdayism</h3>
+          <hr class="hr-dots" />
+          <div id="virtual-history" class="post-body"></div>
         </article>
       </section>
 
@@ -79,10 +79,8 @@
 
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
 
-  <script>
-    // posts loader (unchanged structure)
+    // Load posts.json (works if at /posts.json or /posts/posts.json)
     async function loadPostsJSON(){
       const candidates = ['posts.json', 'posts/posts.json'];
       let lastErr;
@@ -112,17 +110,15 @@
         `).join('');
         if (window.MathJax?.typeset) MathJax.typeset();
       } catch (e) {
-        grid.innerHTML = '<p class="post-body" style="color:#b7b3ac">Could not load posts.</p>';
+        grid.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
       }
     })();
 
-    // Trvthnukes sample content slot (you can replace with your own JS/JSON later)
-    document.getElementById('trvthnuke').textContent =
-      '…';
-  </script>
+    // Optional: seed the two feature boxes with content you control
+    document.getElementById('trvthnuke').textContent = '…';
+    document.getElementById('virtual-history').textContent = '…';
 
-  <!-- Anthems: same IDs as before -->
-  <script>
+    // Anthems (same IDs; change src when files exist)
     (function(){
       const ANTHEMS = [
         { title: "Allegra (solo sketch)",  src: "audio/anthem1.mp3" },
