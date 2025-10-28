@@ -7,24 +7,18 @@
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
 
-  <!-- MathJax (for titles or snippets that include LaTeX) -->
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$','$$'], ['\\[','\\]']]
-      }
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] }
     };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body class="home">
-  <!-- Header (title / blurb handled in CSS ::after / menu) -->
   <header class="site-header container">
     <a class="site-title" href="index.html">Thoughts In Silico</a>
     <nav class="site-nav" aria-label="Primary">
-      <a href="about.html">About</a>
       <a href="categories.html?cat=Book%20Reviews">Book Reviews</a>
       <div class="nav-dropdown">
         <a href="categories.html?cat=Fiction">Fiction ▾</a>
@@ -37,15 +31,14 @@
       <a href="categories.html?cat=Technology">Technology</a>
       <a href="categories.html?cat=Music">Music</a>
       <a href="categories.html?cat=Miscellaneous">Miscellaneous</a>
+      <a href="about.html">About</a>
     </nav>
   </header>
 
-  <!-- Main (Recent posts start one full viewport down; see CSS margin-top:100vh) -->
   <main class="container home-posts">
     <h2 class="list-heading">Recent posts</h2>
     <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-    <!-- Personal feature cards (solid; you fill these) -->
     <section class="home-features" aria-label="Personal updates">
       <article class="feature-card">
         <h3 class="feature-title">Quote of the week</h3>
@@ -63,7 +56,7 @@
     <p><small>© 2025 Thoughts In Silico.</small></p>
   </footer>
 
-  <!-- Typewriter effect for site title (header layout is fixed in CSS; no shifting) -->
+  <!-- Typewriter for the site title -->
   <script>
     (function(){
       const el = document.querySelector('.site-title');
@@ -86,7 +79,7 @@
     (async function(){
       const grid = document.getElementById('posts-grid');
       try{
-        const res = await fetch('posts.json');   /* root-level JSON */
+        const res = await fetch('posts/posts.json'); /* FIXED PATH */
         let posts = await res.json();
         posts = posts.sort((a,b) => new Date(b.date) - new Date(a.date));
 
@@ -127,7 +120,6 @@
       const start = () =>
         document.querySelectorAll('.reveal-card').forEach(el => obs.observe(el));
 
-      // In case posts render after load
       const mo = new MutationObserver(start);
       mo.observe(document.getElementById('posts-grid'), { childList: true });
       start();
