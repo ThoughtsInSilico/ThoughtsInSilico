@@ -20,7 +20,7 @@
       <nav>
         <h3>Pages</h3>
         <ul>
-          <li><a href="about.html">The Brain-vat Speaks</a></li>
+          <li><a href="about.html">(about: the brain-vat speaks)</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
             <a href="categories.html?cat=Fiction">Fiction ▾</a>
@@ -30,10 +30,10 @@
             </ul>
           </li>
           <li><a href="categories.html?cat=Mathematics">Mathematics</a></li>
-          <li><a href="categories.html?cat=Technology">Technology</a></li>
+          <li><a href="categories.html?cat=Technology">Technognostics</a></li>
           <li><a href="categories.html?cat=Music">Music</a></li>
-          <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
           <li><a href="library.html">My Library</a></li>
+          <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
         </ul>
 
         <h3>Anthems</h3>
@@ -46,14 +46,14 @@
 
     <!-- Main -->
     <main class="main">
-      <!-- New, shorter hero using img/index-background.jpg -->
+      <!-- Shorter hero (img/index-background.jpg) -->
       <section class="hero" aria-label="Background art"></section>
 
       <section class="container section">
         <h2 class="list-heading">Recent posts</h2>
         <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
 
-        <!-- Transparent Roman boxes -->
+        <!-- Transparent cards -->
         <article class="feature-card" style="margin-top:16px">
           <h3 style="margin:0 0 6px">Trvthnukes</h3>
           <hr class="hr-dots" />
@@ -76,7 +76,6 @@
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Load posts.json (works at /posts.json or /posts/posts.json)
     async function loadPostsJSON(){
       const candidates = ['posts.json', 'posts/posts.json'];
       let lastErr;
@@ -110,23 +109,23 @@
       }
     })();
 
-    // Content slots (leave empty or fill)
+    // Content slots
     document.getElementById('trvthnuke').textContent = '';
     document.getElementById('virtual-history').textContent = '';
 
-    // Anthems (buttons visible)
+    // Anthems (buttons visible when you add tracks)
     (function(){
       const ANTHEMS = [
         // { title: "Title", src: "audio/yourfile.mp3" }
       ];
       const list  = document.getElementById('anthems-list');
       const audio = document.getElementById('anthem-audio');
-      list.innerHTML = ANTHEMS.map((a,i)=>`
+      list.innerHTML = ANTHEMS.length ? ANTHEMS.map((a,i)=>`
         <div class="anthem-item" data-i="${i}">
           <button class="anthem-btn" type="button">Play</button>
           <span class="anthem-title">${a.title}</span>
         </div>
-      `).join('') || '<div class="anthem-item">Add tracks in audio/…</div>';
+      `).join('') : '<div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div>';
       list.addEventListener('click', e=>{
         const btn = e.target.closest('.anthem-btn'); if(!btn) return;
         const i = +btn.parentElement.dataset.i;
