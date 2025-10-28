@@ -14,11 +14,16 @@
   --font:"Iceberg",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   --maxw:1100px;
   --space:1.25rem;
+
+  /* Plane settings (can tweak) */
+  --flight-color: #f3f6ff;
+  --flight-speed: 18s;                 /* slower = more graceful */
+  --flight-path: path("M 40 120 C 260 40, 520 140, 760 70 S 940 170, 820 220 C 700 270, 560 260, 580 330 C 600 400, 760 420, 860 360 C 940 310, 880 260, 820 260 C 700 260, 620 360, 560 460 C 500 560, 520 660, 600 740 C 680 820, 780 860, 860 920 C 920 970, 900 1050, 820 1100 C 700 1180, 520 1180, 420 1260 C 320 1340, 320 1440, 420 1520");
 }
 
 /* === Base === */
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%; scroll-behavior:smooth}
 body{margin:0;color:var(--text);background:var(--bg);font:400 16px/1.65 var(--font);letter-spacing:.01em}
 .container{width:min(100% - 2rem,var(--maxw));margin-inline:auto}
 a{color:var(--accent);text-decoration:none}
@@ -54,7 +59,7 @@ a:hover{text-decoration:underline}
 }
 .site-title:visited{color:#fff}
 
-/* Blurb: one line, muted, below title */
+/* Blurb: one line, muted, below title (same on all pages) */
 .site-header::after{
   content:"Hi, it’s Reza. I write about math, tech, and fiction.";
   grid-row:2;
@@ -94,7 +99,7 @@ a:hover{text-decoration:underline}
 .nav-submenu--row a{display:block;padding:.5rem .6rem;font-size:1rem}
 .nav-dropdown:hover .nav-submenu--row{display:flex;flex-direction:column}
 
-/* About: subtle boxed pill (no decorative lines) */
+/* About: subtle boxed pill (no heavy fill) */
 .site-nav a[href$="about.html"]{
   font-family:"Zen Tokyo Zoo",var(--font);
   font-size:1.05rem;
@@ -224,153 +229,55 @@ body.home .post-card{ background:rgba(12,14,24,.32); border-color:rgba(185,205,2
 .feature-quote{ margin:0; min-height:3.25rem; }
 .feature-body{ min-height:4.5rem; }
 
-
-/* === Paper airplane scroll hint: curved, smoother, dotted trace === */
-  html{ scroll-behavior: smooth; } /* nice-to-have */
-  
-  body.home .scroll-hint{
-    position: fixed;
-    top: clamp(110px, 18vh, 220px);   /* sits under the title area */
-    left: clamp(24px, 10vw, 140px);   /* align with title column */
-    z-index: 50;
-    color: #ffffff;                   /* opaque plane */
-    background: transparent;
-    border: 0;
-    padding: .25rem;
-    cursor: pointer;
-    opacity: 1;
-    transition: opacity .25s ease, transform .25s ease;
-    animation: tsi-plane-curve 2.8s cubic-bezier(.22,.61,.36,1) .3s 1 both;
-  }
-  body.home .scroll-hint:is(:hover,:focus-visible){
-    transform: translateY(1px);
-    outline: none;
-  }
-  body.home .scroll-hint.is-hidden{ display: none; }
-  
-  /* The dotted curve — drawn from top to near the posts */
-  body.home .scroll-trace{
-    position: fixed;
-    top: clamp(110px, 18vh, 220px);
-    left: clamp(24px, 10vw, 140px);
-    width: 120px; height: 420px;
-    z-index: 40;
-    pointer-events: none;
-    color: rgba(230,238,255,.95);
-  }
-  body.home .scroll-trace.is-hidden{ display: none; }
-  body.home .scroll-trace path{
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-dasharray: 0 8;            /* dotted */
-    opacity: .95;
-    animation: tsi-trace-draw 2.2s ease-in-out .25s 1 both;
-  }
-  
-  /* Smooth, curving flight that matches (roughly) the SVG curve */
-  @keyframes tsi-plane-curve{
-    0%   { transform: translate(0,0) rotate(8deg);   opacity: 1; }
-    16%  { transform: translate(16px, 40px) rotate(5deg); }
-    33%  { transform: translate(-6px, 110px) rotate(3deg); }
-    50%  { transform: translate(12px, 190px) rotate(1deg); }
-    66%  { transform: translate(-4px, 260px) rotate(.5deg); }
-    83%  { transform: translate(8px, 320px) rotate(0deg); }
-    100% { transform: translate(4px, 360px) rotate(0deg); opacity: 0; }
-  }
-  
-  /* Draw the dotted trace from start to end */
-  @keyframes tsi-trace-draw{
-    from { stroke-dashoffset: 1200; }
-    to   { stroke-dashoffset: 0; }
-  }
-  
-  /* Reduce motion: no flying; subtle pulse + static dotted line */
-  @media (prefers-reduced-motion: reduce){
-    body.home .scroll-hint{ animation: none; }
-    body.home .scroll-hint svg{ animation: tsi-pulse 1.8s ease-in-out infinite; }
-    @keyframes tsi-pulse{ 0%,100%{opacity:.9;transform:none} 50%{opacity:1;transform:scale(1.06)} }
-    body.home .scroll-trace path{ animation: none; opacity:.85; }
-  }
-
-
-
-  /* === Global: looping paper airplane scroll hint (all pages) === */
-:root{
-  /* Path is provided by JS; fallback here just in case */
-  --flight-path: path("M 20 40 C 140 20, 100 140, 60 200 S 110 280, 40 340 S 110 420, 60 520");
-  --flight-speed: 14s;
-  --flight-color: rgba(242,245,255,0.98); /* milky */
+/* ============================
+   Fluid plane + dotted trace
+   ============================ */
+.flight-layer{ position:fixed; inset:0; pointer-events:none; z-index:60; }
+.flight-trace{ position:absolute; inset:0; }
+.flight-trace path{
+  fill:none;
+  stroke:var(--flight-color);
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-dasharray:0 9;                 /* dotted */
+  opacity:.9;
+  animation: trace-draw calc(var(--flight-speed) * .70) ease-in-out infinite;
 }
-
-html{ scroll-behavior:smooth; }
-
-.flight-hint,
-.flight-trace{
-  position: fixed;
-  top: 0; left: 0;
-  pointer-events: auto;
-  z-index: 60;
-}
-
 .flight-hint{
-  width: 44px; height: 44px;          /* slightly larger */
-  color: var(--flight-color);
+  position:absolute;
+  width:56px; height:56px;               /* slightly larger */
+  color:var(--flight-color);
   filter: drop-shadow(0 2px 6px rgba(0,0,0,.45));
-  pointer-events: auto;
-  cursor: default;
-  /* Motion path flight */
+  pointer-events:auto;                   /* clickable nudge */
+  cursor:default;
+  /* follow the same path as the trace */
   offset-path: var(--flight-path);
-  offset-rotate: auto 90deg;           /* nose aligns with tangent */
+  offset-rotate: auto 90deg;
   animation: plane-fly var(--flight-speed) cubic-bezier(.22,.61,.36,1) infinite;
 }
+.flight-hint svg{ width:56px; height:56px; display:block }
 
-.flight-hint svg{ width: 44px; height: 44px; display:block }
-
-/* Dotted trace that “draws” behind the plane */
-.flight-trace{
-  width: 100vw; height: 100vh; z-index: 50; pointer-events:none;
-}
-.flight-trace svg{ width: 100%; height: 100%; }
-.flight-trace path{
-  fill: none;
-  stroke: var(--flight-color);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-dasharray: 0 9;              /* dotted look */
-  opacity: .9;
-  /* Draw the path repeatedly to feel alive */
-  animation: trace-draw calc(var(--flight-speed) * .75) ease-in-out infinite;
-}
-
-/* Fade-out when near bottom (JS adds .flight-done) */
+/* fade out only at bottom (body.flight-done set by JS) */
 .flight-done .flight-hint,
-.flight-done .flight-trace{
-  animation-play-state: paused;
-  opacity: 0;
-  transition: opacity .7s ease;
-  pointer-events: none;
-}
+.flight-done .flight-trace{ opacity:0; transition:opacity .7s ease; }
 
-/* Respect Reduce Motion */
+/* Reduce motion */
 @media (prefers-reduced-motion: reduce){
-  .flight-hint{ animation:none; offset-path:none; position:fixed; top:10vh; left:10vw; }
-  .flight-trace path{ animation:none; opacity:.75 }
+  .flight-hint{ animation:none; offset-path:none; top:12vh; left:10vw; }
+  .flight-trace path{ animation:none; opacity:.7 }
 }
 
-/* Keyframes */
+/* keyframes */
 @keyframes plane-fly{
-  0%   { offset-distance: 0%;   transform: translate(0,0) rotate(0deg); }
-  22%  { offset-distance: 22%; }
-  38%  { offset-distance: 38%; }
-  55%  { offset-distance: 55%; }
-  72%  { offset-distance: 72%; }
-  88%  { offset-distance: 88%; }
+  0%   { offset-distance: 0%; }
+  18%  { offset-distance: 18%; }
+  34%  { offset-distance: 34%; }
+  50%  { offset-distance: 50%; }
+  68%  { offset-distance: 68%; }
+  84%  { offset-distance: 84%; }
   100% { offset-distance: 100%; }
 }
 @keyframes trace-draw{
   from { stroke-dashoffset: 1200; }
   to   { stroke-dashoffset: 0; }
 }
-
