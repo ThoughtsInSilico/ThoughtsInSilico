@@ -225,46 +225,74 @@ body.home .post-card{ background:rgba(12,14,24,.32); border-color:rgba(185,205,2
 .feature-body{ min-height:4.5rem; }
 
 
-/* === Paper airplane scroll hint (home only) === */
-html{ scroll-behavior: smooth; } /* nice-to-have */
-
-body.home .scroll-hint{
-  position: fixed;
-  top: clamp(120px, 20vh, 240px);  /* sits below the title */
-  left: clamp(24px, 10vw, 140px);  /* roughly under the title column */
-  z-index: 50;
-  color: rgba(230,238,255,.85);    /* plane color */
-  background: transparent;
-  border: 0;
-  padding: .25rem;
-  cursor: pointer;
-  opacity: 0.95;
-  transition: opacity .25s ease, transform .25s ease;
-  /* flight animation */
-  animation: tsi-plane-fly 2.6s ease-in-out 0.6s 3 both;
-}
-body.home .scroll-hint:is(:hover,:focus-visible){
-  opacity: 1;
-  transform: translateY(1px);
-  outline: none;
-}
-body.home .scroll-hint.is-hidden{ display: none; }
-
-@keyframes tsi-plane-fly{
-  0%   { transform: translate(0,0) rotate(8deg);   opacity: .95; }
-  25%  { transform: translate(10px, 16vh) rotate(3deg); }
-  50%  { transform: translate(-8px, 32vh) rotate(-2deg); }
-  75%  { transform: translate(6px, 44vh) rotate(1deg); opacity: .92; }
-  100% { transform: translate(0, 52vh) rotate(0deg);   opacity: 0; }
-}
-
-/* Respect user preference: reduce motion -> subtle pulse, no flying */
-@media (prefers-reduced-motion: reduce){
-  body.home .scroll-hint{ animation: none; }
-  body.home .scroll-hint svg{ animation: tsi-pulse 1.8s ease-in-out infinite; }
-  @keyframes tsi-pulse{
-    0%,100%{ opacity:.85; transform:none; }
-    50%{ opacity:1; transform: scale(1.05); }
+/* === Paper airplane scroll hint: curved, smoother, dotted trace === */
+  html{ scroll-behavior: smooth; } /* nice-to-have */
+  
+  body.home .scroll-hint{
+    position: fixed;
+    top: clamp(110px, 18vh, 220px);   /* sits under the title area */
+    left: clamp(24px, 10vw, 140px);   /* align with title column */
+    z-index: 50;
+    color: #ffffff;                   /* opaque plane */
+    background: transparent;
+    border: 0;
+    padding: .25rem;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity .25s ease, transform .25s ease;
+    animation: tsi-plane-curve 2.8s cubic-bezier(.22,.61,.36,1) .3s 1 both;
   }
-}
+  body.home .scroll-hint:is(:hover,:focus-visible){
+    transform: translateY(1px);
+    outline: none;
+  }
+  body.home .scroll-hint.is-hidden{ display: none; }
+  
+  /* The dotted curve — drawn from top to near the posts */
+  body.home .scroll-trace{
+    position: fixed;
+    top: clamp(110px, 18vh, 220px);
+    left: clamp(24px, 10vw, 140px);
+    width: 120px; height: 420px;
+    z-index: 40;
+    pointer-events: none;
+    color: rgba(230,238,255,.95);
+  }
+  body.home .scroll-trace.is-hidden{ display: none; }
+  body.home .scroll-trace path{
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 0 8;            /* dotted */
+    opacity: .95;
+    animation: tsi-trace-draw 2.2s ease-in-out .25s 1 both;
+  }
+  
+  /* Smooth, curving flight that matches (roughly) the SVG curve */
+  @keyframes tsi-plane-curve{
+    0%   { transform: translate(0,0) rotate(8deg);   opacity: 1; }
+    16%  { transform: translate(16px, 40px) rotate(5deg); }
+    33%  { transform: translate(-6px, 110px) rotate(3deg); }
+    50%  { transform: translate(12px, 190px) rotate(1deg); }
+    66%  { transform: translate(-4px, 260px) rotate(.5deg); }
+    83%  { transform: translate(8px, 320px) rotate(0deg); }
+    100% { transform: translate(4px, 360px) rotate(0deg); opacity: 0; }
+  }
+  
+  /* Draw the dotted trace from start to end */
+  @keyframes tsi-trace-draw{
+    from { stroke-dashoffset: 1200; }
+    to   { stroke-dashoffset: 0; }
+  }
+  
+  /* Reduce motion: no flying; subtle pulse + static dotted line */
+  @media (prefers-reduced-motion: reduce){
+    body.home .scroll-hint{ animation: none; }
+    body.home .scroll-hint svg{ animation: tsi-pulse 1.8s ease-in-out infinite; }
+    @keyframes tsi-pulse{ 0%,100%{opacity:.9;transform:none} 50%{opacity:1;transform:scale(1.06)} }
+    body.home .scroll-trace path{ animation: none; opacity:.85; }
+  }
+
+
 
