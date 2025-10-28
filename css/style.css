@@ -140,8 +140,16 @@ a:hover{text-decoration:underline}
    ================= */
 .page-main{width:min(100% - 2rem,var(--maxw));margin-inline:auto}
 article.post-card{display:block}
+
+/* UNIVERSAL tidy reading: justified paragraphs with soft hyphenation */
 .post-body{font-size:1.02rem}
-.post-body p{margin:.9rem 0;text-indent:.8em}
+.post-body p{
+  margin:.9rem 0;
+  text-indent:.8em;
+  text-align:justify;
+  text-justify:inter-word;
+  hyphens:auto;
+}
 .post-body p:first-of-type,
 .post-body h2 + p,
 .post-body h3 + p{ text-indent:0 }
