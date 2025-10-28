@@ -1,23 +1,23 @@
 /* =========================================================
-   Silico: Book of Genesis — clean Roman vibe
-   - Title + site font: Cinzel (crisp S/C)
+   Silico: Book of Genesis — medieval vibe
+   - Body font: MedievalSharp
+   - Title font: UnifrakturCook (bold)
    - Sidebar everywhere; single text color
-   - Nav & post titles: UPPERCASE via CSS (visual only)
-   - About grid includes a right banner tile + full-screen fade banner
+   - Home hero uses img/index-background.jpg (shorter)
+   - Transparent post/feature cards on Home
    =======================================================*/
 
 /* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=UnifrakturCook:wght@700&display=swap');
 
 /* Tokens */
 :root{
   --bg: #0b0e10;
-  --ink: #e8e6e3;          /* single text color */
+  --ink: #e8e6e3;          /* one text color */
   --ink-dim: #cfcac3;
   --stroke: #232831;
 
-  /* sidebar tint that matches the title vibe */
-  --sidebar-top: #0d0f1a;
+  --sidebar-top: #0d0f1a;  /* deep indigo tint */
   --sidebar-bot: #0a0d12;
 
   --shadow: 0 10px 30px rgba(0,0,0,.45);
@@ -28,24 +28,21 @@
 *{ box-sizing:border-box }
 html,body{
   margin:0; padding:0; background:var(--bg); color:var(--ink);
-  font:16px/1.7 'Cinzel', serif;                 /* Roman across the site */
+  font:18px/1.7 'MedievalSharp', serif; /* medieval hand vibe */
 }
 a{ color:var(--ink); text-decoration:none }
 a:hover{ text-decoration:underline }
 img{ max-width:100%; display:block }
 hr{ border:0; height:1px; background:var(--stroke) }
 
-/* Title (same font; bigger weight) */
+/* Site title (thicker medieval) */
 .site-title{
-  font-family:'Cinzel', serif;
+  font-family:'UnifrakturCook', serif;
   font-weight:700;
   font-size: clamp(28px, 5vw, 46px);
   line-height:1.1; margin:0;
   text-shadow:0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
-
-/* Roman label class for small headings (Trvthnukes/Virtual History) */
-.roman{ font-family:'Cinzel', serif; letter-spacing:.02em }
 
 /* Layout: sidebar + main */
 .layout{
@@ -61,36 +58,44 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .sidebar .brand{ margin-bottom:6px }
 .sidebar nav h3{
   font-size:12px; color:var(--ink-dim);
-  text-transform:uppercase; letter-spacing:.12em;
-  margin:18px 0 8px;
+  letter-spacing:.08em; margin:18px 0 8px;
 }
 .sidebar nav ul{ list-style:none; margin:0; padding:0 }
 .sidebar nav li{ margin:4px 0 }
 .sidebar nav a{
   display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent;
-  text-transform:uppercase; letter-spacing:.08em;  /* UPPERCASE nav */
 }
 .sidebar nav a:hover, .sidebar nav a:focus-visible{
   border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
 }
-.anthems .anthem-item{ margin:8px 0; font-size:13px; color:var(--ink-dim) }
+.anthems .anthem-item{ margin:8px 0; font-size:16px; color:var(--ink-dim); display:flex; gap:8px; align-items:center }
 .sidebar audio{ width:100% }
 .main{ min-height:100vh; overflow:hidden }
 
-/* Hero keeps your banner (home) */
+/* Home hero: new background, less height but still scrolly */
 .hero{
-  min-height:100vh;
-  background:url('img/banner.jpg') center/cover no-repeat fixed;
+  min-height: 62vh; /* shorter than full screen */
+  background:url('img/index-background.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
 
-/* Containers / cards */
+/* Containers / grids */
 .container{ width:min(1100px, 100% - 40px); margin:0 auto }
 .section{ padding:28px 0 }
+
 .posts-grid{
   display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px;
 }
-.post-card, .feature-card, .anthem-card, .card{
+
+/* Transparent cards on Home */
+.post-card, .feature-card, .anthem-card{
+  background: transparent;
+  border:1px dashed var(--stroke);
+  border-radius:var(--r2);
+  padding:14px;
+  box-shadow:none;
+}
+.card{ /* for other non-home cards */
   background:linear-gradient(180deg,#0d1116,#0a0d11);
   border:1px dashed var(--stroke); border-radius:var(--r2); padding:14px; box-shadow:var(--shadow);
 }
@@ -98,11 +103,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .post-time, .post-meta{ color:var(--ink-dim) }
 .post-body p, .post-card p, .card p{ text-align: justify }
 
-/* UPPERCASE for visible post titles (cards & post pages) */
-.post-title a, .post-title, .posts-grid .post-card h3 a,
-h1.post-title, article h1{ text-transform:uppercase; letter-spacing:.06em }
-
-/* Legacy post pages → convert top header into a sidebar */
+/* Legacy post pages → convert top header into a sidebar (no file edits) */
 .site-header{
   position: fixed; top:0; left:0; width:280px; height:100vh;
   padding:22px 18px 28px;
@@ -115,14 +116,13 @@ h1.post-title, article h1{ text-transform:uppercase; letter-spacing:.06em }
 .site-nav{ display:block }
 .site-nav > a, .site-nav .nav-dropdown > a{
   display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent;
-  text-transform:uppercase; letter-spacing:.08em
 }
 .site-nav > a:hover, .site-nav .nav-dropdown > a:hover{
   border-color:var(--stroke); background:rgba(255,255,255,.03)
 }
 .nav-dropdown{ margin:8px 0 0 }
 .nav-submenu{ display:block; margin:6px 0 0 10px }
-.nav-submenu a{ display:block; margin:2px 0; text-transform:uppercase; letter-spacing:.08em }
+.nav-submenu a{ display:block; margin:2px 0 }
 .page-main{ margin-left:280px; padding-top:14px }
 
 /* About: uneven, gapless favorites grid */
@@ -136,21 +136,20 @@ h1.post-title, article h1{ text-transform:uppercase; letter-spacing:.06em }
   padding:16px;
   background:linear-gradient(180deg,#0d1116,#0a0d11);
 }
-.about-cell h4{
-  margin:0 0 10px; font-size:14px; text-transform:uppercase; letter-spacing:.12em;
-}
+.about-cell h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
 .span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 }
 .tall-2{ grid-row: span 2 }
 
-/* Right-column banner tile inside grid */
+/* Right-column banner tile inside grid (your original banner) */
 .banner-tile{
   background:url('img/banner.jpg') center/cover no-repeat;
   min-height: 260px;
 }
 
-/* Full-screen banner with soft fade (after grid) */
+/* Full-screen banner with soft fade (between boxes and long text) */
 .about-banner{
-  height:100vh; background:url('img/banner.jpg') center/cover no-repeat fixed;
+  height: 100vh;
+  background:url('img/banner.jpg') center/cover no-repeat fixed;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
           mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
   margin:0;
