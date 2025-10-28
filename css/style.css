@@ -223,3 +223,48 @@ body.home .post-card{ background:rgba(12,14,24,.32); border-color:rgba(185,205,2
 .feature-title{ margin:0 0 .6rem 0; font-size:1.15rem; letter-spacing:.01em; color:var(--text); }
 .feature-quote{ margin:0; min-height:3.25rem; }
 .feature-body{ min-height:4.5rem; }
+
+
+/* === Paper airplane scroll hint (home only) === */
+html{ scroll-behavior: smooth; } /* nice-to-have */
+
+body.home .scroll-hint{
+  position: fixed;
+  top: clamp(120px, 20vh, 240px);  /* sits below the title */
+  left: clamp(24px, 10vw, 140px);  /* roughly under the title column */
+  z-index: 50;
+  color: rgba(230,238,255,.85);    /* plane color */
+  background: transparent;
+  border: 0;
+  padding: .25rem;
+  cursor: pointer;
+  opacity: 0.95;
+  transition: opacity .25s ease, transform .25s ease;
+  /* flight animation */
+  animation: tsi-plane-fly 2.6s ease-in-out 0.6s 3 both;
+}
+body.home .scroll-hint:is(:hover,:focus-visible){
+  opacity: 1;
+  transform: translateY(1px);
+  outline: none;
+}
+body.home .scroll-hint.is-hidden{ display: none; }
+
+@keyframes tsi-plane-fly{
+  0%   { transform: translate(0,0) rotate(8deg);   opacity: .95; }
+  25%  { transform: translate(10px, 16vh) rotate(3deg); }
+  50%  { transform: translate(-8px, 32vh) rotate(-2deg); }
+  75%  { transform: translate(6px, 44vh) rotate(1deg); opacity: .92; }
+  100% { transform: translate(0, 52vh) rotate(0deg);   opacity: 0; }
+}
+
+/* Respect user preference: reduce motion -> subtle pulse, no flying */
+@media (prefers-reduced-motion: reduce){
+  body.home .scroll-hint{ animation: none; }
+  body.home .scroll-hint svg{ animation: tsi-pulse 1.8s ease-in-out infinite; }
+  @keyframes tsi-pulse{
+    0%,100%{ opacity:.85; transform:none; }
+    50%{ opacity:1; transform: scale(1.05); }
+  }
+}
+
