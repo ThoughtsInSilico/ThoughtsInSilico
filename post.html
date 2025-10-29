@@ -10,11 +10,12 @@
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script src="js/sidebar.js" defer></script>
+  <script src="js/includes.js" defer></script>
 </head>
 
 <body>
   <div class="layout">
+    <!-- Sidebar include -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
@@ -26,9 +27,8 @@
         <p style="margin-top:18px"><a href="index.html">← Back to Home</a></p>
       </section>
 
-      <footer class="container" style="padding:18px 0 30px">
-        <small>© <span id="y"></span> Silico: Book of Genesis</small>
-      </footer>
+      <!-- Footer include -->
+      <div id="footer-include" data-src="partials/footer.html"></div>
     </main>
   </div>
 
@@ -39,36 +39,29 @@
       t.content.querySelectorAll('script').forEach(n => n.remove());
       return t.innerHTML;
     }
-
     async function loadPost(){
       const usp = new URLSearchParams(location.search);
       const u = usp.get('u');
       const titleEl = document.getElementById('title');
       const metaEl  = document.getElementById('meta');
       const bodyEl  = document.getElementById('body');
-
       if(!u){ titleEl.textContent = 'No post selected'; return; }
-
       try{
         const res = await fetch(u);
         const html = await res.text();
-
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const h1 = doc.querySelector('h1') || doc.querySelector('.post-title');
         const time = doc.querySelector('time[datetime]');
         titleEl.innerHTML = h1 ? h1.innerHTML : 'Untitled';
         if (time) metaEl.textContent = new Date(time.getAttribute('datetime')).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
-
         const article = doc.querySelector('article') || doc.querySelector('main') || doc.body;
         const cleaned = article.cloneNode(true);
         const firstH1 = cleaned.querySelector('h1'); if(firstH1) firstH1.remove();
         const firstTime = cleaned.querySelector('time[datetime]'); if(firstTime) firstTime.remove();
         bodyEl.innerHTML = sanitizeHtml(cleaned.innerHTML);
-
         bodyEl.querySelectorAll('a[href^="posts/"]').forEach(a=>{
           a.href = 'post.html?u=' + encodeURIComponent(a.getAttribute('href'));
         });
-
         if (window.MathJax?.typeset) MathJax.typeset();
         if(location.hash) {
           const target = document.getElementById(location.hash.slice(1));
@@ -79,7 +72,6 @@
         bodyEl.innerHTML = `<p class="post-body" style="color:#cfcac3">Error loading <code>${u}</code>.</p>`;
       }
     }
-    document.getElementById('y').textContent = new Date().getFullYear();
     loadPost();
   </script>
 </body>
