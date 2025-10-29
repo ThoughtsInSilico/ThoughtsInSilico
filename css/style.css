@@ -40,14 +40,15 @@ hr{ border:0; height:1px; background:var(--stroke) }
 /* ---------- Layout ---------- */
 .layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
 
-/* SIDEBAR with image visible behind a semi-transparent gradient (gradient ON TOP to dim image) */
+/* SIDEBAR: keep the image, darken via multiply blend for readability */
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
 
-  /* Top layer is the gradient (dims), bottom is the grayscale image */
+  /* Image + dark gradient overlay; multiply keeps a monochrome darkening */
   background:
-    linear-gradient(180deg, rgba(13,15,26,0.92), rgba(10,13,18,0.92)),
-    url('../img/sidebar-image.jpg') center top / 280px auto repeat-y;
+    url('../img/sidebar-image.jpg') center top / 280px auto repeat-y,
+    linear-gradient(180deg, rgba(15,17,22,0.80), rgba(10,12,16,0.92));
+  background-blend-mode: multiply;
 
   border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
