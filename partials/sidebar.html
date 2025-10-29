@@ -1,22 +1,8 @@
 <aside class="sidebar" role="navigation" aria-label="Primary">
   <div class="brand"><a class="site-title" href="./">Silico: Book of Genesis</a></div>
 
-  <!-- Search -->
-  <div class="sidebar-search">
-    <form action="search.html" method="get" role="search" aria-label="Search posts">
-      <input
-        type="search"
-        name="q"
-        placeholder="Search posts…"
-        aria-label="Search posts"
-        style="width:100%;padding:8px;border-radius:8px;border:1px dashed var(--stroke);
-               background:rgba(255,255,255,.04);color:var(--ink);"
-      />
-    </form>
-  </div>
-
   <nav>
-    <h3>Pages</h3>
+    <h3>Categories</h3>
     <ul>
       <li><a href="about.html">The Vat-brain Speaks</a></li>
       <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
@@ -33,6 +19,18 @@
       <li><a href="library.html">My Library</a></li>
       <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
     </ul>
+
+    <!-- Search moved BELOW the categories -->
+    <div class="sidebar-search" style="margin-top:14px;">
+      <form action="search.html" method="get" role="search" aria-label="Search posts">
+        <input
+          type="search"
+          name="q"
+          placeholder="Search posts…"
+          aria-label="Search posts"
+        />
+      </form>
+    </div>
 
     <h3>Currently Listening</h3>
     <article class="anthem-card">
