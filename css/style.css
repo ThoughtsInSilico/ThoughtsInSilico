@@ -1,8 +1,7 @@
 /* =========================================================
-   Silico: Book of Genesis — Font setup
-   - Titles & nav: Girassol
-   - Body: Stardos Stencil
-   - Trvthnukes/Virtual History headers: Cinzel (via .roman)
+   Silico: Book of Genesis — Girassol titles, Stardos body,
+   Cinzel only for the Trvthnukes/Virtual History headings.
+   Nav uses the body font (Stardos), normal casing.
    =======================================================*/
 
 /* Google Fonts */
@@ -26,7 +25,7 @@
 *{ box-sizing:border-box }
 html,body{
   margin:0; padding:0; background:var(--bg); color:var(--ink);
-  font:18px/1.7 'Stardos Stencil', system-ui, serif;    /* BODY FONT */
+  font:18px/1.7 'Stardos Stencil', system-ui, serif;   /* BODY + NAV FONT */
 }
 a{ color:var(--ink); text-decoration:none }
 a:hover{ text-decoration:underline }
@@ -41,12 +40,12 @@ hr{ border:0; height:1px; background:var(--stroke) }
   text-shadow:0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
 
-/* Navigation links use Girassol */
+/* Navigation links inherit body font (Stardos) — normal casing */
 .sidebar nav a,
 .site-header .site-nav > a,
 .site-header .nav-dropdown > a,
 .site-header .nav-submenu a{
-  font-family:'Girassol', system-ui, serif;
+  font-family: inherit;
 }
 
 /* Post titles (cards and full posts) use Girassol */
@@ -62,7 +61,7 @@ article h1.post-title{
 /* Cinzel for Trvthnukes/Virtual History headings ONLY */
 .roman{ font-family:'Cinzel', serif; letter-spacing:.02em }
 
-/* ---------- Layout (unchanged) ---------- */
+/* ---------- Layout ---------- */
 .layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
@@ -140,7 +139,7 @@ article h1.post-title{
 .nav-submenu a{ display:block; margin:2px 0 }
 .page-main{ margin-left:280px; padding-top:14px }
 
-/* About grid + banners (unchanged) */
+/* About grid + banners */
 .about-grid{
   display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
   gap:0; border:1px solid var(--stroke);
