@@ -31,7 +31,7 @@
 *{ box-sizing:border-box }
 html,body{
   margin:0; padding:0; background:var(--bg); color:var(--ink);
-  font:18px/1.7 'Stardos Stencil', system-ui, serif;   /* BODY + NAV FONT */
+  font:18px/1.7 'Stardos Stencil', system-ui, serif;
 }
 a{ color:var(--ink); text-decoration:none }
 a:hover{ text-decoration:underline }
@@ -39,7 +39,7 @@ img{ max-width:100%; display:block }
 hr{ border:0; height:1px; background:var(--stroke) }
 
 /* ---------- Fonts by role ---------- */
-.site-title{                                  /* SITE & page titles */
+.site-title{
   font-family:'Girassol', system-ui, serif;
   font-size: clamp(28px, 5vw, 46px);
   line-height:1.1; margin:0;
@@ -82,30 +82,31 @@ article h1.post-title{
   letter-spacing:.08em; margin:18px 0 8px;
 }
 .sidebar nav ul{ list-style:none; margin:0; padding:0 }
-/* slightly narrower spacing */
-.sidebar nav li{ margin:2px 0 }                 /* was 4px */
+.sidebar nav li{ margin:2px 0 }
 .sidebar nav a{
-  display:block; padding:5px 8px;               /* was 6px 8px */
+  display:block; padding:5px 8px;
   border-radius:8px; border:1px dashed transparent;
 }
 
-/* collapse submenus by default; open via .open */
+/* collapsible submenu */
 .nav-submenu{ display:none; margin:4px 0 0 12px; padding:0; list-style:none; }
 .nav-submenu.open{ display:block; }
-
-/* optional: make the caret look clickable */
 .nav-toggle{ cursor:pointer }
+
+/* prevent ‘Fiction’ toggler from looking like a link on hover */
+.sidebar .nav-toggle:hover{ text-decoration:none }
 
 .sidebar nav a:hover, .sidebar nav a:focus-visible{
   border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
 }
+
 .anthems .anthem-item{ margin:8px 0; font-size:16px; color:var(--ink-dim); display:flex; gap:8px; align-items:center }
 .sidebar audio{ width:100% }
 .main{ min-height:100vh; overflow:hidden }
 
 /* ---------- Home hero (index background) ---------- */
 .hero{
-  min-height: 62vh; /* shorter than full screen to tease the scroll */
+  min-height: 62vh;
   background:url('../img/index-background.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
@@ -117,7 +118,6 @@ article h1.post-title{
   display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px;
 }
 
-/* Transparent cards on Home; solid cards elsewhere via .card */
 .post-card, .feature-card, .anthem-card{
   background: transparent;
   border:1px dashed var(--stroke);
@@ -133,7 +133,7 @@ article h1.post-title{
 .post-time, .post-meta{ color:var(--ink-dim) }
 .post-body p, .post-card p, .card p{ text-align: justify }
 
-/* ---------- Legacy post pages → sidebarify top header without editing each file ---------- */
+/* ---------- Legacy post pages header (kept for future) ---------- */
 .site-header{
   position: fixed; top:0; left:0; width:280px; height:100vh;
   padding:22px 18px 28px;
@@ -169,20 +169,41 @@ article h1.post-title{
 .span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 } .span-6{ grid-column: span 6 }
 .tall-2{ grid-row: span 2 }
 
-/* About page: right-grid banner tile */
+/* (old) banner tile retained in case you re-use elsewhere */
 .banner-tile{
   background:url('../img/banner.jpg') center/cover no-repeat;
   min-height: 260px;
 }
 
-/* About page: full-screen banner with soft fade (between grid & long text) */
+/* About page: full-screen banner with soft fade.
+   Center the image as if the sidebar didn't exist:
+   shift by +140px (half of the 280px sidebar), and dim it. */
 .about-banner{
+  position:relative;
   height: 100vh;
-  background:url('../img/banner.jpg') center/cover no-repeat fixed;
+  background:url('../img/banner.jpg') no-repeat fixed;
+  background-size: cover;
+  background-position: calc(50% + 140px) center; /* center of main area */
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
           mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
   margin:0;
 }
+.about-banner::after{
+  content:"";
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.38); /* dimmer overlay */
+}
+
+/* Anthem player styles (on About page grid) */
+.anthem-player h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
+.anthem-list{ list-style:none; margin:10px 0 8px; padding:0 }
+.anthem-list li{ margin:6px 0; display:flex; gap:8px; align-items:center }
+.anthem-list button{ font:inherit; padding:4px 8px; border:1px dashed var(--stroke); border-radius:8px; background:transparent; color:var(--ink); cursor:pointer }
+.anthem-list button:hover{ background:rgba(255,255,255,.03) }
+.anthem-controls{ display:flex; gap:8px; margin-top:10px }
+.anthem-controls button{ font:inherit; padding:6px 10px; border:1px dashed var(--stroke); border-radius:8px; background:transparent; color:var(--ink); cursor:pointer }
+.anthem-controls button:hover{ background:rgba(255,255,255,.03) }
+.anthem-audio{ width:100%; margin-top:10px }
 
 /* ---------- Divider ---------- */
 .hr-dots{
@@ -198,6 +219,8 @@ article h1.post-title{
   .site-header{ position:relative; width:auto; height:auto }
   .page-main{ margin-left:0 }
   .about-grid{ grid-template-columns: repeat(2, 1fr) }
+  /* on small screens, sidebar is stacked, so don't offset banner center */
+  .about-banner{ background-position: center }
 }
 @media (max-width: 520px){
   .about-grid{ grid-template-columns: 1fr }
