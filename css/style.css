@@ -40,15 +40,14 @@ hr{ border:0; height:1px; background:var(--stroke) }
 /* ---------- Layout ---------- */
 .layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
 
+/* SIDEBAR with image visible behind a semi-transparent gradient */
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
-  /* gradient + optional image behind sidebar */
+
+  /* TOP layer: your image; BOTTOM layer: translucent gradient */
   background:
-    linear-gradient(180deg, var(--sidebar-top), var(--sidebar-bot)),
-    url('../img/sidebar-image.jpg');
-  background-size: auto, 280px auto;
-  background-repeat: no-repeat, repeat-y;
-  background-position: 0 0, center top;
+    url('../img/sidebar-image.jpg') center top / 280px auto repeat-y,
+    linear-gradient(180deg, rgba(13,15,26,0.9), rgba(10,13,18,0.9));
 
   border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
@@ -100,7 +99,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .post-time,.post-meta{ color:var(--ink-dim) }
 .post-body p,.post-card p,.card p{ text-align: justify }
 
-/* ---------- About (Brain-vat) ---------- */
+/* ---------- About (Vat-brain) ---------- */
 .about-upper{
   background: url('../img/about-upper.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
@@ -116,17 +115,16 @@ hr{ border:0; height:1px; background:var(--stroke) }
   border-right:1px solid var(--stroke);
   border-bottom:1px solid var(--stroke);
   padding:16px;
-  background: rgba(13,17,22,0.62);      /* ← transparency */
-  backdrop-filter: blur(1px);            /* subtle softening */
+  background: rgba(13,17,22,0.62);
+  backdrop-filter: blur(1px);
 }
 .about-cell h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
 
-/* Helpers */
 .span-1{ grid-column: span 1 } .span-2{ grid-column: span 2 } .span-3{ grid-column: span 3 }
 .span-4{ grid-column: span 4 } .span-6{ grid-column: span 6 }
 .tall-2{ grid-row: span 2 }
 
-/* Notes column: fully transparent, no border */
+/* Notes column: fully transparent */
 .notes-cell{
   background: transparent;
   border-right:1px solid transparent;
