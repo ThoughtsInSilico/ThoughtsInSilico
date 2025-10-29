@@ -17,8 +17,8 @@
           <li><a href="about.html">The Brain-vat Speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
-            <a href="categories.html?cat=Fiction">Fiction ▾</a>
-            <ul style="margin:.25rem 0 .5rem 12px; padding:0; list-style:none;">
+            <a href="#" class="nav-toggle" aria-expanded="false" aria-controls="fic-sub">Fiction ▾</a>
+            <ul id="fic-sub" class="nav-submenu" aria-label="Fiction submenu">
               <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
@@ -29,6 +29,13 @@
           <li><a href="library.html" aria-current="page">My Library</a></li>
           <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
         </ul>
+
+        <h3>Currently Listening</h3>
+        <article class="anthem-card">
+          <div class="anthems-list">
+            <div class="anthem-item">Update this list later…</div>
+          </div>
+        </article>
       </nav>
     </aside>
 
@@ -40,9 +47,21 @@
       </section>
 
       <footer class="container" style="padding:18px 0 30px">
-        <p><small>© 2025 Silico: Book of Genesis.</small></p>
+        <p><small>© <span id="y"></span> Silico: Book of Genesis.</small></p>
       </footer>
     </main>
   </div>
+
+  <script>
+    document.querySelectorAll('.nav-toggle').forEach(t => {
+      t.addEventListener('click', e => {
+        e.preventDefault();
+        const ul = t.nextElementSibling;
+        const open = ul.classList.toggle('open');
+        t.setAttribute('aria-expanded', String(open));
+      });
+    });
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
