@@ -6,27 +6,75 @@
   <title>My Library • Silico: Book of Genesis</title>
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
+  <style>
+    /* Library layout (just for this page) */
+    .library-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap:22px;
+      padding-top:12px;
+    }
+    .book-card{
+      border:1px dashed var(--stroke);
+      border-radius:var(--r2);
+      padding:14px;
+      background:rgba(12,15,19,0.4);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.25);
+      text-align:center;
+    }
+    .book-card img{
+      width:100%;
+      height:auto;
+      border-radius:8px;
+      margin-bottom:10px;
+    }
+    .book-card h3{
+      margin:0;
+      font-weight:bold; /* title in bold */
+      font-size:1.05rem;
+    }
+    .book-card .author{
+      color: var(--ink-dim); /* lighter grey */
+      margin:6px 0 8px;
+      font-size:.95rem;
+    }
+    .book-card .blurb{
+      margin:0;
+      line-height:1.45; /* row height flexes naturally with content length */
+    }
+  </style>
 </head>
+
 <body>
   <div class="layout">
-    <!-- Sidebar include -->
+    <!-- Sidebar include (kept consistent with the rest of the site) -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
       <section class="container section">
         <h1 class="site-title" style="font-size: clamp(28px,5vw,46px);">My Library</h1>
         <hr class="hr-dots"/>
-        <p style="color:#b7b3ac">Add book cover images and notes as you like.</p>
+
+        <!-- BOOKS -->
+        <div class="library-grid">
+          <!-- Duplicate this .book-card block for more books -->
+          <article class="book-card">
+            <img src="img/book-placeholder.jpg" alt="Title 1 cover">
+            <h3>Title 1</h3>
+            <p class="author">John Smith</p>
+            <p class="blurb">Blah blah blah.</p>
+          </article>
+        </div>
       </section>
 
       <footer class="container" style="padding:18px 0 30px">
-        <p><small>© 2025 Silico: Book of Genesis.</small></p>
+        <p><small>© <span id="y"></span> Silico: Book of Genesis.</small></p>
       </footer>
     </main>
   </div>
 
   <script>
-    // Sidebar include + active link
+    // Sidebar include + active link highlight
     (async function(){
       const holder = document.getElementById('sidebar-include');
       if (holder){
@@ -39,6 +87,7 @@
         });
       }
     })();
+    document.getElementById('y').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
