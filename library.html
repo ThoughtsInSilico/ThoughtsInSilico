@@ -7,14 +7,22 @@
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
   <script src="js/includes.js" defer></script>
+
   <style>
-    /* Library layout (scoped to this page) */
+    /* ===== Library layout (scoped to this page) ===== */
     .library-grid{
       display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap:22px;
       padding-top:12px;
+      grid-template-columns: repeat(2, 1fr);      /* phones */
     }
+    @media (min-width: 700px){
+      .library-grid{ grid-template-columns: repeat(3, 1fr); } /* tablets */
+    }
+    @media (min-width: 1000px){
+      .library-grid{ grid-template-columns: repeat(4, 1fr); } /* desktop: 4 across */
+    }
+
     .book-card{
       border:1px dashed var(--stroke);
       border-radius:var(--r2);
@@ -22,26 +30,34 @@
       background:rgba(12,15,19,0.4);
       box-shadow: inset 0 0 8px rgba(0,0,0,0.25);
     }
+
+    /* Uniform covers */
     .book-card img{
-      display:block;            /* ensures the text is below the image */
+      display:block;
       width:100%;
-      height:auto;
+      /* Set a consistent shape/size: 2:3 “book cover” */
+      aspect-ratio: 2 / 3;
+      object-fit: cover;      /* crop to fill, no distortion */
       border-radius:8px;
       margin-bottom:10px;
     }
+
     .book-card h3{
       margin:0;
-      font-weight:bold;         /* title in bold */
+      font-weight:bold;       /* title in bold */
       font-size:1.05rem;
+      text-align:center;
     }
     .book-card .author{
-      color: var(--ink-dim);    /* lighter grey */
+      color: var(--ink-dim);  /* lighter grey */
       margin:6px 0 8px;
       font-size:.95rem;
+      text-align:center;
     }
     .book-card .blurb{
       margin:0;
-      line-height:1.45;         /* row height flexes with blurb length */
+      line-height:1.45;       /* row height flexes with blurb length */
+      text-align:center;
     }
   </style>
 </head>
