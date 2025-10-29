@@ -14,6 +14,7 @@
 
 <body class="home">
   <div class="layout">
+    <!-- Sidebar -->
     <aside class="sidebar" role="navigation" aria-label="Primary">
       <div class="brand"><a class="site-title" href="index.html">Silico: Book of Genesis</a></div>
       <nav>
@@ -22,8 +23,8 @@
           <li><a href="about.html">The Brain-vat Speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
-            <a href="#" class="nav-toggle" aria-expanded="false">Fiction ▾</a>
-            <ul class="nav-submenu" aria-label="Fiction submenu">
+            <a href="categories.html?cat=Fiction">Fiction ▾</a>
+            <ul style="margin:.25rem 0 .5rem 12px; padding:0; list-style:none;">
               <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
@@ -36,91 +37,76 @@
         </ul>
 
         <h3>Anthems</h3>
-        <article class="anthem-card" id="anthems">
-          <div class="anthems-list" id="anthems-list"></div>
-          <audio id="anthem-audio" preload="none"></audio>
+        <article class="anthem-card">
+          <div class="anthems-list">
+            <div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div>
+          </div>
+          <audio preload="none"></audio>
         </article>
       </nav>
     </aside>
 
+    <!-- Main -->
     <main class="main">
-      <section class="hero" aria-label="Background art"></section>
+      <!-- Hero with background image (set in CSS) -->
+      <section class="hero"></section>
 
       <section class="container section">
-        <h2 class="list-heading">Recent posts</h2>
-        <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
+        <h1 class="site-title" style="font-size: clamp(28px,5vw,46px);">Recent Posts</h1>
+        <hr class="hr-dots"/>
 
-        <article class="feature-card" style="margin-top:16px">
-          <h3 class="roman" style="margin:0 0 6px">Trvthnukes</h3>
-          <hr class="hr-dots" />
-          <blockquote id="trvthnuke" class="post-body" style="margin:0"></blockquote>
-        </article>
-
-        <article class="feature-card" style="margin-top:12px">
-          <h3 class="roman" style="margin:0 0 6px">Virtual Histories</h3>
-          <hr class="hr-dots" />
-          <div id="virtual-history" class="post-body"></div>
-        </article>
+        <div id="posts" class="posts-grid" aria-live="polite"></div>
       </section>
 
       <footer class="container" style="padding:18px 0 30px">
-        <p><small>© <span id="y"></span> Silico: Book of Genesis.</small></p>
+        <small>© <span id="y"></span> Silico: Book of Genesis</small>
       </footer>
     </main>
   </div>
 
   <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
+    // Load posts.json and render cards
+    async function loadPosts() {
+      const grid = document.getElementById('posts');
+      try{
+        const res = await fetch('posts/posts.json');
+        const posts = await res.json();
 
-    // Helper: after rendering cards, route to post.html?u=…
-    function retargetPostLinks(scope){
-      scope.querySelectorAll('.post-card a').forEach(a=>{
-        const raw = a.getAttribute('href');
-        a.setAttribute('href', `post.html?u=${encodeURIComponent(raw)}`);
+        const formatDate = (iso) => {
+          const d = new Date(iso);
+          return d.toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
+        };
+
+        const items = posts.slice(0, 9).map(p => `
+          <article class="post-card">
+            <h3><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
+            <time class="post-time" datetime="${p.date}">${formatDate(p.date)}</time>
+            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
+            ${p.excerpt ? `<p class="post-body">${p.excerpt}</p>` : ''}
+          </article>
+        `).join('');
+
+        grid.innerHTML = items || '<p class="post-body" style="color:#cfcac3">No posts yet.</p>';
+
+        retargetPostLinks(grid);
+        if (window.MathJax?.typeset) MathJax.typeset();
+      }catch(e){
+        grid.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
+      }
+    }
+
+    function retargetPostLinks(root){
+      root.querySelectorAll('a[href^="posts/"]').forEach(a=>{
+        a.href = 'post.html?u=' + encodeURIComponent(a.getAttribute('href'));
       });
     }
 
-    async function loadPostsJSON(){
-      const candidates = ['posts.json', 'posts/posts.json'];
-      let lastErr;
-      for (const path of candidates){
-        try{
-          const res = await fetch(path, {cache:'no-store'});
-          if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-          return await res.json();
-        }catch(e){ lastErr = e; }
-      }
-      throw lastErr;
-    }
+    // Anthems (audio)
+    (function setupAnthems(){
+      const list = document.querySelector('.anthems-list');
+      const audio = document.querySelector('.sidebar audio');
+      const ANTHEMS = []; // Add like: { title: 'Track', src: 'audio/track.mp3' }
 
-    (async function(){
-      const grid = document.getElementById('posts-grid');
-      try{
-        let posts = await loadPostsJSON();
-        posts = posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
-        grid.innerHTML = posts.map(p => `
-          <article class="post-card">
-            <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
-            <time class="post-time" datetime="${p.date}">
-              ${new Date(p.date).toLocaleString(undefined,{month:'short',year:'numeric'})}
-            </time>
-            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
-          </article>
-        `).join('');
-        retargetPostLinks(grid);
-        if (window.MathJax?.typeset) MathJax.typeset();
-      } catch (e) {
-        grid.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
-      }
-    })();
-
-    document.getElementById('trvthnuke').textContent = '';
-    document.getElementById('virtual-history').textContent = '';
-
-    (function(){
-      const ANTHEMS = [];
-      const list  = document.getElementById('anthems-list');
-      const audio = document.getElementById('anthem-audio');
       list.innerHTML = ANTHEMS.length ? ANTHEMS.map((a,i)=>`
         <div class="anthem-item" data-i="${i}">
           <button class="anthem-btn" type="button">Play</button>
@@ -133,6 +119,9 @@
         audio.src = ANTHEMS[i].src; audio.play();
       });
     })();
+
+    document.getElementById('y').textContent = new Date().getFullYear();
+    loadPosts();
   </script>
 </body>
 </html>
