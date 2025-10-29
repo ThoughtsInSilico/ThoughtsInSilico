@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Search • Silico: Book of Genesis</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="theme-color" content="#000000" />
+  <script src="js/includes.js" defer></script>
+  <style>
+    .search-muted{ color: var(--ink-dim); }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <div id="sidebar-include" data-src="partials/sidebar.html"></div>
+
+    <main class="main">
+      <section class="container section">
+        <h1 class="site-title" style="font-size: clamp(28px,5vw,46px);">Search</h1>
+        <p id="queryLabel" class="search-muted" style="margin:.25rem 0 1rem;"></p>
+        <hr class="hr-dots"/>
+        <div id="results" class="posts-grid" aria-live="polite"></div>
+      </section>
+
+      <div id="footer-include" data-src="partials/footer.html"></div>
+    </main>
+  </div>
+
+  <script>
+    function getQ(){
+      const q = new URLSearchParams(location.search).get('q') || '';
+      return q.trim();
+    }
+    function norm(s){ return (s || '').toString().toLowerCase(); }
+
+    (async function(){
+      const q = getQ();
+      document.getElementById('queryLabel').textContent =
+        q ? `Results for “${q}”` : 'Type a query in the sidebar and press Enter.';
+
+      const box = document.getElementById('results');
+      if (!q){ box.innerHTML = '<p class="post-body search-muted">No query.</p>'; return; }
+
+      try{
+        const res = await fetch('posts/posts.json', { cache: 'no-store' });
+        const posts = await res.json();
+
+        const needle = norm(q);
+        const matches = posts.filter(p=>{
+          const hay = [
+            p.title, p.titleHtml, p.category, p.subcategory, p.excerpt
+          ].map(norm).join(' § ');
+          return hay.includes(needle);
+        }).sort((a,b)=> new Date(b.date) - new Date(a.date));
+
+        const fmt = iso => new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
+        box.innerHTML = matches.length ? matches.map(p => `
+          <article class="post-card">
+            <h3><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
+            <time class="post-time" datetime="${p.date}">${fmt(p.date)}</time>
+            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
+            ${p.excerpt ? `<p class="post-body">${p.excerpt}</p>` : ''}
+          </article>
+        `).join('') : '<p class="post-body search-muted">No results.</p>';
+
+        // Open results via post.html (consistent with the rest of the site)
+        box.querySelectorAll('.post-card a').forEach(a=>{
+          const raw = a.getAttribute('href');
+          a.setAttribute('href', `post.html?u=${encodeURIComponent(raw)}`);
+        });
+      }catch(e){
+        console.error(e);
+        box.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
+      }
+    })();
+  </script>
+</body>
+</html>
