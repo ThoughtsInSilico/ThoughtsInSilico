@@ -78,10 +78,23 @@ article h1.post-title{
   letter-spacing:.08em; margin:18px 0 8px;
 }
 .sidebar nav ul{ list-style:none; margin:0; padding:0 }
-.sidebar nav li{ margin:4px 0 }
+/* slightly narrower spacing */
+.sidebar nav li{ margin:2px 0 }                 /* was 4px */
 .sidebar nav a{
-  display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent;
+  display:block; padding:5px 8px;               /* was 6px 8px */
+  border-radius:8px; border:1px dashed transparent;
 }
+
+
+/* collapse submenus by default; open via .open */
+.nav-submenu{ display:none; margin:4px 0 0 12px; padding:0; list-style:none; }
+.nav-submenu.open{ display:block; }
+
+/* optional: make the caret look clickable */
+.nav-toggle{ cursor:pointer }
+
+
+
 .sidebar nav a:hover, .sidebar nav a:focus-visible{
   border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
 }
