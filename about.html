@@ -6,14 +6,13 @@
   <title>The Vat-brain Speaks • Silico: Book of Genesis</title>
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
+  <script src="js/sidebar.js" defer></script>
 </head>
 
 <body>
   <div class="layout">
-    <!-- Sidebar include -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
-    <!-- Main -->
     <main class="main">
       <section class="about-upper">
         <div class="container section">
@@ -73,10 +72,7 @@
 
           <section id="about-site" class="post-body" aria-labelledby="about-site-heading">
             <h2 id="about-site-heading">About the site</h2>
-            <p>This is an informal, personal blog. I intentionally do not make this a formal site for my academic works as I have other places for that. Neither do I expect it to be a complete compedium of all my research work.</p> 
-            <p>For a while I kept a Linktree for my write-ups, but I constantly felt disappointed with the available site building options, even after paying through different subscriptions, but they're shoddy, so why not just make my own site?</p>
-            <p>I was going for a 'minimalist' yet personalized vibe, so I went with a theme that looks like an academic notebook, with slight ornamentation in aesthetics adding character, while still keeping it very much subdued. I know black text on white background can sometimes be hard to read, though. I may rehaul this place time to time. </p>
-            <p>I don't know if anyone reads this blog at all. Perhaps someday I will add comments and a mailing list, but at the moment, I simply cannot keep up with people. If you are reading this, I won't make a big deal out of it, but you made my day with your curiosity :] </p>
+            <p>This is an informal, personal blog…</p>
             <p>If you want to reach out: message me on Discord (nonergodicsystem) or email me at <a href="mailto:non.ergodic.system@gmail.com">non.ergodic.system@gmail.com</a></p>
           </section>
 
@@ -93,25 +89,12 @@
   </div>
 
   <script>
-    // Sidebar include + active link
-    (async function(){
-      const holder = document.getElementById('sidebar-include');
-      if (holder){
-        const res = await fetch(holder.dataset.src || 'partials/sidebar.html');
-        holder.outerHTML = await res.text();
-        const path = (location.pathname.split('/').pop() || 'index.html');
-        document.querySelectorAll('.sidebar nav a').forEach(a=>{
-          const href = a.getAttribute('href') || '';
-          if (href === path || href.startsWith(path+'?')) a.setAttribute('aria-current','page');
-        });
-      }
-    })();
-
-    /* Personal Anthems (unchanged) */
+    // Personal Anthems (kept)
     const ANTHEMS = [];
     const list = document.getElementById('anthemList');
     const audio = document.getElementById('anthemAudio');
     function renderList(active = -1){
+      if(!list) return;
       list.innerHTML = ANTHEMS.length
         ? ANTHEMS.map((a,i)=>`<li><button data-i="${i}" type="button">${i===active?'▶':'►'} ${a.title}</button></li>`).join('')
         : '<li>Add <code>.mp3</code> files in <code>audio/</code> and list them in the ANTHEMS array.</li>';
