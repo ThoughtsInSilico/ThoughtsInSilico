@@ -53,7 +53,7 @@
         posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
         const fmt = iso => new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
         grid.innerHTML = posts.slice(0, 9).map(p => `
-          <article class="post-card">
+          <article class="post-card" ${p.cardImage ? `style="--card-img: url('${p.cardImage}');"` : ''}>
             <h3><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
             <time class="post-time" datetime="${p.date}">${fmt(p.date)}</time>
             <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
