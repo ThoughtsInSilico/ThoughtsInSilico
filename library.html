@@ -6,8 +6,11 @@
   <title>My Library • Silico: Book of Genesis</title>
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
+  <!-- Sidebar include loader -->
+  <script src="js/sidebar.js" defer></script>
+
   <style>
-    /* Library layout (just for this page) */
+    /* Library layout (scopes to this page only) */
     .library-grid{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -20,9 +23,9 @@
       padding:14px;
       background:rgba(12,15,19,0.4);
       box-shadow: inset 0 0 8px rgba(0,0,0,0.25);
-      text-align:center;
     }
     .book-card img{
+      display:block;            /* ensures everything else is BELOW the picture */
       width:100%;
       height:auto;
       border-radius:8px;
@@ -30,24 +33,24 @@
     }
     .book-card h3{
       margin:0;
-      font-weight:bold; /* title in bold */
+      font-weight:bold;         /* title in bold */
       font-size:1.05rem;
     }
     .book-card .author{
-      color: var(--ink-dim); /* lighter grey */
+      color: var(--ink-dim);    /* lighter grey */
       margin:6px 0 8px;
       font-size:.95rem;
     }
     .book-card .blurb{
       margin:0;
-      line-height:1.45; /* row height flexes naturally with content length */
+      line-height:1.45;         /* row height flexes with blurb length */
     }
   </style>
 </head>
 
 <body>
   <div class="layout">
-    <!-- Sidebar include (kept consistent with the rest of the site) -->
+    <!-- Uses your shared sidebar partial -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
@@ -57,9 +60,9 @@
 
         <!-- BOOKS -->
         <div class="library-grid">
-          <!-- Duplicate this .book-card block for more books -->
+          <!-- Duplicate this .book-card for more books; edit only the four fields -->
           <article class="book-card">
-            <img src="img/book-placeholder.jpg" alt="Title 1 cover">
+            <img src="img/image1.png" alt="Title 1 cover">
             <h3>Title 1</h3>
             <p class="author">John Smith</p>
             <p class="blurb">Blah blah blah.</p>
@@ -74,19 +77,6 @@
   </div>
 
   <script>
-    // Sidebar include + active link highlight
-    (async function(){
-      const holder = document.getElementById('sidebar-include');
-      if (holder){
-        const res = await fetch(holder.dataset.src || 'partials/sidebar.html');
-        holder.outerHTML = await res.text();
-        const path = (location.pathname.split('/').pop() || 'index.html');
-        document.querySelectorAll('.sidebar nav a').forEach(a=>{
-          const href = a.getAttribute('href') || '';
-          if (href === path || href.startsWith(path+'?')) a.setAttribute('aria-current','page');
-        });
-      }
-    })();
     document.getElementById('y').textContent = new Date().getFullYear();
   </script>
 </body>
