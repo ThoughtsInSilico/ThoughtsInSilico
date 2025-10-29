@@ -10,11 +10,11 @@
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="js/sidebar.js" defer></script>
 </head>
 
 <body>
   <div class="layout">
-    <!-- Sidebar include -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
@@ -33,20 +33,6 @@
   </div>
 
   <script>
-    // Sidebar include + active link
-    (async function(){
-      const holder = document.getElementById('sidebar-include');
-      if (holder){
-        const res = await fetch(holder.dataset.src || 'partials/sidebar.html');
-        holder.outerHTML = await res.text();
-        const path = (location.pathname.split('/').pop() || 'index.html');
-        document.querySelectorAll('.sidebar nav a').forEach(a=>{
-          const href = a.getAttribute('href') || '';
-          if (href === path || href.startsWith(path+'?')) a.setAttribute('aria-current','page');
-        });
-      }
-    })();
-
     function sanitizeHtml(html){
       const t = document.createElement('template');
       t.innerHTML = html;
@@ -77,7 +63,6 @@
         const cleaned = article.cloneNode(true);
         const firstH1 = cleaned.querySelector('h1'); if(firstH1) firstH1.remove();
         const firstTime = cleaned.querySelector('time[datetime]'); if(firstTime) firstTime.remove();
-
         bodyEl.innerHTML = sanitizeHtml(cleaned.innerHTML);
 
         bodyEl.querySelectorAll('a[href^="posts/"]').forEach(a=>{
