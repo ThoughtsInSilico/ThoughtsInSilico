@@ -84,9 +84,15 @@
         titleEl.innerHTML = h1 ? h1.innerHTML : 'Untitled';
         if (time) metaEl.textContent = new Date(time.getAttribute('datetime')).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
 
-        const article = doc.querySelector('article') || doc.querySelector('main') || doc.body;
-        bodyEl.innerHTML = sanitizeHtml(article.innerHTML);
+        // Use article/main/body, but remove the first H1 and first TIME to avoid duplicates
+        const articleNode = doc.querySelector('article') || doc.querySelector('main') || doc.body;
+        const cleaned = articleNode.cloneNode(true);
+        const firstH1 = cleaned.querySelector('h1'); if(firstH1) firstH1.remove();
+        const firstTime = cleaned.querySelector('time[datetime]'); if(firstTime) firstTime.remove();
 
+        bodyEl.innerHTML = sanitizeHtml(cleaned.innerHTML);
+
+        // Retarget links to other posts
         bodyEl.querySelectorAll('a[href^="posts/"]').forEach(a=>{
           a.href = 'post.html?u=' + encodeURIComponent(a.getAttribute('href'));
         });
