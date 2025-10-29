@@ -19,8 +19,8 @@
           <li><a href="about.html" aria-current="page">The Brain-vat Speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
-            <a href="categories.html?cat=Fiction">Fiction ▾</a>
-            <ul style="margin:.25rem 0 .5rem 12px; padding:0; list-style:none;">
+            <a href="#" class="nav-toggle" aria-expanded="false" aria-controls="fic-sub">Fiction ▾</a>
+            <ul id="fic-sub" class="nav-submenu" aria-label="Fiction submenu">
               <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
@@ -32,12 +32,11 @@
           <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
         </ul>
 
-        <h3>Anthems</h3>
+        <h3>Currently Listening</h3>
         <article class="anthem-card">
           <div class="anthems-list">
-            <div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div>
+            <div class="anthem-item">Update this list later…</div>
           </div>
-          <audio preload="none"></audio>
         </article>
       </nav>
     </aside>
@@ -54,7 +53,18 @@
             <h4>What is this?</h4>
             <p>Thoughts, math, fictions, and experiments.</p>
           </div>
-          <div class="about-cell span-3 banner-tile"></div>
+
+          <!-- Anthems player (replaces former banner tile) -->
+          <div class="about-cell span-3 anthem-player">
+            <h4>Anthems</h4>
+            <ul class="anthem-list" id="anthemList"></ul>
+            <div class="anthem-controls">
+              <button id="prevBtn" type="button">Prev</button>
+              <button id="playBtn" type="button">Play/Pause</button>
+              <button id="nextBtn" type="button">Next</button>
+            </div>
+            <audio id="anthemAudio" class="anthem-audio" preload="none" controls></audio>
+          </div>
 
           <div class="about-cell span-2">
             <h4>Contact</h4>
@@ -71,7 +81,7 @@
         </div>
       </section>
 
-      <!-- Full-bleed banner with soft fade -->
+      <!-- Full-bleed banner with soft fade and dimmer/offset centering -->
       <section class="about-banner"></section>
 
       <section class="container section">
@@ -89,6 +99,62 @@
     </main>
   </div>
 
-  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <script>
+    // Sidebar 'Fiction' toggler
+    document.querySelectorAll('.nav-toggle').forEach(t => {
+      t.addEventListener('click', e => {
+        e.preventDefault();
+        const ul = t.nextElementSibling;
+        const open = ul.classList.toggle('open');
+        t.setAttribute('aria-expanded', String(open));
+      });
+    });
+
+    // Simple playlist for Anthems section (add your .mp3 files into /audio and list them here)
+    const ANTHEMS = [
+      // { title: 'Track 1', src: 'audio/track1.mp3' },
+      // { title: 'Track 2', src: 'audio/track2.mp3' },
+    ];
+
+    const list = document.getElementById('anthemList');
+    const audio = document.getElementById('anthemAudio');
+    const prevBtn = document.getElementById('prevBtn');
+    const playBtn = document.getElementById('playBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let i = 0;
+
+    function renderList(){
+      list.innerHTML = ANTHEMS.length ? ANTHEMS.map((a,idx)=>`
+        <li>
+          <button data-i="${idx}" type="button">${idx===i ? '▶' : '►'}</button>
+          <span>${a.title}</span>
+        </li>
+      `).join('') : '<li>Add .mp3 files in <code>audio/</code> and list them in the ANTHEMS array.</li>';
+    }
+
+    function load(iNew){
+      if(!ANTHEMS.length) return;
+      i = (iNew + ANTHEMS.length) % ANTHEMS.length;
+      audio.src = ANTHEMS[i].src;
+      audio.play();
+      renderList();
+    }
+
+    list.addEventListener('click', e=>{
+      const btn = e.target.closest('button[data-i]');
+      if(!btn) return;
+      load(+btn.dataset.i);
+    });
+    prevBtn.addEventListener('click', ()=> load(i-1));
+    nextBtn.addEventListener('click', ()=> load(i+1));
+    playBtn.addEventListener('click', ()=>{
+      if(!audio.src && ANTHEMS.length) load(i);
+      else audio.paused ? audio.play() : audio.pause();
+    });
+
+    renderList();
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
