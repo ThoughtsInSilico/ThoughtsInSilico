@@ -6,8 +6,6 @@
   <title>Post • Silico: Book of Genesis</title>
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
-
-  <!-- MathJax for LaTeX in posts -->
   <script>
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
   </script>
@@ -16,7 +14,6 @@
 
 <body>
   <div class="layout">
-    <!-- Sidebar (nav uses Stardos Stencil; titles use Girassol via CSS) -->
     <aside class="sidebar" role="navigation" aria-label="Primary">
       <div class="brand"><a class="site-title" href="index.html">Silico: Book of Genesis</a></div>
       <nav>
@@ -25,8 +22,8 @@
           <li><a href="about.html">The Brain-vat Speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
-            <a href="categories.html?cat=Fiction">Fiction ▾</a>
-            <ul style="margin:.25rem 0 .5rem 12px; padding:0; list-style:none;">
+            <a href="#" class="nav-toggle" aria-expanded="false" aria-controls="fic-sub">Fiction ▾</a>
+            <ul id="fic-sub" class="nav-submenu" aria-label="Fiction submenu">
               <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
@@ -37,6 +34,13 @@
           <li><a href="library.html">My Library</a></li>
           <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
         </ul>
+
+        <h3>Currently Listening</h3>
+        <article class="anthem-card">
+          <div class="anthems-list">
+            <div class="anthem-item">Update this list later…</div>
+          </div>
+        </article>
       </nav>
     </aside>
 
@@ -56,8 +60,17 @@
   </div>
 
   <script>
+    // Sidebar toggler
+    document.querySelectorAll('.nav-toggle').forEach(t => {
+      t.addEventListener('click', e => {
+        e.preventDefault();
+        const ul = t.nextElementSibling;
+        const open = ul.classList.toggle('open');
+        t.setAttribute('aria-expanded', String(open));
+      });
+    });
+
     function sanitizeHtml(html){
-      // super-light keep-safe: allow basic tags; posts are trusted but we prevent accidental stray <script>
       const t = document.createElement('template');
       t.innerHTML = html;
       t.content.querySelectorAll('script').forEach(n => n.remove());
@@ -79,26 +92,21 @@
       try{
         const res = await fetch(u);
         const html = await res.text();
-
-        // Sniff title, date (if present), and inject
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const h1 = doc.querySelector('h1') || doc.querySelector('.post-title');
         const time = doc.querySelector('time[datetime]');
         titleEl.innerHTML = h1 ? h1.innerHTML : 'Untitled';
         if (time) metaEl.textContent = new Date(time.getAttribute('datetime')).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
 
-        // Body: use article or main content
         const article = doc.querySelector('article') || doc.querySelector('main') || doc.body;
         bodyEl.innerHTML = sanitizeHtml(article.innerHTML);
 
-        // Retarget internal post links
         bodyEl.querySelectorAll('a[href^="posts/"]').forEach(a=>{
           a.href = 'post.html?u=' + encodeURIComponent(a.getAttribute('href'));
         });
 
         if (window.MathJax?.typeset) MathJax.typeset();
 
-        // Scroll to hash if provided
         if(location.hash) {
           const target = document.getElementById(location.hash.slice(1));
           if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
