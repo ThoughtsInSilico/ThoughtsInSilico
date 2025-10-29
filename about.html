@@ -16,11 +16,11 @@
       <nav>
         <h3>Pages</h3>
         <ul>
-          <li><a href="about.html" aria-current="page">The Brain-vat Speaks</a></li>
+          <li><a href="about.html" aria-current="page">the brain-vat speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
-            <a href="#" class="nav-toggle" aria-expanded="false" aria-controls="fic-sub">Fiction ▾</a>
-            <ul id="fic-sub" class="nav-submenu" aria-label="Fiction submenu">
+            <a href="#" class="nav-toggle" aria-expanded="false">Fiction ▾</a>
+            <ul class="nav-submenu" aria-label="Fiction submenu">
               <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
@@ -32,10 +32,11 @@
           <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
         </ul>
 
+        <!-- Rename only; keep simple list (no player) -->
         <h3>Currently Listening</h3>
         <article class="anthem-card">
           <div class="anthems-list">
-            <div class="anthem-item">Update this list later…</div>
+            <div class="anthem-item">Add tracks in audio/…</div>
           </div>
         </article>
       </nav>
@@ -47,15 +48,28 @@
         <h1 class="site-title" style="font-size: clamp(34px,6vw,64px);">The Brain-vat Speaks</h1>
         <hr class="hr-dots"/>
 
-        <!-- Grid -->
+        <!-- Your original grid (unchanged headings/slots) -->
         <div class="about-grid">
-          <div class="about-cell span-3">
-            <h4>What is this?</h4>
-            <p>Thoughts, math, fictions, and experiments.</p>
+          <div class="about-cell span-3 tall-2">
+            <h4>Favorite books</h4>
+            <div class="post-body">
+              <ul>
+                <p><em>Process and Reality</em></p>
+                <p><em>Difference and Repetition</em></p>
+              </ul>
+            </div>
+          </div>
+          <div class="about-cell span-2">
+            <h4>Favorite films</h4>
+            <div class="post-body"><ul></ul></div>
+          </div>
+          <div class="about-cell span-1">
+            <h4>Favorite music</h4>
+            <div class="post-body"><ul></ul></div>
           </div>
 
-          <!-- Anthems player (replaces former banner tile) -->
-          <div class="about-cell span-3 anthem-player">
+          <!-- REPLACED: small banner tile -> Anthems player (only change here) -->
+          <div class="about-cell span-2 anthem-player">
             <h4>Anthems</h4>
             <ul class="anthem-list" id="anthemList"></ul>
             <div class="anthem-controls">
@@ -66,28 +80,47 @@
             <audio id="anthemAudio" class="anthem-audio" preload="none" controls></audio>
           </div>
 
-          <div class="about-cell span-2">
-            <h4>Contact</h4>
-            <p>Email: <a href="mailto:non.ergodic.system@gmail.com">non.ergodic.system@gmail.com</a></p>
-          </div>
-          <div class="about-cell span-2">
-            <h4>Elsewhere</h4>
-            <p>Links go here.</p>
-          </div>
-          <div class="about-cell span-2">
-            <h4>Status</h4>
-            <p>Online.</p>
+          <div class="about-cell span-4">
+            <h4>Notes</h4>
+            <div class="post-body"><p></p></div>
           </div>
         </div>
       </section>
 
-      <!-- Full-bleed banner with soft fade and dimmer/offset centering -->
-      <section class="about-banner"></section>
+      <!-- Big banner stays; just dimmer + centered via CSS -->
+      <section class="about-banner" aria-label="Banner image"></section>
 
+      <!-- Long text below is untouched -->
       <section class="container section">
-        <article class="card">
-          <h2 class="roman" style="margin-top:0;">Preface</h2>
-          <p>Write your preface text here.</p>
+        <article class="post-body card" style="margin-bottom:18px">
+          <h1>About</h1>
+
+          <p class="muted" style="margin:.25rem 0 1rem;">
+            <a href="#about-me">About me</a> • <a href="#about-site">About the site</a>
+          </p>
+
+          <section id="about-me" class="post-body" aria-labelledby="about-me-heading">
+            <h2 id="about-me-heading">About me</h2>
+
+            <p>Hi, my name is Reza.</p>
+            <p>Where should I begin? Oh yes, I love mathematics: long story short, I am a pure math undergrad (and a dropout) and I took a gap year, and now, I’m back in college as a different major. I also deeply love music, physics, literature, philosophy, history, and theology. I am an artist in the sense that I draw, paint, write, and compose music (but only subpar). I do photography. I make experimental videos sometimes. I used to be obsessively into art films, on-and-off. Here, you'll get a bit of all that, and more.</p>
+            <p>I'm actually in my early twenties, despite what the page 'About the Author' suggests. I'm a child of the diaspora, the product of an Iranian father and a Malaysian mother. As you'd expect, I speak multiple languages. </p>
+            <p>I'm often haunted by a vague sense of destiny and I have a million clownish delusions of grandeur. I also have severe ADHD and complex PTSD; I tend to talk and write a lot about that. During my teenage years up until the pandemic, I’ve had a lot of out-of-body experiences, and occurs occasionally in my dreams, both in conscious daydreams and where I sleepwalk at night (yes, I'm a parasomniac). I'm not sure if I'll ever resolve this but at least I will want to write about it here.</p>
+            <p>Some of the most mesmerizing experiences I've had in my life were on mountains in remote areas, far away from the city lights, completely in solitude and surrounded by pine trees in cold weather (and sometimes the gentle sound of rain), where I encountered the brilliance of light that made the trees cast sharper shadows under the moon than in daylight, and the Earth was lit blue finely through the silver river of the Milky Way just above my head).</p>
+          </section>
+
+          <hr/>
+
+          <section id="about-site" class="post-body" aria-labelledby="about-site-heading">
+            <h2 id="about-site-heading">About the site</h2>
+            <p>This is an informal, personal blog. I intentionally do not make this a formal site for my academic works as I have other places for that. Neither do I expect it to be a complete compedium of all my research work.</p> 
+            <p>For a while I kept a Linktree for my write-ups, but I constantly felt disappointed with the available site building options, even after paying through different subscriptions, but they're shoddy, so why not just make my own site?</p>
+            <p>I was going for a 'minimalist' yet personalized vibe, so I went with a theme that looks like an academic notebook, with slight ornamentation in aesthetics adding character, while still keeping it very much subdued. I know black text on white background can sometimes be hard to read, though. I may rehaul this place time to time. </p>
+            <p>I don't know if anyone reads this blog at all. Perhaps someday I will add comments and a mailing list, but at the moment, I simply cannot keep up with people. If you are reading this, I won't make a big deal out of it, but you made my day with your curiosity :] </p>
+            <p>If you want to reach out: message me on Discord (nonergodicsystem) or email me at <a href="mailto:non.ergodic.system@gmail.com">non.ergodic.system@gmail.com</a></p>
+          </section>
+
+          <p><a href="index.html">← Back to Home</a></p>
         </article>
 
         <p><a href="index.html">← Back to Home</a></p>
@@ -100,7 +133,7 @@
   </div>
 
   <script>
-    // Sidebar 'Fiction' toggler
+    // Make 'Fiction' a pure toggler (not a link)
     document.querySelectorAll('.nav-toggle').forEach(t => {
       t.addEventListener('click', e => {
         e.preventDefault();
@@ -110,18 +143,16 @@
       });
     });
 
-    // Simple playlist for Anthems section (add your .mp3 files into /audio and list them here)
+    // Simple playlist for the Anthems tile (add your files into /audio)
     const ANTHEMS = [
       // { title: 'Track 1', src: 'audio/track1.mp3' },
       // { title: 'Track 2', src: 'audio/track2.mp3' },
     ];
-
     const list = document.getElementById('anthemList');
     const audio = document.getElementById('anthemAudio');
     const prevBtn = document.getElementById('prevBtn');
     const playBtn = document.getElementById('playBtn');
     const nextBtn = document.getElementById('nextBtn');
-
     let i = 0;
 
     function renderList(){
@@ -132,15 +163,13 @@
         </li>
       `).join('') : '<li>Add .mp3 files in <code>audio/</code> and list them in the ANTHEMS array.</li>';
     }
-
-    function load(iNew){
+    function load(n){
       if(!ANTHEMS.length) return;
-      i = (iNew + ANTHEMS.length) % ANTHEMS.length;
+      i = (n + ANTHEMS.length) % ANTHEMS.length;
       audio.src = ANTHEMS[i].src;
       audio.play();
       renderList();
     }
-
     list.addEventListener('click', e=>{
       const btn = e.target.closest('button[data-i]');
       if(!btn) return;
