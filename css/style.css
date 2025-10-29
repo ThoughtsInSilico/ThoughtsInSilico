@@ -205,3 +205,56 @@ hr{ border:0; height:1px; background:var(--stroke) }
 @media (max-width: 520px){
   .about-grid{ grid-template-columns: 1fr }
 }
+
+
+/* ===== Interlude module ===== */
+:root{
+  --inter-gap: clamp(10px, 2vw, 24px);
+  --inter-col-w: 260px;
+  --inter-center-w: min(56vw, 720px);
+  --inter-tab-h: 28px;
+  --inter-tab-gap: 6px;
+  --inter-load-gap: 8px;
+}
+
+/* outer section */
+.interlude{ position:relative; min-height:240vh; padding-block:12vh 24vh; overflow:visible; }
+
+/* three columns */
+.interlude-grid{
+  position:relative; display:grid;
+  grid-template-columns: var(--inter-col-w) 1fr var(--inter-col-w);
+  align-items:start; gap: var(--inter-gap);
+  max-width:min(1300px, 92vw); margin-inline:auto;
+}
+
+/* center media stays put */
+.center-wrap{ position:sticky; top:14vh; display:grid; place-items:center; align-self:start; height:min(70vh, 720px); }
+.center-media{ width: var(--inter-center-w); max-width:100%; max-height:100%; object-fit:cover; border-radius:10px; box-shadow: var(--shadow); background:#000; }
+
+/* left: old-web tabs climbing upward */
+.left-rail{ position:relative; min-height:120vh; }
+.tab-stack{ position:sticky; top:20vh; display:flex; flex-direction:column-reverse; gap: var(--inter-tab-gap); padding-right:6px; }
+.tab{
+  height: var(--inter-tab-h); display:inline-flex; align-items:center; gap:8px; padding:0 10px;
+  width: clamp(120px, 18vw, var(--inter-col-w)); background:#dfdfdf; color:#000; border:1px solid #9b9b9b;
+  box-shadow: inset 0 1px 0 #fff, inset 1px 0 0 #fff, inset 0 -1px 0 #6b6b6b, inset -1px 0 0 #6b6b6b;
+  font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; user-select:none;
+}
+.tab::before{ content:"•"; color:#0033cc; font-weight:900; }
+
+/* right: straight “Loading” list going downward */
+.right-rail{ position:relative; }
+.loading-stack{ position:sticky; top:20vh; display:flex; flex-direction:column; gap: var(--inter-load-gap); padding-left:10px; border-left:2px dotted #c9c9c9; }
+.loading-item{ font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:14px; letter-spacing:.08em; text-transform:uppercase; opacity:.85; }
+.loading-item span{ display:inline-block; animation: inter-blink 1200ms steps(2, jump-none) infinite; }
+@keyframes inter-blink { 50% { opacity:.35 } }
+
+/* responsive */
+@media (max-width: 980px){
+  .interlude-grid{ grid-template-columns: 1fr; }
+  .left-rail, .right-rail{ display:none; }
+  .center-wrap{ top:10vh; }
+  .interlude{ min-height:160vh; }
+}
+
