@@ -10,11 +10,12 @@
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script src="js/sidebar.js" defer></script>
+  <script src="js/includes.js" defer></script>
 </head>
 
 <body class="home">
   <div class="layout">
+    <!-- Sidebar include -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
@@ -38,14 +39,12 @@
         </article>
       </section>
 
-      <footer class="container" style="padding:18px 0 30px">
-        <p><small>© <span id="y"></span> Silico: Book of Genesis.</small></p>
-      </footer>
+      <!-- Footer include -->
+      <div id="footer-include" data-src="partials/footer.html"></div>
     </main>
   </div>
 
   <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
     (async function(){
       const grid = document.getElementById('posts-grid');
       try{
