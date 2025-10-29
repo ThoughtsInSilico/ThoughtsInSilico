@@ -47,7 +47,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
   /* Image + dark gradient overlay; multiply keeps it monochrome */
   background:
     url('../img/sidebar-image.jpg') center top / 280px auto repeat-y,
-    linear-gradient(180deg, rgba(16,18,22,0.58), rgba(10,12,16,0.74));
+    linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45);
   background-blend-mode: multiply;
 
   border-right:1px solid var(--stroke);
