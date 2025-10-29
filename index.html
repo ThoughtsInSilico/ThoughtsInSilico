@@ -25,6 +25,29 @@
         <h1 class="site-title" style="font-size: clamp(28px,5vw,46px);">Recent Posts</h1>
         <hr class="hr-dots"/>
         <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
+        
+                <!-- ===== Interlude (between Recent Posts and Trvthnukes) ===== -->
+        <section class="interlude" id="interlude">
+          <div class="interlude-grid">
+            <!-- LEFT: upward old-web tabs -->
+            <aside class="left-rail">
+              <div class="tab-stack" id="leftTabs"></div>
+            </aside>        
+            <!-- CENTER: still/moving media stays put while you scroll -->
+            <div class="center-wrap">
+              <!-- EDIT: replace src with your own image / GIF; or swap to a <video> (see script comment) -->
+              <img class="center-media" id="centerMedia"
+                   src="img/banner.jpg"
+                   alt="Center media">
+            </div>        
+            <!-- RIGHT: straight vertical line of Loading going downward -->
+            <aside class="right-rail">
+              <div class="loading-stack" id="rightLoading"></div>
+            </aside>        
+          </div>
+        </section>
+        <!-- ===== End Interlude ===== -->
+
 
         <article class="feature-card" style="margin-top:16px">
           <h3 class="roman" style="margin:0 0 6px">Trvthnukes</h3>
