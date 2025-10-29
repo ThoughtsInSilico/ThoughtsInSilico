@@ -64,13 +64,33 @@ hr{ border:0; height:1px; background:var(--stroke) }
   border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
 }
 
-/* Ensure submenu never shows bullets, even if specificity fights back */
+/* Ensure submenu never shows bullets */
 .sidebar .nav-submenu{ list-style:none !important; margin:4px 0 0 12px; padding:0 }
 
 /* Hover-only submenu: parent is NOT a link */
 .has-submenu > .nav-submenu{ display:none; }
 .has-submenu:hover > .nav-submenu{ display:block }
 .nav-parent{ cursor:default }
+
+/* ---- NEW: Sidebar search visibility ---- */
+.sidebar-search{ margin:12px 0 10px; }
+.sidebar-search input[type="search"]{
+  width:100%;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid rgba(232,230,227,.35);
+  background: rgba(0,0,0,.35);       /* darker field for contrast */
+  color: var(--ink);
+  outline: none;
+}
+.sidebar-search input::placeholder{
+  color: rgba(232,230,227,.65);
+}
+.sidebar-search input:focus{
+  border-color: #e8e6e3;
+  box-shadow: 0 0 0 2px rgba(232,230,227,.15);
+  background: rgba(0,0,0,.45);
+}
 
 .main{ min-height:100vh; overflow:hidden }
 
