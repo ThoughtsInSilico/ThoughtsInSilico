@@ -36,7 +36,9 @@
 
         <h3>Anthems</h3>
         <article class="anthem-card">
-          <div class="anthems-list"><div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div></div>
+          <div class="anthems-list">
+            <div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div>
+          </div>
           <audio preload="none"></audio>
         </article>
       </nav>
@@ -44,61 +46,55 @@
 
     <main class="main">
       <section class="container section">
-        <h1 id="cat-title" class="site-title" style="font-size: clamp(28px,5vw,46px);">Posts</h1>
+        <h1 class="site-title" id="catTitle" style="font-size: clamp(28px,5vw,46px);">Categories</h1>
         <hr class="hr-dots"/>
-        <div id="posts-grid" class="posts-grid"></div>
+        <div id="posts" class="posts-grid" aria-live="polite"></div>
       </section>
 
       <footer class="container" style="padding:18px 0 30px">
-        <p><small>© <span id="y"></span> Silico: Book of Genesis.</small></p>
+        <small>© <span id="y"></span> Silico: Book of Genesis</small>
       </footer>
     </main>
   </div>
 
   <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
+    // Expand/collapse submenu (mobile)
+    document.querySelectorAll('.nav-toggle').forEach(t => {
+      t.addEventListener('click', e => {
+        e.preventDefault();
+        const ul = t.nextElementSibling;
+        const open = ul.classList.toggle('open');
+        t.setAttribute('aria-expanded', String(open));
+      });
+    });
 
-    // Route post links to the shell
-    function retargetPostLinks(scope){
-      scope.querySelectorAll('.post-card a').forEach(a=>{
-        const raw = a.getAttribute('href');
-        a.setAttribute('href', `post.html?u=${encodeURIComponent(raw)}`);
+    function retargetPostLinks(root){
+      root.querySelectorAll('a[href^="posts/"]').forEach(a=>{
+        a.href = 'post.html?u=' + encodeURIComponent(a.getAttribute('href'));
       });
     }
 
-    const params = new URL(location.href).searchParams;
-    const catText = (params.get('cat') || 'All').replace(/\+/g,' ');
-    const subText = (params.get('sub') || '').replace(/\+/g,' ');
-    document.getElementById('cat-title').textContent =
-      subText ? `${catText} • ${subText}` : (catText === 'All' ? 'Posts' : catText);
+    async function loadCategory(){
+      const grid = document.getElementById('posts');
+      const h = document.getElementById('catTitle');
+      const usp = new URLSearchParams(location.search);
+      const cat = usp.get('cat') || 'All';
+      const sub = usp.get('sub') || '';
+      h.innerHTML = (sub ? `${cat} • <span style="opacity:.7">${sub}</span>` : cat);
 
-    async function loadPostsJSON(){
-      const candidates = ['posts.json', 'posts/posts.json'];
-      let lastErr;
-      for(const path of candidates){
-        try{
-          const res = await fetch(path, {cache:'no-store'});
-          if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-          return await res.json();
-        }catch(e){ lastErr = e; }
-      }
-      throw lastErr;
-    }
-
-    (async function(){
-      const grid = document.getElementById('posts-grid');
       try{
-        let posts = await loadPostsJSON();
-        posts = posts
-          .filter(p => (catText==='All' || p.category===catText) && (!subText || p.subcategory===subText))
-          .sort((a,b) => new Date(b.date) - new Date(a.date));
+        const res = await fetch('posts/posts.json');
+        const posts = await res.json();
+        const filter = p => (cat==='All' || p.category===cat) && (!sub || p.subcategory===sub);
+        const formatDate = (iso) => {
+          const d = new Date(iso);
+          return d.toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
+        };
 
-        grid.innerHTML = posts.map(p => `
+        grid.innerHTML = posts.filter(filter).map(p => `
           <article class="post-card">
-            <h3 class="post-title"><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
-            <time class="post-time" datetime="${p.date}">
-              ${new Date(p.date).toLocaleString(undefined,{month:'short', year:'numeric'})}
-            </time>
+            <h3><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
+            <time class="post-time" datetime="${p.date}">${formatDate(p.date)}</time>
             <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
           </article>
         `).join('') || '<p class="post-body" style="color:#cfcac3">No posts yet.</p>';
@@ -108,7 +104,10 @@
       }catch(e){
         grid.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
       }
-    })();
+    }
+
+    document.getElementById('y').textContent = new Date().getFullYear();
+    loadCategory();
   </script>
 </body>
 </html>
