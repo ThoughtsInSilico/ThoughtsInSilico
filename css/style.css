@@ -21,6 +21,10 @@
 
   --shadow: 0 10px 30px rgba(0,0,0,.45);
   --r2: 14px;
+
+  /* Added to support inline styles in posts */
+  --border: var(--stroke);
+  --muted: var(--ink-dim);
 }
 
 /* ---------- Base ---------- */
@@ -85,15 +89,12 @@ article h1.post-title{
   border-radius:8px; border:1px dashed transparent;
 }
 
-
 /* collapse submenus by default; open via .open */
 .nav-submenu{ display:none; margin:4px 0 0 12px; padding:0; list-style:none; }
 .nav-submenu.open{ display:block; }
 
 /* optional: make the caret look clickable */
 .nav-toggle{ cursor:pointer }
-
-
 
 .sidebar nav a:hover, .sidebar nav a:focus-visible{
   border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
@@ -105,7 +106,7 @@ article h1.post-title{
 /* ---------- Home hero (index background) ---------- */
 .hero{
   min-height: 62vh; /* shorter than full screen to tease the scroll */
-  background:url('img/index-background.jpg') center/cover no-repeat fixed;
+  background:url('../img/index-background.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
 
@@ -170,14 +171,14 @@ article h1.post-title{
 
 /* About page: right-grid banner tile */
 .banner-tile{
-  background:url('img/banner.jpg') center/cover no-repeat;
+  background:url('../img/banner.jpg') center/cover no-repeat;
   min-height: 260px;
 }
 
 /* About page: full-screen banner with soft fade (between grid & long text) */
 .about-banner{
   height: 100vh;
-  background:url('img/banner.jpg') center/cover no-repeat fixed;
+  background:url('../img/banner.jpg') center/cover no-repeat fixed;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
           mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
   margin:0;
