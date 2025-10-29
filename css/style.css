@@ -40,14 +40,14 @@ hr{ border:0; height:1px; background:var(--stroke) }
 /* ---------- Layout ---------- */
 .layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
 
-/* SIDEBAR: keep the image, darken via multiply blend for readability */
+/* SIDEBAR: keep the image, slightly lighter but still readable */
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
 
-  /* Image + dark gradient overlay; multiply keeps a monochrome darkening */
+  /* Image + dark gradient overlay; multiply keeps it monochrome */
   background:
     url('../img/sidebar-image.jpg') center top / 280px auto repeat-y,
-    linear-gradient(180deg, rgba(15,17,22,0.80), rgba(10,12,16,0.92));
+    linear-gradient(180deg, rgba(16,18,22,0.58), rgba(10,12,16,0.74));
   background-blend-mode: multiply;
 
   border-right:1px solid var(--stroke);
