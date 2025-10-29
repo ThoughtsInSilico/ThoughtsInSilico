@@ -10,10 +10,11 @@
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
   </script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script src="js/sidebar.js" defer></script>
+  <script src="js/includes.js" defer></script>
 </head>
 <body>
   <div class="layout">
+    <!-- Sidebar include -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
@@ -23,9 +24,8 @@
         <div id="posts" class="posts-grid" aria-live="polite"></div>
       </section>
 
-      <footer class="container" style="padding:18px 0 30px">
-        <small>© <span id="y"></span> Silico: Book of Genesis</small>
-      </footer>
+      <!-- Footer include -->
+      <div id="footer-include" data-src="partials/footer.html"></div>
     </main>
   </div>
 
@@ -35,7 +35,6 @@
         a.href = 'post.html?u=' + encodeURIComponent(a.getAttribute('href'));
       });
     }
-
     async function loadCategory(){
       const grid = document.getElementById('posts');
       const h = document.getElementById('catTitle');
@@ -43,7 +42,6 @@
       const cat = usp.get('cat') || 'All';
       const sub = usp.get('sub') || '';
       h.innerHTML = (sub ? `${cat} • <span style="opacity:.7">${sub}</span>` : cat);
-
       try{
         const res = await fetch('posts/posts.json');
         const posts = await res.json();
@@ -65,8 +63,6 @@
         grid.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
       }
     }
-
-    document.getElementById('y').textContent = new Date().getFullYear();
     loadCategory();
   </script>
 </body>
