@@ -22,8 +22,8 @@
           <li><a href="about.html">The Brain-vat Speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
-            <a href="#" class="nav-toggle" aria-expanded="false" aria-controls="fic-sub">Fiction ▾</a>
-            <ul id="fic-sub" class="nav-submenu" aria-label="Fiction submenu">
+            <a href="#" class="nav-toggle" aria-expanded="false">Fiction ▾</a>
+            <ul class="nav-submenu" aria-label="Fiction submenu">
               <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
@@ -38,7 +38,7 @@
         <h3>Currently Listening</h3>
         <article class="anthem-card">
           <div class="anthems-list">
-            <div class="anthem-item">Update this list later…</div>
+            <div class="anthem-item">Add tracks in audio/…</div>
           </div>
         </article>
       </nav>
@@ -60,7 +60,7 @@
   </div>
 
   <script>
-    // Sidebar toggler
+    // Fiction toggler only
     document.querySelectorAll('.nav-toggle').forEach(t => {
       t.addEventListener('click', e => {
         e.preventDefault();
@@ -84,14 +84,12 @@
       const metaEl  = document.getElementById('meta');
       const bodyEl  = document.getElementById('body');
 
-      if(!u){
-        titleEl.textContent = 'No post selected';
-        return;
-      }
+      if(!u){ titleEl.textContent = 'No post selected'; return; }
 
       try{
         const res = await fetch(u);
         const html = await res.text();
+
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const h1 = doc.querySelector('h1') || doc.querySelector('.post-title');
         const time = doc.querySelector('time[datetime]');
@@ -106,7 +104,6 @@
         });
 
         if (window.MathJax?.typeset) MathJax.typeset();
-
         if(location.hash) {
           const target = document.getElementById(location.hash.slice(1));
           if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
