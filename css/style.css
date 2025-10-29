@@ -1,7 +1,8 @@
 /* =========================================================
    Silico: Book of Genesis — Girassol titles, Stardos body,
-   Cinzel only for the Trvthnukes/Virtual History headings.
+   Cinzel only for Trvthnukes / Virtual History headings.
    Nav uses the body font (Stardos), normal casing.
+   Index background shown only on the home hero.
    =======================================================*/
 
 /* Google Fonts */
@@ -33,7 +34,7 @@ img{ max-width:100%; display:block }
 hr{ border:0; height:1px; background:var(--stroke) }
 
 /* ---------- Fonts by role ---------- */
-.site-title{                                  /* SITE TITLE */
+.site-title{                                  /* SITE & page titles */
   font-family:'Girassol', system-ui, serif;
   font-size: clamp(28px, 5vw, 46px);
   line-height:1.1; margin:0;
@@ -87,14 +88,14 @@ article h1.post-title{
 .sidebar audio{ width:100% }
 .main{ min-height:100vh; overflow:hidden }
 
-/* Home hero (shorter) uses img/index-background.jpg */
+/* ---------- Home hero (index background) ---------- */
 .hero{
-  min-height: 62vh;
+  min-height: 62vh; /* shorter than full screen to tease the scroll */
   background:url('img/index-background.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
 
-/* Containers / cards */
+/* ---------- Containers / cards ---------- */
 .container{ width:min(1100px, 100% - 40px); margin:0 auto }
 .section{ padding:28px 0 }
 .posts-grid{
@@ -117,7 +118,7 @@ article h1.post-title{
 .post-time, .post-meta{ color:var(--ink-dim) }
 .post-body p, .post-card p, .card p{ text-align: justify }
 
-/* Legacy post pages → sidebarify their top header without editing each file */
+/* ---------- Legacy post pages → sidebarify top header without editing each file ---------- */
 .site-header{
   position: fixed; top:0; left:0; width:280px; height:100vh;
   padding:22px 18px 28px;
@@ -139,7 +140,7 @@ article h1.post-title{
 .nav-submenu a{ display:block; margin:2px 0 }
 .page-main{ margin-left:280px; padding-top:14px }
 
-/* About grid + banners */
+/* ---------- About grid (no banner images here) ---------- */
 .about-grid{
   display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
   gap:0; border:1px solid var(--stroke);
@@ -154,23 +155,16 @@ article h1.post-title{
 .span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 }
 .tall-2{ grid-row: span 2 }
 
-.banner-tile{ background:url('img/banner.jpg') center/cover no-repeat; min-height:260px; }
-.about-banner{
-  height: 100vh;
-  background:url('img/banner.jpg') center/cover no-repeat fixed;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
-          mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
-  margin:0;
-}
+/* Removed: .banner-tile and .about-banner (no banner.jpg) */
 
-/* Divider */
+/* ---------- Divider ---------- */
 .hr-dots{
   width:100%; height:1px;
   background:repeating-linear-gradient(90deg, transparent 0 6px, var(--stroke) 6px 7px);
   border:0; margin:14px 0 18px;
 }
 
-/* Responsive */
+/* ---------- Responsive ---------- */
 @media (max-width: 900px){
   .layout{ grid-template-columns:1fr }
   .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke) }
