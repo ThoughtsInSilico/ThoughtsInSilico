@@ -18,6 +18,8 @@
         <ul>
           <li><a href="about.html" aria-current="page">the brain-vat speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
+
+          <!-- Hover submenu (parent not clickable) -->
           <li class="has-submenu">
             <span class="nav-parent">Fiction ▾</span>
             <ul class="nav-submenu" aria-label="Fiction submenu">
@@ -25,6 +27,7 @@
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
           </li>
+
           <li><a href="categories.html?cat=Mathematics">Mathematics</a></li>
           <li><a href="categories.html?cat=Technognostics">Technognostics</a></li>
           <li><a href="categories.html?cat=Music">Music</a></li>
@@ -41,14 +44,15 @@
 
     <!-- Main -->
     <main class="main">
-      <!-- Only change here: wrap your original top content in .about-upper -->
+      <!-- upper area gets its own background -->
       <section class="about-upper">
         <div class="container section">
           <h1 class="site-title" style="font-size: clamp(34px,6vw,64px);">The Brain-vat Speaks</h1>
           <hr class="hr-dots"/>
 
-          <!-- Your original grid (unchanged content/labels) -->
+          <!-- GRID -->
           <div class="about-grid">
+            <!-- Left: books, 2 rows high -->
             <div class="about-cell span-3 tall-2">
               <h4>Favorite books</h4>
               <div class="post-body">
@@ -58,41 +62,34 @@
                 </ul>
               </div>
             </div>
+
+            <!-- Top middle: films -->
             <div class="about-cell span-2">
               <h4>Favorite films</h4>
               <div class="post-body"><ul></ul></div>
             </div>
-            <div class="about-cell span-1">
-              <h4>Favorite music</h4>
-              <div class="post-body"><ul></ul></div>
-            </div>
 
-            <!-- Anthems tile (unchanged from prior pass) -->
-            <div class="about-cell span-2 anthem-player">
-              <h4>Anthems</h4>
-              <ul class="anthem-list" id="anthemList"></ul>
-              <div class="anthem-controls">
-                <button id="prevBtn" type="button">Prev</button>
-                <button id="playBtn" type="button">Play/Pause</button>
-                <button id="nextBtn" type="button">Next</button>
-              </div>
-              <audio id="anthemAudio" class="anthem-audio" preload="none" controls></audio>
-            </div>
-
-            <div class="about-cell span-4">
+            <!-- Right column: Notes (empty & transparent; spans two rows) -->
+            <div class="about-cell notes-cell span-1 tall-2">
               <h4>Notes</h4>
-              <div class="post-body"><p></p></div>
+              <div class="post-body"><!-- intentionally empty --></div>
+            </div>
+
+            <!-- Second row middle-left: Personal Anthems -->
+            <div class="about-cell span-2 anthem-player">
+              <h4>Personal Anthems</h4>
+              <ul class="anthem-list" id="anthemList"></ul>
+              <audio id="anthemAudio" class="anthem-audio" preload="none" controls></audio>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Big banner (dimmer & centered vs main) -->
+      <!-- Banner below stays the same -->
       <section class="about-banner" aria-label="Banner image"></section>
 
       <!-- Long text (unchanged) -->
       <section class="container section">
-        <!-- … your long about text remains as-is … -->
         <article class="post-body card" style="margin-bottom:18px">
           <h1>About</h1>
           <p class="muted" style="margin:.25rem 0 1rem;">
@@ -101,6 +98,7 @@
 
           <section id="about-me" class="post-body" aria-labelledby="about-me-heading">
             <h2 id="about-me-heading">About me</h2>
+
             <p>Hi, my name is Reza.</p>
             <p>Where should I begin? Oh yes, I love mathematics: long story short, I am a pure math undergrad (and a dropout) and I took a gap year, and now, I’m back in college as a different major. I also deeply love music, physics, literature, philosophy, history, and theology. I am an artist in the sense that I draw, paint, write, and compose music (but only subpar). I do photography. I make experimental videos sometimes. I used to be obsessively into art films, on-and-off. Here, you'll get a bit of all that, and more.</p>
             <p>I'm actually in my early twenties, despite what the page 'About the Author' suggests. I'm a child of the diaspora, the product of an Iranian father and a Malaysian mother. As you'd expect, I speak multiple languages. </p>
@@ -132,43 +130,27 @@
   </div>
 
   <script>
-    // Anthems (same lightweight player)
+    /* Personal Anthems: click a title to play (decluttered) */
     const ANTHEMS = [
       // { title: 'Track 1', src: 'audio/track1.mp3' },
       // { title: 'Track 2', src: 'audio/track2.mp3' },
     ];
     const list = document.getElementById('anthemList');
     const audio = document.getElementById('anthemAudio');
-    const prevBtn = document.getElementById('prevBtn');
-    const playBtn = document.getElementById('playBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    let i = 0;
 
-    function renderList(){
-      list.innerHTML = ANTHEMS.length ? ANTHEMS.map((a,idx)=>`
-        <li>
-          <button data-i="${idx}" type="button">${idx===i ? '▶' : '►'}</button>
-          <span>${a.title}</span>
-        </li>
-      `).join('') : '<li>Add .mp3 files in <code>audio/</code> and list them in the ANTHEMS array.</li>';
-    }
-    function load(n){
-      if(!ANTHEMS.length) return;
-      i = (n + ANTHEMS.length) % ANTHEMS.length;
-      audio.src = ANTHEMS[i].src; audio.play(); renderList();
+    function renderList(active = -1){
+      list.innerHTML = ANTHEMS.length
+        ? ANTHEMS.map((a,i)=>`<li><button data-i="${i}" type="button">${i===active?'▶':'►'} ${a.title}</button></li>`).join('')
+        : '<li>Add <code>.mp3</code> files in <code>audio/</code> and list them in the ANTHEMS array.</li>';
     }
     list.addEventListener('click', e=>{
       const btn = e.target.closest('button[data-i]'); if(!btn) return;
-      load(+btn.dataset.i);
+      const i = +btn.dataset.i;
+      audio.src = ANTHEMS[i].src; audio.play();
+      renderList(i);
     });
-    prevBtn.addEventListener('click', ()=> load(i-1));
-    nextBtn.addEventListener('click', ()=> load(i+1));
-    playBtn.addEventListener('click', ()=>{
-      if(!audio.src && ANTHEMS.length) load(i);
-      else audio.paused ? audio.play() : audio.pause();
-    });
-
     renderList();
+
     document.getElementById('y').textContent = new Date().getFullYear();
   </script>
 </body>
