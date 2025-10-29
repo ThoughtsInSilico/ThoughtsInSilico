@@ -23,8 +23,8 @@
           <li><a href="about.html">The Brain-vat Speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
-            <a href="categories.html?cat=Fiction">Fiction ▾</a>
-            <ul style="margin:.25rem 0 .5rem 12px; padding:0; list-style:none;">
+            <a href="#" class="nav-toggle" aria-expanded="false" aria-controls="fic-sub">Fiction ▾</a>
+            <ul id="fic-sub" class="nav-submenu" aria-label="Fiction submenu">
               <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
@@ -36,25 +36,22 @@
           <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
         </ul>
 
-        <h3>Anthems</h3>
+        <h3>Currently Listening</h3>
         <article class="anthem-card">
           <div class="anthems-list">
-            <div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div>
+            <div class="anthem-item">Update this list later…</div>
           </div>
-          <audio preload="none"></audio>
         </article>
       </nav>
     </aside>
 
     <!-- Main -->
     <main class="main">
-      <!-- Hero with background image (set in CSS) -->
       <section class="hero"></section>
 
       <section class="container section">
         <h1 class="site-title" style="font-size: clamp(28px,5vw,46px);">Recent Posts</h1>
         <hr class="hr-dots"/>
-
         <div id="posts" class="posts-grid" aria-live="polite"></div>
       </section>
 
@@ -65,7 +62,16 @@
   </div>
 
   <script>
-    // Load posts.json and render cards
+    // Collapsible 'Fiction' in sidebar
+    document.querySelectorAll('.nav-toggle').forEach(t => {
+      t.addEventListener('click', e => {
+        e.preventDefault();
+        const ul = t.nextElementSibling;
+        const open = ul.classList.toggle('open');
+        t.setAttribute('aria-expanded', String(open));
+      });
+    });
+
     async function loadPosts() {
       const grid = document.getElementById('posts');
       try{
@@ -100,25 +106,6 @@
         a.href = 'post.html?u=' + encodeURIComponent(a.getAttribute('href'));
       });
     }
-
-    // Anthems (audio)
-    (function setupAnthems(){
-      const list = document.querySelector('.anthems-list');
-      const audio = document.querySelector('.sidebar audio');
-      const ANTHEMS = []; // Add like: { title: 'Track', src: 'audio/track.mp3' }
-
-      list.innerHTML = ANTHEMS.length ? ANTHEMS.map((a,i)=>`
-        <div class="anthem-item" data-i="${i}">
-          <button class="anthem-btn" type="button">Play</button>
-          <span class="anthem-title">${a.title}</span>
-        </div>
-      `).join('') : '<div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div>';
-      list.addEventListener('click', e=>{
-        const btn = e.target.closest('.anthem-btn'); if(!btn) return;
-        const i = +btn.parentElement.dataset.i;
-        audio.src = ANTHEMS[i].src; audio.play();
-      });
-    })();
 
     document.getElementById('y').textContent = new Date().getFullYear();
     loadPosts();
