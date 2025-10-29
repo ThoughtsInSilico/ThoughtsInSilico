@@ -43,7 +43,7 @@
       const sub = usp.get('sub') || '';
       h.innerHTML = (sub ? `${cat} • <span style="opacity:.7">${sub}</span>` : cat);
       try{
-        const res = await fetch('posts/posts.json');
+        const res = await fetch('posts/posts.json?nocache=' + Date.now());
         const posts = await res.json();
         const filter = p => (cat==='All' || p.category===cat) && (!sub || p.subcategory===sub);
         const fmt = iso => new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
