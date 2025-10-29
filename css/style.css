@@ -40,16 +40,13 @@ hr{ border:0; height:1px; background:var(--stroke) }
 /* ---------- Layout ---------- */
 .layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
 
-/* SIDEBAR: keep the image, slightly lighter but still readable */
+/* SIDEBAR: keep the image (lighter), your exact alphas */
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
-
-  /* Image + dark gradient overlay; multiply keeps it monochrome */
   background:
     url('../img/sidebar-image.jpg') center top / 280px auto repeat-y,
-    linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45);
+    linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
   background-blend-mode: multiply;
-
   border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
   padding:22px 18px 28px;
@@ -67,8 +64,11 @@ hr{ border:0; height:1px; background:var(--stroke) }
   border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
 }
 
+/* Ensure submenu never shows bullets, even if specificity fights back */
+.sidebar .nav-submenu{ list-style:none !important; margin:4px 0 0 12px; padding:0 }
+
 /* Hover-only submenu: parent is NOT a link */
-.has-submenu > .nav-submenu{ display:none; margin:4px 0 0 12px; padding:0; list-style:none; }
+.has-submenu > .nav-submenu{ display:none; }
 .has-submenu:hover > .nav-submenu{ display:block }
 .nav-parent{ cursor:default }
 
@@ -105,13 +105,10 @@ hr{ border:0; height:1px; background:var(--stroke) }
   background: url('../img/about-upper.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
-
 .about-grid{
   display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
   gap:0; border:1px solid var(--stroke);
 }
-
-/* Semi-transparent tiles so the image shows through */
 .about-cell{
   border-right:1px solid var(--stroke);
   border-bottom:1px solid var(--stroke);
