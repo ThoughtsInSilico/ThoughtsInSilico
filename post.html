@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post • Silico: Book of Genesis</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <meta name="theme-color" content="#000000" />
+
+  <!-- MathJax for LaTeX in posts -->
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <div class="layout">
+    <!-- Sidebar (nav uses Stardos Stencil; titles use Girassol via CSS) -->
+    <aside class="sidebar" role="navigation" aria-label="Primary">
+      <div class="brand"><a class="site-title" href="index.html">Silico: Book of Genesis</a></div>
+      <nav>
+        <h3>Pages</h3>
+        <ul>
+          <li><a href="about.html">the brain-vat speaks</a></li>
+          <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
+          <li>
+            <a href="categories.html?cat=Fiction">Fiction ▾</a>
+            <ul style="margin:.25rem 0 .5rem 12px; padding:0; list-style:none;">
+              <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
+              <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
+            </ul>
+          </li>
+          <li><a href="categories.html?cat=Mathematics">Mathematics</a></li>
+          <li><a href="categories.html?cat=Technology">Technognostics</a></li>
+          <li><a href="categories.html?cat=Music">Music</a></li>
+          <li><a href="library.html">My Library</a></li>
+          <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
+        </ul>
+
+        <h3>Anthems</h3>
+        <article class="anthem-card">
+          <div class="anthems-list">
+            <div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div>
+          </div>
+          <audio preload="none"></audio>
+        </article>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <section class="container section">
+        <article class="card">
+          <header>
+            <h1 id="post-title" class="post-title">Loading…</h1>
+            <p id="post-meta" class="post-meta" style="display:none"></p>
+          </header>
+          <div id="post-body" class="post-body"></div>
+        </article>
+
+        <p style="margin-top:18px"><a href="index.html">← Back to Home</a></p>
+      </section>
+
+      <footer class="container" style="padding:18px 0 30px">
+        <small>© <span id="y"></span> Silico: Book of Genesis</small>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Utility: make URLs inside the imported fragment absolute relative to the source file
+    function absolutizeUrls(root, baseHref){
+      const base = new URL(baseHref, location.origin);
+      const fix = (el, attr) => {
+        const v = el.getAttribute(attr);
+        if(!v || v.startsWith('#') || v.startsWith('mailto:') || v.startsWith('javascript:')) return;
+        try { el.setAttribute(attr, new URL(v, base).pathname + new URL(v, base).search + new URL(v, base).hash); }
+        catch(_) {}
+      };
+      root.querySelectorAll('[src]').forEach(el=>fix(el,'src'));
+      root.querySelectorAll('a[href]').forEach(el=>fix(el,'href'));
+    }
+
+    async function loadPost(){
+      const params = new URL(location.href).searchParams;
+      const u = params.get('u');
+      const titleEl = document.getElementById('post-title');
+      const bodyEl  = document.getElementById('post-body');
+
+      if(!u){
+        titleEl.textContent = 'Post not specified';
+        bodyEl.innerHTML = '<p class="post-body">Use ?u=/posts/your-file.html</p>';
+        return;
+      }
+
+      try{
+        const res = await fetch(u, {cache:'no-store'});
+        if(!res.ok) throw new Error(res.status + ' ' + res.statusText);
+        const text = await res.text();
+        const doc  = new DOMParser().parseFromString(text, 'text/html');
+
+        // Try to derive a title
+        const candidateTitle = (doc.querySelector('h1')?.textContent || doc.title || u).trim();
+        titleEl.textContent = candidateTitle;
+
+        // Find main content heuristically
+        let node =
+          doc.querySelector('article') ||
+          doc.querySelector('main') ||
+          doc.querySelector('.post-body') ||
+          doc.querySelector('.container .card') ||
+          doc.body;
+
+        // Import into our page
+        const frag = document.createDocumentFragment();
+        // If it's body, avoid duplicating sidebars/headers from the source
+        if(node === doc.body){
+          // Take what looks like primary content blocks
+          const guess = doc.querySelector('article, main, .container, .post, .content');
+          frag.appendChild((guess || doc.body).cloneNode(true));
+        }else{
+          frag.appendChild(node.cloneNode(true));
+        }
+
+        // Absolutize URLs relative to the original file
+        const wrapper = document.createElement('div');
+        wrapper.appendChild(frag);
+        absolutizeUrls(wrapper, u);
+
+        // If the imported block contained its own header, try removing duplicate h1
+        const importedH1 = wrapper.querySelector('h1');
+        if(importedH1 && importedH1.textContent.trim() === candidateTitle){
+          importedH1.parentElement.removeChild(importedH1);
+        }
+
+        bodyEl.innerHTML = wrapper.innerHTML;
+
+        // Typeset Math if present
+        if (window.MathJax?.typesetPromise) await MathJax.typesetPromise();
+
+        // Scroll to hash if provided
+        if(location.hash) {
+          const target = document.getElementById(location.hash.slice(1));
+          if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      }catch(e){
+        titleEl.textContent = 'Could not load post';
+        bodyEl.innerHTML = `<p class="post-body" style="color:#cfcac3">Error loading <code>${u}</code>.</p>`;
+      }
+    }
+    loadPost();
+  </script>
+</body>
+</html>
