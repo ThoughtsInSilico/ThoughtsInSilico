@@ -19,6 +19,7 @@
 
     <!-- Main -->
     <main class="main">
+      <!-- Make sure this hero block exists (it reserves height even if the image fails) -->
       <section class="hero" aria-label="Background art"></section>
 
       <section class="container section">
@@ -53,7 +54,6 @@
       if (holder){
         const res = await fetch(holder.dataset.src || 'partials/sidebar.html');
         holder.outerHTML = await res.text();
-        // highlight current page
         const path = (location.pathname.split('/').pop() || 'index.html');
         document.querySelectorAll('.sidebar nav a').forEach(a=>{
           const href = a.getAttribute('href') || '';
@@ -70,9 +70,7 @@
       try{
         const res = await fetch('posts/posts.json');
         const posts = await res.json();
-
         posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
-
         const fmt = iso => new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
         grid.innerHTML = posts.slice(0, 9).map(p => `
           <article class="post-card">
@@ -82,12 +80,10 @@
             ${p.excerpt ? `<p class="post-body">${p.excerpt}</p>` : ''}
           </article>
         `).join('');
-
         grid.querySelectorAll('.post-card a').forEach(a=>{
           const raw = a.getAttribute('href');
           a.setAttribute('href', `post.html?u=${encodeURIComponent(raw)}`);
         });
-
         if (window.MathJax?.typeset) MathJax.typeset();
       }catch(e){
         grid.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
