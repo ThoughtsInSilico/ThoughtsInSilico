@@ -155,7 +155,21 @@ article h1.post-title{
 .span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 }
 .tall-2{ grid-row: span 2 }
 
-/* Removed: .banner-tile and .about-banner (no banner.jpg) */
+/* About page: right-grid banner tile */
+.banner-tile{
+  background:url('img/banner.jpg') center/cover no-repeat;
+  min-height: 260px;
+}
+
+/* About page: full-screen banner with soft fade (between grid & long text) */
+.about-banner{
+  height: 100vh;
+  background:url('img/banner.jpg') center/cover no-repeat fixed;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+  margin:0;
+}
+
 
 /* ---------- Divider ---------- */
 .hr-dots{
