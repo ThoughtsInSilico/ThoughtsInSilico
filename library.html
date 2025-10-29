@@ -6,11 +6,9 @@
   <title>My Library • Silico: Book of Genesis</title>
   <link rel="stylesheet" href="css/style.css" />
   <meta name="theme-color" content="#000000" />
-  <!-- Sidebar include loader -->
-  <script src="js/sidebar.js" defer></script>
-
+  <script src="js/includes.js" defer></script>
   <style>
-    /* Library layout (scopes to this page only) */
+    /* Library layout (scoped to this page) */
     .library-grid{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -25,7 +23,7 @@
       box-shadow: inset 0 0 8px rgba(0,0,0,0.25);
     }
     .book-card img{
-      display:block;            /* ensures everything else is BELOW the picture */
+      display:block;            /* ensures the text is below the image */
       width:100%;
       height:auto;
       border-radius:8px;
@@ -50,7 +48,7 @@
 
 <body>
   <div class="layout">
-    <!-- Uses your shared sidebar partial -->
+    <!-- Sidebar include -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
@@ -60,24 +58,19 @@
 
         <!-- BOOKS -->
         <div class="library-grid">
-          <!-- Duplicate this .book-card for more books; edit only the four fields -->
+          <!-- Duplicate this .book-card block for more books -->
           <article class="book-card">
-            <img src="img/thus-spoke-zarathustra.png" alt="thus-spoke-zarathustra cover">
+            <img src="img/image1.png" alt="Title 1 cover">
             <h3>Title 1</h3>
-            <p class="author">Friedrich Nietzsche</p>
+            <p class="author">John Smith</p>
             <p class="blurb">Blah blah blah.</p>
           </article>
         </div>
       </section>
 
-      <footer class="container" style="padding:18px 0 30px">
-        <p><small>© <span id="y"></span> Silico: Book of Genesis.</small></p>
-      </footer>
+      <!-- Footer include -->
+      <div id="footer-include" data-src="partials/footer.html"></div>
     </main>
   </div>
-
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
 </body>
 </html>
