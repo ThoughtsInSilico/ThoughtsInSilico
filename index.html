@@ -48,7 +48,7 @@
     (async function(){
       const grid = document.getElementById('posts-grid');
       try{
-        const res = await fetch('posts/posts.json');
+        const res = await fetch('posts/posts.json?nocache=' + Date.now());
         const posts = await res.json();
         posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
         const fmt = iso => new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
