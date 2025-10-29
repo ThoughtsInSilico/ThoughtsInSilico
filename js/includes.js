@@ -1,5 +1,5 @@
 // Robust include for sidebar/footer partials on GitHub Pages or local files.
-// Injects a "Back to Home" link on all pages except the home page.
+// Injects a "Back to Home" link directly ABOVE the footer on all non-home pages.
 
 async function fetchFirst(paths) {
   for (const url of paths) {
@@ -34,32 +34,36 @@ async function includeInto(el) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Sidebar
+  // 1) Sidebar
   await includeInto(document.getElementById('sidebar-include'));
+
+  // Highlight active link after sidebar is present
   const path = (location.pathname.split('/').pop() || 'index.html');
   document.querySelectorAll('.sidebar nav a').forEach(a => {
     const href = a.getAttribute('href') || '';
     if (href === path || href.startsWith(path + '?')) a.setAttribute('aria-current', 'page');
   });
 
-  // Footer
+  // 2) Footer
   await includeInto(document.getElementById('footer-include'));
 
-  // Year
+  // 3) Year
   const yearEl = document.querySelector('[data-year], #y');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Inject Back to Home on all non-home pages
+  // 4) Inject "Back to Home" ABOVE the footer on all non-home pages
   const isHome = document.body.classList.contains('home') || /(?:^|\/)index\.html?$/.test(location.pathname);
   if (!isHome) {
+    const footerEl = document.querySelector('main footer') || document.querySelector('footer');
     const linkWrap = document.createElement('p');
     linkWrap.className = 'back-home container';
     linkWrap.style.padding = '0 0 18px';
     linkWrap.innerHTML = '<a href="./">← Back to Home</a>';
 
-    const footerAnchor = document.getElementById('footer-include');
-    const main = document.querySelector('main') || document.body;
-    if (footerAnchor && footerAnchor.parentNode) footerAnchor.parentNode.insertBefore(linkWrap, footerAnchor);
-    else main.appendChild(linkWrap);
+    if (footerEl && footerEl.parentNode) {
+      footerEl.parentNode.insertBefore(linkWrap, footerEl); // directly above footer
+    } else {
+      (document.querySelector('main') || document.body).appendChild(linkWrap);
+    }
   }
 });
