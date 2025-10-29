@@ -14,7 +14,6 @@
   --shadow: 0 10px 30px rgba(0,0,0,.45);
   --r2: 14px;
 
-  /* Present so inline styles in posts won't break */
   --border: var(--stroke);
   --muted: var(--ink-dim);
 }
@@ -30,7 +29,7 @@ a:hover{ text-decoration:underline }
 img{ max-width:100%; display:block }
 hr{ border:0; height:1px; background:var(--stroke) }
 
-/* ---------- Fonts by role ---------- */
+/* ---------- Titles ---------- */
 .site-title{
   font-family:'Girassol', system-ui, serif;
   font-size: clamp(28px, 5vw, 46px);
@@ -40,14 +39,13 @@ hr{ border:0; height:1px; background:var(--stroke) }
 
 /* ---------- Layout ---------- */
 .layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
+
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
-
-  /* gradient + optional image behind the sidebar */
+  /* gradient + optional image behind sidebar */
   background:
     linear-gradient(180deg, var(--sidebar-top), var(--sidebar-bot)),
     url('../img/sidebar-image.jpg');
-  /* image fits the 280px width, repeat vertically if needed */
   background-size: auto, 280px auto;
   background-repeat: no-repeat, repeat-y;
   background-position: 0 0, center top;
@@ -56,30 +54,27 @@ hr{ border:0; height:1px; background:var(--stroke) }
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
   padding:22px 18px 28px;
 }
-.sidebar .brand{ margin-bottom:6px }
 .sidebar nav h3{
   font-size:12px; color:var(--ink-dim);
   letter-spacing:.08em; margin:18px 0 8px;
 }
 .sidebar nav ul{ list-style:none; margin:0; padding:0 }
 .sidebar nav li{ margin:2px 0 }
-.sidebar nav a,
-.sidebar .nav-parent{
-  display:block; padding:5px 8px;
-  border-radius:8px; border:1px dashed transparent;
+.sidebar nav a, .sidebar .nav-parent{
+  display:block; padding:5px 8px; border-radius:8px; border:1px dashed transparent;
 }
-.sidebar nav a:hover, .sidebar nav a:focus-visible,
-.sidebar .nav-parent:hover{ border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none }
+.sidebar nav a:hover, .sidebar nav a:focus-visible, .sidebar .nav-parent:hover{
+  border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
+}
 
-/* hover dropdown: parent is NOT a link */
+/* Hover-only submenu: parent is NOT a link */
 .has-submenu > .nav-submenu{ display:none; margin:4px 0 0 12px; padding:0; list-style:none; }
 .has-submenu:hover > .nav-submenu{ display:block }
 .nav-parent{ cursor:default }
 
-/* ---------- Main ---------- */
 .main{ min-height:100vh; overflow:hidden }
 
-/* ---------- Home hero (index background) ---------- */
+/* ---------- Home hero ---------- */
 .hero{
   min-height: 62vh;
   background:url('../img/index-background.jpg') center/cover no-repeat fixed;
@@ -89,11 +84,9 @@ hr{ border:0; height:1px; background:var(--stroke) }
 /* ---------- Containers / cards ---------- */
 .container{ width:min(1100px, 100% - 40px); margin:0 auto }
 .section{ padding:28px 0 }
-.posts-grid{
-  display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px;
-}
+.posts-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
 
-.post-card, .feature-card, .anthem-card{
+.post-card,.feature-card,.anthem-card{
   background: transparent;
   border:1px dashed var(--stroke);
   border-radius:var(--r2);
@@ -104,35 +97,57 @@ hr{ border:0; height:1px; background:var(--stroke) }
   background:linear-gradient(180deg,#0d1116,#0a0d11);
   border:1px dashed var(--stroke); border-radius:var(--r2); padding:14px; box-shadow:var(--shadow);
 }
-.post-card h3{ margin:8px 0 6px }
-.post-time, .post-meta{ color:var(--ink-dim) }
-.post-body p, .post-card p, .card p{ text-align: justify }
+.post-time,.post-meta{ color:var(--ink-dim) }
+.post-body p,.post-card p,.card p{ text-align: justify }
 
-/* ---------- About grid ---------- */
-.about-grid{
-  display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
-  gap:0; border:1px solid var(--stroke);
-}
-.about-cell{
-  border-right:1px solid var(--stroke);
-  border-bottom:1px solid var(--stroke);
-  padding:16px;
-  background:linear-gradient(180deg,#0d1116,#0a0d11);
-}
-.about-cell h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
-.span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 } .span-4{ grid-column: span 4 } .span-6{ grid-column: span 6 }
-.tall-2{ grid-row: span 2 }
-
-/* Upper part background for Brain-vat page ONLY */
+/* ---------- About (Brain-vat) ---------- */
 .about-upper{
   background: url('../img/about-upper.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
 
-/* Full-screen banner with soft fade, dimmer, and centered relative to main (offset 140px for the 280px sidebar) */
+.about-grid{
+  display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
+  gap:0; border:1px solid var(--stroke);
+}
+
+/* Semi-transparent tiles so the image shows through */
+.about-cell{
+  border-right:1px solid var(--stroke);
+  border-bottom:1px solid var(--stroke);
+  padding:16px;
+  background: rgba(13,17,22,0.62);      /* ← transparency */
+  backdrop-filter: blur(1px);            /* subtle softening */
+}
+.about-cell h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
+
+/* Helpers */
+.span-1{ grid-column: span 1 } .span-2{ grid-column: span 2 } .span-3{ grid-column: span 3 }
+.span-4{ grid-column: span 4 } .span-6{ grid-column: span 6 }
+.tall-2{ grid-row: span 2 }
+
+/* Notes column: fully transparent, no border */
+.notes-cell{
+  background: transparent;
+  border-right:1px solid transparent;
+  border-bottom:1px solid transparent;
+}
+
+/* Personal Anthems (decluttered) */
+.anthem-player h4{ margin:0 0 8px; font-size:16px; letter-spacing:.08em }
+.anthem-list{ list-style:none; margin:8px 0 10px; padding:0 }
+.anthem-list li{ margin:6px 0; }
+.anthem-list button{
+  font:inherit; padding:4px 8px;
+  border:1px dashed var(--stroke); border-radius:8px;
+  background:transparent; color:var(--ink); cursor:pointer;
+}
+.anthem-list button:hover{ background:rgba(255,255,255,.03) }
+.anthem-audio{ width:100%; margin-top:6px }
+
+/* Full-screen banner: dimmer & centered relative to main (offset 140px for 280px sidebar) */
 .about-banner{
-  position:relative;
-  height: 100vh;
+  position:relative; height: 100vh;
   background:url('../img/banner.jpg') no-repeat fixed;
   background-size: cover;
   background-position: calc(50% + 140px) center;
@@ -140,27 +155,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
           mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
   margin:0;
 }
-.about-banner::after{
-  content:""; position:absolute; inset:0; background: rgba(0,0,0,.38);
-}
-
-/* Anthem tile (simple player styles preserved) */
-.anthem-player h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
-.anthem-list{ list-style:none; margin:10px 0 8px; padding:0 }
-.anthem-list li{ margin:6px 0; display:flex; gap:8px; align-items:center }
-.anthem-list button{ font:inherit; padding:4px 8px; border:1px dashed var(--stroke); border-radius:8px; background:transparent; color:var(--ink); cursor:pointer }
-.anthem-list button:hover{ background:rgba(255,255,255,.03) }
-.anthem-controls{ display:flex; gap:8px; margin-top:10px }
-.anthem-controls button{ font:inherit; padding:6px 10px; border:1px dashed var(--stroke); border-radius:8px; background:transparent; color:var(--ink); cursor:pointer }
-.anthem-controls button:hover{ background:rgba(255,255,255,.03) }
-.anthem-audio{ width:100%; margin-top:10px }
-
-/* ---------- Divider ---------- */
-.hr-dots{
-  width:100%; height:1px;
-  background:repeating-linear-gradient(90deg, transparent 0 6px, var(--stroke) 6px 7px);
-  border:0; margin:14px 0 18px;
-}
+.about-banner::after{ content:""; position:absolute; inset:0; background: rgba(0,0,0,.38); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px){
