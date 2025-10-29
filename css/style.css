@@ -2,7 +2,9 @@
    Silico: Book of Genesis — Girassol titles, Stardos body,
    Cinzel only for Trvthnukes / Virtual History headings.
    Nav uses the body font (Stardos), normal casing.
-   Index background shown only on the home hero.
+   Index background (img/index-background.jpg) on Home hero.
+   About banner (img/banner.jpg) for tile + full-screen fade.
+   =======================================================*/
 
 /* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Girassol&family=Stardos+Stencil:wght@400;700&family=Cinzel:wght@400;600;700&display=swap');
@@ -136,10 +138,9 @@ article h1.post-title{
 }
 .nav-dropdown{ margin:8px 0 0 }
 .nav-submenu{ display:block; margin:6px 0 0 10px }
-.nav-submenu a{ display:block; margin:2px 0 }
 .page-main{ margin-left:280px; padding-top:14px }
 
-/* ---------- About grid (no banner images here) ---------- */
+/* ---------- About grid ---------- */
 .about-grid{
   display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
   gap:0; border:1px solid var(--stroke);
@@ -151,7 +152,7 @@ article h1.post-title{
   background:linear-gradient(180deg,#0d1116,#0a0d11);
 }
 .about-cell h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
-.span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 }
+.span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 } .span-6{ grid-column: span 6 }
 .tall-2{ grid-row: span 2 }
 
 /* About page: right-grid banner tile */
@@ -168,7 +169,6 @@ article h1.post-title{
           mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
   margin:0;
 }
-
 
 /* ---------- Divider ---------- */
 .hr-dots{
