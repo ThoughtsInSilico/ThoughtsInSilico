@@ -9,6 +9,14 @@
   <script src="js/includes.js" defer></script>
   <style>
     .search-muted{ color: var(--ink-dim); }
+    .result-badge{
+      display:inline-block; font-size:.75rem; padding:2px 6px; border:1px dashed var(--stroke);
+      border-radius:8px; opacity:.8; margin-left:6px;
+    }
+    .snippet{ color: var(--ink-dim); margin:.5rem 0 0; line-height:1.5 }
+    .snippet mark{ background: rgba(255,255,255,.15); padding:0 .1em; border-radius:2px }
+    .result-card{ border:1px dashed var(--stroke); border-radius:var(--r2); padding:14px }
+    .result-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:16px; }
   </style>
 </head>
 <body>
@@ -20,7 +28,7 @@
         <h1 class="site-title" style="font-size: clamp(28px,5vw,46px);">Search</h1>
         <p id="queryLabel" class="search-muted" style="margin:.25rem 0 1rem;"></p>
         <hr class="hr-dots"/>
-        <div id="results" class="posts-grid" aria-live="polite"></div>
+        <div id="results" class="result-grid" aria-live="polite"></div>
       </section>
 
       <div id="footer-include" data-src="partials/footer.html"></div>
@@ -28,50 +36,165 @@
   </div>
 
   <script>
-    function getQ(){
-      const q = new URLSearchParams(location.search).get('q') || '';
-      return q.trim();
+    function qstr(){ return (new URLSearchParams(location.search).get('q') || '').trim(); }
+    const norm = s => (s || '').toString().toLowerCase();
+    const collapse = s => s.replace(/\s+/g,' ').trim();
+
+    function tokens(q){
+      return q.split(/\s+/).filter(Boolean).map(t => t.toLowerCase());
     }
-    function norm(s){ return (s || '').toString().toLowerCase(); }
+    function matchesAll(haystack, toks){
+      const h = norm(haystack);
+      return toks.every(t => h.includes(t));
+    }
+    function highlight(text, toks){
+      let out = text;
+      toks.forEach(t=>{
+        const re = new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'ig');
+        out = out.replace(re,'<mark>$1</mark>');
+      });
+      return out;
+    }
+
+    async function fetchText(url){
+      const res = await fetch(url, { cache:'no-store' });
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      // Prefer <article>, then <main>, else body
+      const root = doc.querySelector('article') || doc.querySelector('main') || doc.body;
+      // Strip scripts
+      root.querySelectorAll('script').forEach(n=>n.remove());
+      return collapse(root.textContent || '');
+    }
+
+    async function indexPosts(){
+      const res = await fetch('posts/posts.json', { cache:'no-store' });
+      const arr = await res.json();
+
+      // Fetch body text for each post (sequential is fine for small sites)
+      const out = [];
+      for (const p of arr){
+        try{
+          const text = await fetchText(p.url);
+          out.push({
+            type: 'Post',
+            title: p.titleHtml || p.title,
+            url: `post.html?u=${encodeURIComponent(p.url)}`,
+            date: p.date,
+            category: p.category,
+            subcategory: p.subcategory || '',
+            excerpt: p.excerpt || '',
+            body: text
+          });
+        }catch(e){
+          // If body fails, still index with title/meta
+          out.push({
+            type: 'Post',
+            title: p.titleHtml || p.title,
+            url: `post.html?u=${encodeURIComponent(p.url)}`,
+            date: p.date,
+            category: p.category,
+            subcategory: p.subcategory || '',
+            excerpt: p.excerpt || '',
+            body: ''
+          });
+        }
+      }
+      return out;
+    }
+
+    async function indexLibrary(){
+      // Parse titles/authors/blurbs from library.html .book-card blocks
+      try{
+        const res = await fetch('library.html', { cache:'no-store' });
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const cards = doc.querySelectorAll('.book-card');
+        const items = [];
+        cards.forEach((c, i)=>{
+          const title = collapse((c.querySelector('h3')?.textContent) || '');
+          const author = collapse((c.querySelector('.author')?.textContent) || '');
+          const blurb = collapse((c.querySelector('.blurb')?.textContent) || '');
+          // make an anchor slug so we can deep-link
+          const slug = title ? title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') : `book-${i+1}`;
+          items.push({
+            type: 'Library',
+            title,
+            url: `library.html#${slug}`,
+            date: '',
+            category: 'Library',
+            subcategory: author,
+            excerpt: blurb,
+            body: `${title} ${author} ${blurb}`,
+            _slug: slug
+          });
+        });
+        return items;
+      }catch(e){
+        return [];
+      }
+    }
+
+    function render(results, toks){
+      const box = document.getElementById('results');
+      if (!results.length){
+        box.innerHTML = '<p class="post-body search-muted">No results.</p>';
+        return;
+      }
+      const fmtDate = iso => iso ? new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'}) : '';
+
+      box.innerHTML = results.map(r=>{
+        // choose best snippet: excerpt or short slice of body containing first token
+        let snippet = r.excerpt || '';
+        if (!snippet && r.body){
+          const h = r.body.toLowerCase();
+          const first = toks.find(t => h.includes(t));
+          let i = first ? h.indexOf(first) : 0;
+          i = Math.max(0, i - 60);
+          snippet = r.body.slice(i, i + 180);
+          if (i > 0) snippet = '…' + snippet;
+          if (i + 180 < r.body.length) snippet = snippet + '…';
+        }
+        snippet = highlight(collapse(snippet), toks);
+
+        const meta = r.category + (r.subcategory ? ' • ' + r.subcategory : '');
+
+        return `
+          <article class="result-card">
+            <h3>
+              <a href="${r.url}">${r.title}</a>
+              <span class="result-badge">${r.type}</span>
+            </h3>
+            ${r.date ? `<time class="post-time" datetime="${r.date}">${fmtDate(r.date)}</time>` : ''}
+            <p class="post-meta">${meta}</p>
+            ${snippet ? `<p class="snippet">${snippet}</p>` : ''}
+          </article>
+        `;
+      }).join('');
+    }
 
     (async function(){
-      const q = getQ();
-      document.getElementById('queryLabel').textContent =
-        q ? `Results for “${q}”` : 'Type a query in the sidebar and press Enter.';
-
+      const q = qstr();
+      const label = document.getElementById('queryLabel');
+      label.textContent = q ? `Results for “${q}”` : 'Type a query in the sidebar and press Enter.';
       const box = document.getElementById('results');
       if (!q){ box.innerHTML = '<p class="post-body search-muted">No query.</p>'; return; }
 
-      try{
-        const res = await fetch('posts/posts.json', { cache: 'no-store' });
-        const posts = await res.json();
+      box.innerHTML = '<p class="post-body search-muted">Searching the whole site…</p>';
 
-        const needle = norm(q);
-        const matches = posts.filter(p=>{
-          const hay = [
-            p.title, p.titleHtml, p.category, p.subcategory, p.excerpt
-          ].map(norm).join(' § ');
-          return hay.includes(needle);
-        }).sort((a,b)=> new Date(b.date) - new Date(a.date));
+      const toks = tokens(q);
+      const [posts, library] = await Promise.all([indexPosts(), indexLibrary()]);
+      const all = [...posts, ...library];
 
-        const fmt = iso => new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
-        box.innerHTML = matches.length ? matches.map(p => `
-          <article class="post-card">
-            <h3><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
-            <time class="post-time" datetime="${p.date}">${fmt(p.date)}</time>
-            <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
-            ${p.excerpt ? `<p class="post-body">${p.excerpt}</p>` : ''}
-          </article>
-        `).join('') : '<p class="post-body search-muted">No results.</p>';
+      const hits = all.filter(item =>
+        matchesAll(item.title + ' ' + item.category + ' ' + item.subcategory + ' ' + item.excerpt + ' ' + item.body, toks)
+      ).sort((a,b)=> new Date(b.date || 0) - new Date(a.date || 0));
 
-        // Open results via post.html (consistent with the rest of the site)
-        box.querySelectorAll('.post-card a').forEach(a=>{
-          const raw = a.getAttribute('href');
-          a.setAttribute('href', `post.html?u=${encodeURIComponent(raw)}`);
-        });
-      }catch(e){
-        console.error(e);
-        box.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
+      render(hits, toks);
+
+      // Optional: add ids to library cards for deep links (no-op if already present)
+      if (location.hash && location.pathname.endsWith('search.html')){
+        // nothing to do here; the link to library.html has the hash already
       }
     })();
   </script>
