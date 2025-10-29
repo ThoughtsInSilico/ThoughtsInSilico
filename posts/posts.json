@@ -4,27 +4,32 @@
     "url": "posts/pseudo-poems.html",
     "date": "2025-05-01",
     "category": "Fiction",
-    "subcategory": "Poetry"
+    "subcategory": "Poetry",
+    "cardImage": "img/pseudo-poems-icon.jpg"
+
   },
   {
     "title": "Oracle of Orr",
     "url": "posts/oracle-of-orr.html",
     "date": "2025-07-01",
     "category": "Fiction",
-    "subcategory": "Short Stories"
+    "subcategory": "Short Stories",
+    "cardImage": "img/oracle-of-orr-icon.jpg"
   },
   {
     "title": "My 12-Year Journey with the Math Olympiads",
     "url": "posts/math-olympiads-12-years.html",
     "date": "2025-09-01",
-    "category": "Mathematics"
+    "category": "Mathematics",
+    "cardImage": "img/math-olympiads-icon.jpg"
   },
   {
     "title": "The Case for the Profinite Fundamental Group π̂₁",
     "titleHtml": "The Case for the Profinite Fundamental Group \\(\\hat{\\pi}_1\\)",
     "url": "posts/profinite-fundamental-group.html",
     "date": "2025-07-01",
-    "category": "Mathematics"
+    "category": "Mathematics",
+    "cardImage": "img/profinite-fundamental-group-icon.jpg"
   },
   {
     "title": "Book Reviews: After Finitude and Time's Arrow and Archimedes' Point",
@@ -32,5 +37,6 @@
     "url": "posts/book-reviews-after-finitude-times-arrow.html",
     "date": "2025-10-01",
     "category": "Book Reviews"
+    "cardImage": "img/after-finitude-icon.jpg"
   }
 ]
