@@ -50,7 +50,7 @@
         const items = posts.filter(filter)
                            .sort((a,b)=> new Date(b.date) - new Date(a.date))
                            .map(p => `
-          <article class="post-card">
+          <article class="post-card" data-cat="${p.category}">
             <h3><a href="${p.url}">${p.titleHtml || p.title}</a></h3>
             <time class="post-time" datetime="${p.date}">${fmt(p.date)}</time>
             <p class="post-meta">${p.category}${p.subcategory ? ' • ' + p.subcategory : ''}</p>
