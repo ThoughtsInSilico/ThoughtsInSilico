@@ -122,6 +122,22 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .post-time,.post-meta{ color:var(--ink-dim) }
 .post-body p,.post-card p,.card p{ text-align: justify }
 
+/* Post-card category backgrounds */
+.post-card[data-cat]{
+  /* gradient overlay first, then the image set via --bg-img */
+  background:
+    linear-gradient(180deg, rgba(13,17,22,.92), rgba(10,13,17,.96)),
+    var(--bg-img) center/cover no-repeat;
+}
+
+/* Map categories to images (put these files in /img/) */
+.post-card[data-cat="Fiction"]{         --bg-img: url('../img/cat-fiction.jpg'); }
+.post-card[data-cat="Mathematics"]{     --bg-img: url('../img/cat-mathematics.jpg'); }
+.post-card[data-cat="Technognostics"]{  --bg-img: url('../img/cat-technognostics.jpg'); }
+.post-card[data-cat="Book Reviews"]{    --bg-img: url('../img/cat-book-reviews.jpg'); }
+.post-card[data-cat="Music"]{           --bg-img: url('../img/cat-music.jpg'); }
+
+
 /* ---------- About (Vat-brain) ---------- */
 .about-upper{
   background: url('../img/about-upper.jpg') center/cover no-repeat fixed;
