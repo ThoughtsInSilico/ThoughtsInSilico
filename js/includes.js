@@ -1,7 +1,6 @@
 // Robust include for sidebar/footer partials on GitHub Pages or local files.
-// - Tries multiple URL variants (relative, ./, /<repo>/…)
-// - Busts cache so updates appear
-// - Highlights active nav link
+// Also injects a "Back to Home" link on all pages except the home page.
+
 async function fetchFirst(paths) {
   for (const url of paths) {
     try {
@@ -15,26 +14,16 @@ async function fetchFirst(paths) {
 }
 
 function candidatePaths(src) {
-  // Absolute or protocol URL? Use as-is.
   if (/^https?:\/\//i.test(src)) return [src];
 
-  // Current page path, project root, and simple relatives
-  const pathname = location.pathname;            // e.g. /ThoughtsInSilico/index.html
+  const pathname = location.pathname;
   const parts = pathname.split('/').filter(Boolean);
-  const repo = parts.length ? parts[0] : '';     // e.g. ThoughtsInSilico
-  const hereDir = pathname.replace(/[^/]*$/, ''); // e.g. /ThoughtsInSilico/
-
-  // Normalize src without leading './'
+  const repo = parts.length ? parts[0] : '';
+  const hereDir = pathname.replace(/[^/]*$/, '');
   const clean = src.replace(/^.\//, '');
 
-  const variants = [
-    clean,                 // 'partials/sidebar.html'
-    './' + clean,          // './partials/sidebar.html'
-    hereDir + clean,       // '/ThoughtsInSilico/partials/sidebar.html'
-  ];
-  if (repo) variants.push('/' + repo + '/' + clean); // '/ThoughtsInSilico/partials/sidebar.html'
-
-  // Deduplicate while preserving order
+  const variants = [ clean, './' + clean, hereDir + clean ];
+  if (repo) variants.push('/' + repo + '/' + clean);
   return [...new Set(variants)];
 }
 
@@ -48,8 +37,6 @@ async function includeInto(el) {
     el.outerHTML = html;
   } else {
     console.error('Include failed for', src, 'tried:', candidatePaths(src));
-    // Optional visible fallback:
-    // el.innerHTML = '<div style="color:#cfcac3">Failed to load: ' + src + '</div>';
   }
 }
 
@@ -74,4 +61,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 3) Year
   const yearEl = document.querySelector('[data-year], #y');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // 4) Inject "Back to Home" on every page EXCEPT the home page
+  //    - Avoid duplicates if a page already has a .back-home element.
+  const isHome = document.body.classList.contains('home') ||
+                 /(?:^|\/)index\.html?$/.test(location.pathname);
+  if (!isHome && !document.querySelector('.back-home')) {
+    const linkWrap = document.createElement('p');
+    linkWrap.className = 'back-home container';
+    linkWrap.style.padding = '0 0 18px';
+    linkWrap.innerHTML = '<a href="./">← Back to Home</a>';
+
+    // Insert just before the footer include if present, otherwise append to <main>
+    const footerAnchor = document.getElementById('footer-include');
+    const main = document.querySelector('main') || document.body;
+    if (footerAnchor && footerAnchor.parentNode) {
+      footerAnchor.parentNode.insertBefore(linkWrap, footerAnchor);
+    } else {
+      main.appendChild(linkWrap);
+    }
+  }
 });
