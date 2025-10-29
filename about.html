@@ -10,49 +10,17 @@
 
 <body>
   <div class="layout">
-    <!-- Sidebar -->
-    <aside class="sidebar" role="navigation" aria-label="Primary">
-      <div class="brand"><a class="site-title" href="index.html">Silico: Book of Genesis</a></div>
-      <nav>
-        <h3>Pages</h3>
-        <ul>
-          <li><a href="about.html" aria-current="page">The Vat-brain Speaks</a></li>
-          <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
-
-          <!-- Hover submenu (parent not clickable) -->
-          <li class="has-submenu">
-            <span class="nav-parent">Fiction ▾</span>
-            <ul class="nav-submenu" aria-label="Fiction submenu">
-              <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
-              <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
-            </ul>
-          </li>
-
-          <li><a href="categories.html?cat=Mathematics">Mathematics</a></li>
-          <li><a href="categories.html?cat=Technognostics">Technognostics</a></li>
-          <li><a href="categories.html?cat=Music">Music</a></li>
-          <li><a href="library.html">My Library</a></li>
-          <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
-        </ul>
-
-        <h3>Currently Listening</h3>
-        <article class="anthem-card">
-          <div class="anthems-list"><div class="anthem-item">Add tracks in audio/…</div></div>
-        </article>
-      </nav>
-    </aside>
+    <!-- Sidebar include -->
+    <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <!-- Main -->
     <main class="main">
-      <!-- upper area gets its own background -->
       <section class="about-upper">
         <div class="container section">
           <h1 class="site-title" style="font-size: clamp(34px,6vw,64px);">The Vat-brain Speaks</h1>
           <hr class="hr-dots"/>
 
-          <!-- GRID -->
           <div class="about-grid">
-            <!-- Left: books, 2 rows high -->
             <div class="about-cell span-3 tall-2">
               <h4>Favorite books</h4>
               <div class="post-body">
@@ -63,19 +31,16 @@
               </div>
             </div>
 
-            <!-- Top middle: films -->
             <div class="about-cell span-2">
               <h4>Favorite films</h4>
               <div class="post-body"><ul></ul></div>
             </div>
 
-            <!-- Right column: Notes (empty & transparent; spans two rows) -->
             <div class="about-cell notes-cell span-1 tall-2">
               <h4>Notes</h4>
               <div class="post-body"><!-- intentionally empty --></div>
             </div>
 
-            <!-- Second row middle-left: Personal Anthems -->
             <div class="about-cell span-2 anthem-player">
               <h4>Personal Anthems</h4>
               <ul class="anthem-list" id="anthemList"></ul>
@@ -85,10 +50,8 @@
         </div>
       </section>
 
-      <!-- Banner below stays the same -->
       <section class="about-banner" aria-label="Banner image"></section>
 
-      <!-- Long text (unchanged) -->
       <section class="container section">
         <article class="post-body card" style="margin-bottom:18px">
           <h1>About</h1>
@@ -130,20 +93,30 @@
   </div>
 
   <script>
-    /* Personal Anthems: click a title to play (decluttered) */
-    const ANTHEMS = [
-      // { title: 'Track 1', src: 'audio/track1.mp3' },
-      // { title: 'Track 2', src: 'audio/track2.mp3' },
-    ];
+    // Sidebar include + active link
+    (async function(){
+      const holder = document.getElementById('sidebar-include');
+      if (holder){
+        const res = await fetch(holder.dataset.src || 'partials/sidebar.html');
+        holder.outerHTML = await res.text();
+        const path = (location.pathname.split('/').pop() || 'index.html');
+        document.querySelectorAll('.sidebar nav a').forEach(a=>{
+          const href = a.getAttribute('href') || '';
+          if (href === path || href.startsWith(path+'?')) a.setAttribute('aria-current','page');
+        });
+      }
+    })();
+
+    /* Personal Anthems (unchanged) */
+    const ANTHEMS = [];
     const list = document.getElementById('anthemList');
     const audio = document.getElementById('anthemAudio');
-
     function renderList(active = -1){
       list.innerHTML = ANTHEMS.length
         ? ANTHEMS.map((a,i)=>`<li><button data-i="${i}" type="button">${i===active?'▶':'►'} ${a.title}</button></li>`).join('')
         : '<li>Add <code>.mp3</code> files in <code>audio/</code> and list them in the ANTHEMS array.</li>';
     }
-    list.addEventListener('click', e=>{
+    list?.addEventListener('click', e=>{
       const btn = e.target.closest('button[data-i]'); if(!btn) return;
       const i = +btn.dataset.i;
       audio.src = ANTHEMS[i].src; audio.play();
