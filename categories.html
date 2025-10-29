@@ -13,7 +13,6 @@
 </head>
 <body>
   <div class="layout">
-    <!-- Sidebar -->
     <aside class="sidebar" role="navigation" aria-label="Primary">
       <div class="brand"><a class="site-title" href="index.html">Silico: Book of Genesis</a></div>
       <nav>
@@ -37,15 +36,12 @@
 
         <h3>Anthems</h3>
         <article class="anthem-card">
-          <div class="anthems-list">
-            <div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div>
-          </div>
+          <div class="anthems-list"><div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div></div>
           <audio preload="none"></audio>
         </article>
       </nav>
     </aside>
 
-    <!-- Main -->
     <main class="main">
       <section class="container section">
         <h1 id="cat-title" class="site-title" style="font-size: clamp(28px,5vw,46px);">Posts</h1>
@@ -61,6 +57,14 @@
 
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Route post links to the shell
+    function retargetPostLinks(scope){
+      scope.querySelectorAll('.post-card a').forEach(a=>{
+        const raw = a.getAttribute('href');
+        a.setAttribute('href', `post.html?u=${encodeURIComponent(raw)}`);
+      });
+    }
 
     const params = new URL(location.href).searchParams;
     const catText = (params.get('cat') || 'All').replace(/\+/g,' ');
@@ -99,6 +103,7 @@
           </article>
         `).join('') || '<p class="post-body" style="color:#cfcac3">No posts yet.</p>';
 
+        retargetPostLinks(grid);
         if (window.MathJax?.typeset) MathJax.typeset();
       }catch(e){
         grid.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
