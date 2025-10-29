@@ -40,7 +40,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
 /* ---------- Layout ---------- */
 .layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
 
-/* SIDEBAR: keep the image (lighter), your exact alphas */
+/* SIDEBAR: image + your exact overlay alphas (0.38 / 0.45) */
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
   background:
@@ -72,24 +72,26 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .has-submenu:hover > .nav-submenu{ display:block }
 .nav-parent{ cursor:default }
 
-/* ---- NEW: Sidebar search visibility ---- */
+/* ---- Sidebar search (clear & high-contrast) ---- */
 .sidebar-search{ margin:12px 0 10px; }
 .sidebar-search input[type="search"]{
   width:100%;
+  height: 36px;
   padding:8px 10px;
   border-radius:10px;
-  border:1px solid rgba(232,230,227,.35);
-  background: rgba(0,0,0,.35);       /* darker field for contrast */
+  border:1px solid rgba(232,230,227,.70);
+  background: rgba(0,0,0,.65);       /* darker field for contrast */
   color: var(--ink);
   outline: none;
+  backdrop-filter: blur(2px);
 }
 .sidebar-search input::placeholder{
-  color: rgba(232,230,227,.65);
+  color: rgba(232,230,227,.80);
 }
 .sidebar-search input:focus{
-  border-color: #e8e6e3;
-  box-shadow: 0 0 0 2px rgba(232,230,227,.15);
-  background: rgba(0,0,0,.45);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.18);
+  background: rgba(0,0,0,.78);
 }
 
 .main{ min-height:100vh; overflow:hidden }
