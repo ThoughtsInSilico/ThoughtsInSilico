@@ -21,15 +21,15 @@
         <ul>
           <li><a href="about.html">The Brain-vat Speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
-          <li>
-            <a href="#" class="nav-toggle" aria-expanded="false">Fiction ▾</a>
+          <li class="has-submenu">
+            <span class="nav-parent">Fiction ▾</span>
             <ul class="nav-submenu" aria-label="Fiction submenu">
               <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
           </li>
           <li><a href="categories.html?cat=Mathematics">Mathematics</a></li>
-          <li><a href="categories.html?cat=Technology">Technognostics</a></li>
+          <li><a href="categories.html?cat=Technognostics">Technognostics</a></li>
           <li><a href="categories.html?cat=Music">Music</a></li>
           <li><a href="library.html">My Library</a></li>
           <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
@@ -37,9 +37,7 @@
 
         <h3>Currently Listening</h3>
         <article class="anthem-card">
-          <div class="anthems-list">
-            <div class="anthem-item">Add tracks in audio/…</div>
-          </div>
+          <div class="anthems-list"><div class="anthem-item">Add tracks in audio/…</div></div>
         </article>
       </nav>
     </aside>
@@ -60,16 +58,6 @@
   </div>
 
   <script>
-    // Fiction toggler only
-    document.querySelectorAll('.nav-toggle').forEach(t => {
-      t.addEventListener('click', e => {
-        e.preventDefault();
-        const ul = t.nextElementSibling;
-        const open = ul.classList.toggle('open');
-        t.setAttribute('aria-expanded', String(open));
-      });
-    });
-
     function sanitizeHtml(html){
       const t = document.createElement('template');
       t.innerHTML = html;
