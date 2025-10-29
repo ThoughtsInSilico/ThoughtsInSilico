@@ -44,7 +44,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
   background:
-    url('../img/sidebar-image.jpg') center top / 280px auto repeat-y,
+    url('../img/sidebar-image.jpg') center top / 100% auto repeat-y,
     linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
   background-blend-mode: multiply;
   border-right:1px solid var(--stroke);
