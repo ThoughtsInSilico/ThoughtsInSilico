@@ -93,5 +93,82 @@
       }
     })();
   </script>
+
+  <script>
+  /* =====================================================
+     CONTENT BOXES TO FILL (edit these only)
+     ===================================================== */
+    const LEFT_TABS = [
+      // ⇩ Replace/add as many labels as you like
+      "index.htm","guestbook.cgi","/blinkies/","frames.html",
+      "nav_old.css","under_construction.gif","counter: 000123",
+      "sitering: surreal","webcam.jpg","marquee.txt","midis/","/cgi-bin/",
+      "portal.htm","topsites #42","my-links.html","splash.swf"
+    ];
+  
+    const RIGHT_LOADING_COUNT = 36; // how many “Loading” rows to reveal
+  
+    /* =====================================================
+       INITIAL RENDER (create nodes but keep them hidden)
+       ===================================================== */
+    const left = document.getElementById('leftTabs');
+    const right = document.getElementById('rightLoading');
+  
+    if (left && right){ // only run on the homepage
+      const leftNodes = LEFT_TABS.map(label => {
+        const el = document.createElement('div');
+        el.className = 'tab';
+        el.textContent = label;
+        el.style.visibility = 'hidden';
+        left.appendChild(el);
+        return el;
+      });
+  
+      const rightNodes = Array.from({length: RIGHT_LOADING_COUNT}, () => {
+        const el = document.createElement('div');
+        el.className = 'loading-item';
+        el.innerHTML = `Loading<span>…</span>`;
+        el.style.visibility = 'hidden';
+        right.appendChild(el);
+        return el;
+      });
+  
+      /* =====================================================
+         SCROLL PROGRESS → reveal counts left/up and right/down
+         ===================================================== */
+      const section = document.getElementById('interlude');
+      function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+      function getProgress(){
+        const rect = section.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const travel = rect.height + vh; // start/stop gently
+        const y = clamp((vh/2 - rect.top) / travel, 0, 1);
+        return y;
+      }
+      function render(){
+        const p = getProgress();
+        const leftReveal = Math.floor(p * leftNodes.length);
+        const rightReveal = Math.floor(p * rightNodes.length);
+        leftNodes.forEach((el, i) => { el.style.visibility = (i < leftReveal) ? 'visible' : 'hidden'; });
+        rightNodes.forEach((el, i) => { el.style.visibility = (i < rightReveal) ? 'visible' : 'hidden'; });
+      }
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking){ requestAnimationFrame(()=>{ render(); ticking=false; }); ticking = true; }
+      }, {passive:true});
+      window.addEventListener('resize', render);
+      render();
+    }
+  
+    /* =====================================================
+       OPTIONAL: use a <video> instead of <img>
+       -----------------------------------------
+       1) Replace the <img id="centerMedia"> with:
+          <video class="center-media" id="centerMedia" autoplay muted loop playsinline src="YOUR-MOVIE.mp4"></video>
+       2) Done.
+       ===================================================== */
+  </script>
+
+  
 </body>
 </html>
