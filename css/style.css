@@ -1,11 +1,3 @@
-/* =========================================================
-   Silico: Book of Genesis — Girassol titles, Stardos body,
-   Cinzel only for Trvthnukes / Virtual History headings.
-   Nav uses the body font (Stardos), normal casing.
-   Index background (img/index-background.jpg) on Home hero.
-   About banner (img/banner.jpg) for tile + full-screen fade.
-   =======================================================*/
-
 /* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Girassol&family=Stardos+Stencil:wght@400;700&family=Cinzel:wght@400;600;700&display=swap');
 
@@ -22,7 +14,7 @@
   --shadow: 0 10px 30px rgba(0,0,0,.45);
   --r2: 14px;
 
-  /* present so inline styles from posts referencing these won't break */
+  /* Present so inline styles in posts won't break */
   --border: var(--stroke);
   --muted: var(--ink-dim);
 }
@@ -31,7 +23,7 @@
 *{ box-sizing:border-box }
 html,body{
   margin:0; padding:0; background:var(--bg); color:var(--ink);
-  font:18px/1.7 'Stardos Stencil', system-ui, serif;   /* BODY + NAV FONT */
+  font:18px/1.7 'Stardos Stencil', system-ui, serif;
 }
 a{ color:var(--ink); text-decoration:none }
 a:hover{ text-decoration:underline }
@@ -39,39 +31,27 @@ img{ max-width:100%; display:block }
 hr{ border:0; height:1px; background:var(--stroke) }
 
 /* ---------- Fonts by role ---------- */
-.site-title{                                  /* SITE & page titles */
+.site-title{
   font-family:'Girassol', system-ui, serif;
   font-size: clamp(28px, 5vw, 46px);
   line-height:1.1; margin:0;
   text-shadow:0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
 
-/* Navigation links inherit body font (Stardos) — normal casing */
-.sidebar nav a,
-.site-header .site-nav > a,
-.site-header .nav-dropdown > a,
-.site-header .nav-submenu a{
-  font-family: inherit;
-}
-
-/* Post titles (cards and full posts) use Girassol */
-.post-card h3,
-.post-card h3 a,
-.post-title,
-.post-title a,
-h1.post-title,
-article h1.post-title{
-  font-family:'Girassol', system-ui, serif;
-}
-
-/* Cinzel for Trvthnukes/Virtual History headings ONLY */
-.roman{ font-family:'Cinzel', serif; letter-spacing:.02em }
-
 /* ---------- Layout ---------- */
 .layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
 .sidebar{
   position:sticky; top:0; height:100vh; overflow-y:auto;
-  background:linear-gradient(180deg, var(--sidebar-top), var(--sidebar-bot));
+
+  /* gradient + optional image behind the sidebar */
+  background:
+    linear-gradient(180deg, var(--sidebar-top), var(--sidebar-bot)),
+    url('../img/sidebar-image.jpg');
+  /* image fits the 280px width, repeat vertically if needed */
+  background-size: auto, 280px auto;
+  background-repeat: no-repeat, repeat-y;
+  background-position: 0 0, center top;
+
   border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
   padding:22px 18px 28px;
@@ -82,33 +62,26 @@ article h1.post-title{
   letter-spacing:.08em; margin:18px 0 8px;
 }
 .sidebar nav ul{ list-style:none; margin:0; padding:0 }
-/* slightly narrower spacing */
-.sidebar nav li{ margin:2px 0 }                 /* was 4px */
-.sidebar nav a{
-  display:block; padding:5px 8px;               /* was 6px 8px */
+.sidebar nav li{ margin:2px 0 }
+.sidebar nav a,
+.sidebar .nav-parent{
+  display:block; padding:5px 8px;
   border-radius:8px; border:1px dashed transparent;
 }
+.sidebar nav a:hover, .sidebar nav a:focus-visible,
+.sidebar .nav-parent:hover{ border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none }
 
-/* collapse submenus by default; open via .open */
-.nav-submenu{ display:none; margin:4px 0 0 12px; padding:0; list-style:none; }
-.nav-submenu.open{ display:block; }
+/* hover dropdown: parent is NOT a link */
+.has-submenu > .nav-submenu{ display:none; margin:4px 0 0 12px; padding:0; list-style:none; }
+.has-submenu:hover > .nav-submenu{ display:block }
+.nav-parent{ cursor:default }
 
-/* Fiction toggler cursor */
-.nav-toggle{ cursor:pointer }
-
-/* prevent the ‘Fiction’ toggler from showing underline on hover */
-.sidebar .nav-toggle:hover{ text-decoration:none }
-
-.sidebar nav a:hover, .sidebar nav a:focus-visible{
-  border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
-}
-.anthems .anthem-item{ margin:8px 0; font-size:16px; color:var(--ink-dim); display:flex; gap:8px; align-items:center }
-.sidebar audio{ width:100% }
+/* ---------- Main ---------- */
 .main{ min-height:100vh; overflow:hidden }
 
 /* ---------- Home hero (index background) ---------- */
 .hero{
-  min-height: 62vh; /* shorter than full screen to tease the scroll */
+  min-height: 62vh;
   background:url('../img/index-background.jpg') center/cover no-repeat fixed;
   border-bottom:1px solid var(--stroke);
 }
@@ -120,7 +93,6 @@ article h1.post-title{
   display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px;
 }
 
-/* Transparent cards on Home; solid cards elsewhere via .card */
 .post-card, .feature-card, .anthem-card{
   background: transparent;
   border:1px dashed var(--stroke);
@@ -136,27 +108,6 @@ article h1.post-title{
 .post-time, .post-meta{ color:var(--ink-dim) }
 .post-body p, .post-card p, .card p{ text-align: justify }
 
-/* ---------- Legacy post pages → sidebarify top header without editing each file ---------- */
-.site-header{
-  position: fixed; top:0; left:0; width:280px; height:100vh;
-  padding:22px 18px 28px;
-  background:linear-gradient(180deg, var(--sidebar-top), var(--sidebar-bot));
-  border-right:1px solid var(--stroke);
-  box-shadow: inset 0 0 24px rgba(0,0,0,.35);
-  z-index: 10;
-}
-.site-header .site-title{ color:var(--ink); text-decoration:none }
-.site-nav{ display:block }
-.site-nav > a, .site-nav .nav-dropdown > a{
-  display:block; padding:6px 8px; border-radius:8px; border:1px dashed transparent;
-}
-.site-nav > a:hover, .site-nav .nav-dropdown > a:hover{
-  border-color:var(--stroke); background:rgba(255,255,255,.03)
-}
-.nav-dropdown{ margin:8px 0 0 }
-.nav-submenu{ display:block; margin:6px 0 0 10px }
-.page-main{ margin-left:280px; padding-top:14px }
-
 /* ---------- About grid ---------- */
 .about-grid{
   display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
@@ -169,33 +120,31 @@ article h1.post-title{
   background:linear-gradient(180deg,#0d1116,#0a0d11);
 }
 .about-cell h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
-.span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 } .span-6{ grid-column: span 6 }
+.span-3{ grid-column: span 3 } .span-2{ grid-column: span 2 } .span-1{ grid-column: span 1 } .span-4{ grid-column: span 4 } .span-6{ grid-column: span 6 }
 .tall-2{ grid-row: span 2 }
 
-/* (old) banner tile class left in case you re-use it elsewhere */
-.banner-tile{
-  background:url('../img/banner.jpg') center/cover no-repeat;
-  min-height: 260px;
+/* Upper part background for Brain-vat page ONLY */
+.about-upper{
+  background: url('../img/about-upper.jpg') center/cover no-repeat fixed;
+  border-bottom:1px solid var(--stroke);
 }
 
-/* About page: full-screen banner with soft fade, dimmer, and centered relative to MAIN (offset for 280px sidebar) */
+/* Full-screen banner with soft fade, dimmer, and centered relative to main (offset 140px for the 280px sidebar) */
 .about-banner{
   position:relative;
   height: 100vh;
   background:url('../img/banner.jpg') no-repeat fixed;
   background-size: cover;
-  background-position: calc(50% + 140px) center; /* center of page minus sidebar */
+  background-position: calc(50% + 140px) center;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
           mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
   margin:0;
 }
 .about-banner::after{
-  content:"";
-  position:absolute; inset:0;
-  background: rgba(0,0,0,.38); /* dim overlay */
+  content:""; position:absolute; inset:0; background: rgba(0,0,0,.38);
 }
 
-/* Anthem player styles for the grid tile on Brain-vat page */
+/* Anthem tile (simple player styles preserved) */
 .anthem-player h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
 .anthem-list{ list-style:none; margin:10px 0 8px; padding:0 }
 .anthem-list li{ margin:6px 0; display:flex; gap:8px; align-items:center }
@@ -217,10 +166,7 @@ article h1.post-title{
 @media (max-width: 900px){
   .layout{ grid-template-columns:1fr }
   .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke) }
-  .site-header{ position:relative; width:auto; height:auto }
-  .page-main{ margin-left:0 }
   .about-grid{ grid-template-columns: repeat(2, 1fr) }
-  /* when stacked, center banner normally */
   .about-banner{ background-position:center }
 }
 @media (max-width: 520px){
