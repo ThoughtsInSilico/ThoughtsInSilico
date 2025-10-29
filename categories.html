@@ -21,8 +21,8 @@
           <li><a href="about.html">The Brain-vat Speaks</a></li>
           <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
           <li>
-            <a href="#" class="nav-toggle" aria-expanded="false">Fiction ▾</a>
-            <ul class="nav-submenu" aria-label="Fiction submenu">
+            <a href="#" class="nav-toggle" aria-expanded="false" aria-controls="fic-sub">Fiction ▾</a>
+            <ul id="fic-sub" class="nav-submenu" aria-label="Fiction submenu">
               <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
               <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
             </ul>
@@ -34,12 +34,11 @@
           <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
         </ul>
 
-        <h3>Anthems</h3>
+        <h3>Currently Listening</h3>
         <article class="anthem-card">
           <div class="anthems-list">
-            <div class="anthem-item"><button class="anthem-btn" type="button" disabled>Play</button> Add tracks in audio/…</div>
+            <div class="anthem-item">Update this list later…</div>
           </div>
-          <audio preload="none"></audio>
         </article>
       </nav>
     </aside>
@@ -58,7 +57,7 @@
   </div>
 
   <script>
-    // Expand/collapse submenu (mobile)
+    // Expand/collapse submenu (parent is a toggler only)
     document.querySelectorAll('.nav-toggle').forEach(t => {
       t.addEventListener('click', e => {
         e.preventDefault();
