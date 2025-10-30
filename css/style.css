@@ -39,10 +39,14 @@ hr{ border:0; height:1px; background:var(--stroke) }
 
 /* ---------- Layout ---------- */
 .layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
+/* keep the fixed sidebar layered above, main stays interactive */
+.sidebar{ z-index: 10; }
+main{ position: relative; z-index: 0; }
+
 
 /* SIDEBAR: image + your exact overlay alphas (0.38 / 0.45) */
 .sidebar{
-  position:sticky; top:0; height:100vh; overflow-y:auto;
+  position: fixed; left: 0; top: 0; bottom: 0; width: 280px; overflow-y: auto;
   background:
     url('../img/sidebar-image.jpg') center top / 100% auto repeat-y,
     linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
