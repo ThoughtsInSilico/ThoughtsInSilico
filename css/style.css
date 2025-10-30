@@ -200,3 +200,29 @@ hr{ border:0; height:1px; background:var(--stroke) }
 @media (max-width: 520px){
   .about-grid{ grid-template-columns: 1fr }
 }
+
+
+/* ---- sticky footer + bottom "Back to Home" ---- */
+html, body { height: 100%; }
+
+body{
+  min-height: 100dvh;           /* full viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
+main{
+  flex: 1 0 auto;               /* main grows to fill space */
+  display: flex;
+  flex-direction: column;
+}
+
+footer{                          /* your footer element/partial */
+  margin-top: auto;              /* sticks to bottom when page is short */
+}
+
+/* optional: make the back link sit at the end of main on post pages */
+.post-bottom-nav{
+  margin-top: auto;              /* pushes it to the bottom of <main> */
+  padding-top: 12px;
+}
