@@ -42,7 +42,7 @@ hr{ border:0; height:1px; background:var(--stroke) }
 
 /* SIDEBAR: image + your exact overlay alphas (0.38 / 0.45) */
 .sidebar{
-  position:sticky; top:0; height:100vh; overflow-y:auto;
+  position:sticky; top:0; min-height:100vh; overflow:visible;
   background:
     url('../img/sidebar-image.jpg') center top / 100% auto repeat-y,
     linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
