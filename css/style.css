@@ -240,6 +240,18 @@ main{ position:relative; z-index:0; }
 }
 .anthem-list button:hover{ background:rgba(255,255,255,.03) }
 .anthem-audio{ width:100%; margin-top:6px }
+.anthem-list{ display:flex; flex-wrap:wrap; gap:8px; }
+.anthem-list button{
+  font:inherit; padding:6px 10px; border-radius:10px;
+  border:1px dashed var(--stroke); background:transparent; color:var(--ink);
+}
+.anthem-list button[aria-current="true"]{
+  border-color:#fff; background:rgba(255,255,255,.05);
+}
+.now-playing{
+  margin:8px 0 6px;
+  font-weight:700;
+}
 
 /* Full-screen banner: dimmer & centered relative to main (offset 140px for 280px sidebar) */
 .about-banner{
