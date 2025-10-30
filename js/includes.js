@@ -50,12 +50,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.body.classList.toggle('nav-open');
   });
 
-  // Hamburger toggle (works on phone & desktop)
-  const hb = document.querySelector('.hamburger');
-  if (hb) hb.addEventListener('click', () => {
-    document.body.classList.toggle('nav-open');
-  });
-
   // ---- Sidebar "Currently Listening" wiring ----
 (function(){
   const list  = document.getElementById('sl-list');
@@ -83,20 +77,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Optional: auto-load first track (but don’t autoplay):
   // if (SIDEBAR_TRACKS.length){ audio.src = SIDEBAR_TRACKS[0].src; renderSidebarList(0); }
 })();
-
-
-  // PHONE MENU: hamburger toggle
-  const btn = document.getElementById('navToggle');
-  const sidebarEl = document.getElementById('site-sidebar');
-  if (btn && sidebarEl) {
-    const close = () => { document.body.classList.remove('nav-open'); btn.setAttribute('aria-expanded','false'); };
-    const open  = () => { document.body.classList.add('nav-open');    btn.setAttribute('aria-expanded','true'); };
-    btn.addEventListener('click', () =>
-      document.body.classList.contains('nav-open') ? close() : open()
-    );
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-    sidebarEl.addEventListener('click', e => { if (e.target.closest('a')) close(); });
-  }
 
 
   // Highlight active link after sidebar is present
