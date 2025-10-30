@@ -28,23 +28,20 @@
         
                 <!-- ===== Interlude (between Recent Posts and Trvthnukes) ===== -->
         <section class="interlude" id="interlude">
-          <div class="interlude-grid">
-            <!-- LEFT: upward old-web tabs -->
-            <aside class="left-rail">
-              <div class="tab-stack" id="leftTabs"></div>
-            </aside>        
+          <div class="interlude-grid">                  
             <!-- CENTER: still/moving media stays put while you scroll -->
             <div class="center-wrap">
               <!-- EDIT: replace src with your own image / GIF; or swap to a <video> (see script comment) -->
               <img class="center-media" id="centerMedia"
                    src="img/scroll-center.jpg"
                    alt="Center media">
-            </div>        
-            <!-- RIGHT: straight vertical line of Loading going downward -->
-            <aside class="right-rail">
-              <div class="loading-stack" id="rightLoading"></div>
-            </aside>        
-          </div>
+            </div>
+
+            <!-- image tabs appear randomly here -->
+            <div class="effects-layer" id="tabLayer" aria-hidden="true"></div>        
+              <!-- loading grows at bottom-right -->
+              <div class="loading-corner" id="loadingCorner" aria-live="polite"></div>              
+            </div>
         </section>
         <!-- ===== End Interlude ===== -->
 
