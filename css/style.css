@@ -205,21 +205,6 @@ main{ position: relative; z-index: 0; }
 }
 .about-banner::after{ content:""; position:absolute; inset:0; background: rgba(0,0,0,.38); }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 900px){
-  .layout{ grid-template-columns:1fr }
-  .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke) }
-  .about-grid{ grid-template-columns: repeat(2, 1fr) }
-  .about-banner{ background-position:center }
-}
-@media (max-width: 520px){
-  .about-grid{ grid-template-columns: 1fr }
-}
-
-@media (max-width: 900px){
-  .sidebar{ position: static; width: auto; max-height: none; }
-  .layout{ padding-left: 0; }
-}
 
 
 /* ---- sticky footer + bottom "Back to Home" ---- */
@@ -254,3 +239,46 @@ footer{                          /* your footer element/partial */
 main > footer{ margin-top:0 }
 
 
+
+/* ============== Mobile sidebar (phones only) ============== */
+.hamburger{ display:none } /* hidden on desktop */
+
+@media (max-width: 900px){
+
+  /* Hamburger button in top-left */
+  .hamburger{
+    position: fixed; left: 12px; top: 12px; z-index: 1001;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: 10px; border:1px solid var(--stroke);
+    background: rgba(18,20,24,.7); backdrop-filter: blur(6px);
+  }
+  .hamburger span{
+    display:block; width:22px; height:2px; margin:3px 0;
+    background: #e8e8e8;
+    transition: transform .2s ease, opacity .2s ease;
+  }
+  body.nav-open .hamburger span:nth-child(1){ transform: translateY(5px) rotate(45deg); }
+  body.nav-open .hamburger span:nth-child(2){ opacity: 0; }
+  body.nav-open .hamburger span:nth-child(3){ transform: translateY(-5px) rotate(-45deg); }
+
+  /* Off-canvas sidebar (slides in/out) */
+  .sidebar{
+    transform: translateX(-100%);           /* hidden by default */
+    transition: transform .25s ease;
+  }
+  body.nav-open .sidebar{ transform: translateX(0); }
+
+  /* On phones, remove desktop left padding */
+  .layout{ padding-left: 0 !important; }
+
+  /* Lock background scroll when menu open */
+  body.nav-open{ overflow: hidden; }
+
+  /* Keep your existing responsive bits (moved here) */
+  .about-grid{ grid-template-columns: repeat(2, 1fr) }
+  .about-banner{ background-position:center }
+}
+
+@media (max-width: 520px){
+  .about-grid{ grid-template-columns: 1fr }
+}
