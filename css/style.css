@@ -300,17 +300,16 @@ footer{ margin-top:auto; }
 main > footer{ margin-top:0 }
 
 
-
 @media (max-width: 900px){
 
   /* Remove desktop gutter; make room above for the button */
   .layout{ padding-left: 0 !important; padding-top: 56px; }
 
-  /* Hamburger button (always visible, tapable) */
+  /* Phone hamburger (always visible & tappable) */
   .hamburger{
     position: fixed;
     left: 12px;
-    bottom: 16px;          /* change to top:12px; bottom:auto; if you prefer top-left */
+    bottom: 16px;          /* change to: top:12px; bottom:auto; if you prefer top-left */
     top: auto;
     z-index: 3000;
     display: inline-flex !important;
@@ -332,7 +331,7 @@ main > footer{ margin-top:0 }
   body.nav-open .hamburger span:nth-child(2){ opacity: 0; }
   body.nav-open .hamburger span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
 
-  /* NEW: slide only the inner panel; hamburger stays tappable */
+  /* Slide ONLY the inner scrolling panel (keeps hamburger tappable) */
   .sidebar-panel{ transform: translateX(-100%); transition: transform .25s ease; }
   body.nav-open .sidebar-panel{ transform: translateX(0); }
 
@@ -346,6 +345,7 @@ main > footer{ margin-top:0 }
   .double-grid{ grid-template-columns: 1fr; }  /* stack */
   .about-col{ gap: 10px; }
 }
+
 
 @media (min-width: 901px){ .hamburger{ display: none; } }
 
