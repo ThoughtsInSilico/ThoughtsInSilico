@@ -15,6 +15,9 @@
 
 <body class="home">
   <div class="layout">
+    <!-- Sidebar include -->
+    <div id="sidebar-include" data-src="partials/sidebar.html"></div>
+
     <main class="main">
       <section class="hero" aria-label="Background art"></section>
 
@@ -22,26 +25,6 @@
         <h1 class="site-title" style="font-size: clamp(28px,5vw,46px);">Recent Posts</h1>
         <hr class="hr-dots"/>
         <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
-        
-                <!-- ===== Interlude (between Recent Posts and Trvthnukes) ===== -->
-        <section class="interlude" id="interlude">
-          <div class="interlude-grid">                  
-            <!-- CENTER: still/moving media stays put while you scroll -->
-            <div class="center-wrap">
-              <!-- EDIT: replace src with your own image / GIF; or swap to a <video> (see script comment) -->
-              <img class="center-media" id="centerMedia"
-                   src="img/scroll-center.jpg"
-                   alt="Center media">
-            </div>
-
-            <!-- image tabs appear randomly here -->
-            <div class="effects-layer" id="tabLayer" aria-hidden="true"></div>        
-              <!-- loading grows at bottom-right -->
-              <div class="loading-corner" id="loadingCorner" aria-live="polite"></div>              
-            </div>
-        </section>
-        <!-- ===== End Interlude ===== -->
-
 
         <article class="feature-card" style="margin-top:16px">
           <h3 class="roman" style="margin:0 0 6px">Trvthnukes</h3>
@@ -59,15 +42,13 @@
       <!-- Footer include -->
       <div id="footer-include" data-src="partials/footer.html"></div>
     </main>
-    <!-- Sidebar include -->
-    <div id="sidebar-include" data-src="partials/sidebar.html"></div>
   </div>
 
   <script>
     (async function(){
       const grid = document.getElementById('posts-grid');
       try{
-        const res = await fetch('posts/posts.json?nocache=' + Date.now());
+        const res = await fetch('posts/posts.json');
         const posts = await res.json();
         posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
         const fmt = iso => new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
@@ -89,137 +70,5 @@
       }
     })();
   </script>
-
-  
-  <script>
-    /* ============= CONTENT YOU EDIT ============= */
-    
-    /* 1) Your image tabs — put your own filenames here (in /img or anywhere) */
-    const TAB_IMAGES = [
-      "img/aeneid.jpg",
-      "img/beyond-good-and-evil.jpg",
-      "img/metamorphoses.jpg",
-      "img/difference-and-repetition.jpg",
-      "img/madness-and-civilization.jpg",
-      "img/process-and-reality.jpg",
-      "img/thus-spoke-zarathustra.jpg",
-      "img/simulacra-and-simulation.jpg"
-    ];
-    
-    /* 2) How many “Loading…” rows to show by the end of the section */
-    const LOADING_TOTAL = 42;
-    
-    /* 3) Optional: how spammy it feels — show up to this many tab images total
-          (if more than TAB_IMAGES, it loops through array again) */
-    const MAX_TABS = 48;
-    
-    /* ============= LOGIC — do not edit below ============= */
-    
-    const section   = document.getElementById('interlude');
-    const tabLayer  = document.getElementById('tabLayer');
-    const loadBox   = document.getElementById('loadingCorner');
-    const mediaEl   = document.getElementById('centerMedia');
-    
-    if (section && tabLayer && loadBox){
-      const vw = () => (window.innerWidth  || document.documentElement.clientWidth);
-      const vh = () => (window.innerHeight || document.documentElement.clientHeight);
-    
-      // Pre-create loading nodes (hidden initially)
-      const loadNodes = Array.from({length: LOADING_TOTAL}, _ => {
-        const el = document.createElement('div');
-        el.className = 'loading-item';
-        el.innerHTML = `Loading<span>…</span>`;
-        el.style.visibility = 'hidden';
-        loadBox.appendChild(el);
-        return el;
-      });
-    
-      // Keep a pool of tab <img> elements we materialize as progress grows
-      const tabNodes = [];
-    
-      function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
-    
-      function progress(){
-        const rect = section.getBoundingClientRect();
-        const _vh  = vh();
-        const travel = rect.height + _vh; // generous so start/end feel right
-        return clamp(((_vh/2) - rect.top) / travel, 0, 1);
-      }
-    
-      function randomBetween(min,max){ return Math.random()*(max-min)+min; }
-    
-      function cssNum(varName, fallback){
-        const v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(varName));
-        return Number.isFinite(v) ? v : fallback;
-      }
-    
-      function revealTabs(targetCount){
-        while (tabNodes.length < targetCount && tabNodes.length < MAX_TABS){
-          // Choose image (cycle through TAB_IMAGES if needed)
-          const src = TAB_IMAGES[tabNodes.length % TAB_IMAGES.length];
-          const img = document.createElement('img');
-          img.className = 'tab-img';
-          img.src = src;
-    
-          // random size and position within current viewport
-          const wMin = cssNum('--tab-min', 72);
-          const wMax = cssNum('--tab-max', 160);
-          const w    = randomBetween(wMin, wMax);
-          img.style.width = `${w}px`;
-    
-          const offsetTop = window.scrollY - section.offsetTop; // top of viewport relative to section
-          const y = offsetTop + randomBetween(0, vh() - w);     // keep roughly in view
-          const x = randomBetween(0, vw() - w);
-    
-          img.style.top  = `${y}px`;
-          img.style.left = `${x}px`;
-          img.style.opacity = '1';               // visible now
-          tabLayer.appendChild(img);
-    
-          // Auto-remove after fade (1s delay + 1s fade)
-          setTimeout(() => {
-            img.style.opacity = '0';
-            setTimeout(() => { img.remove(); }, 1000);
-          }, 1000);
-    
-          tabNodes.push(img);
-        }
-      }
-    
-      function revealLoading(targetCount){
-        loadNodes.forEach((el, i) => {
-          el.style.visibility = (i < targetCount) ? 'visible' : 'hidden';
-        });
-      }
-    
-      function moveCenter(p){
-        if (!mediaEl) return;
-        const max = cssNum('--center-shift', 220);
-        const ty = p * max;
-        mediaEl.style.transform = `translateY(${ty}px)`;
-      }
-    
-      function render(){
-        const p = progress();
-    
-        // pace: tabs and loading scale with progress
-        const wantTabs = Math.floor(p * MAX_TABS);
-        const wantLoad = Math.floor(p * LOADING_TOTAL);
-    
-        revealTabs(wantTabs);
-        revealLoading(wantLoad);
-        moveCenter(p);
-      }
-    
-      let ticking = false;
-      window.addEventListener('scroll', () => {
-        if (!ticking){ requestAnimationFrame(()=>{ render(); ticking = false; }); ticking = true; }
-      }, {passive:true});
-      window.addEventListener('resize', render);
-      render();
-    }
-  </script>
-
-  
 </body>
 </html>
