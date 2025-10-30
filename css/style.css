@@ -248,15 +248,19 @@ main > footer{ margin-top:0 }
   /* Hamburger button in top-left */
   .hamburger{
     position: fixed; left: 12px; top: 12px; z-index: 1001;
-    display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
     width: 42px; height: 42px; border-radius: 10px; border:1px solid var(--stroke);
     background: rgba(18,20,24,.7); backdrop-filter: blur(6px);
   }
   .hamburger span{
-    display:block; width:22px; height:2px; margin:4px 0;
-    background: #e8e8e8;
+    display:block;
+    width:26px;
+    height:3px;
+    background:#ffffff;
+    border-radius:2px;
     transition: transform .2s ease, opacity .2s ease;
   }
+
   body.nav-open .hamburger span:nth-child(1){ transform: translateY(5px) rotate(45deg); }
   body.nav-open .hamburger span:nth-child(2){ opacity: 0; }
   body.nav-open .hamburger span:nth-child(3){ transform: translateY(-5px) rotate(-45deg); }
