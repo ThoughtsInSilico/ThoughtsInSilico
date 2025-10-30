@@ -20,71 +20,51 @@
           <h1 class="site-title" style="font-size: clamp(34px,6vw,64px);">The Vat-brain Speaks</h1>
           <hr class="hr-dots"/>
 
-          <div class="about-grid">
-            <!-- LEFT: one cell containing TWO side-by-side columns -->
-            <div class="about-cell span-3">
-              <div class="double-grid">
-                <div class="col">
-                  <h4>Fixations</h4>
-                  <div class="post-body">
-                    <ul>
-                      <p>—</p>
-                    </ul>
-                  </div>
+        <div class="about-grid">
+          <!-- LEFT COLUMN (span 3): Fixations + Favorite artists -->
+          <div class="about-cell span-3">
+            <div class="about-col about-left">
+              <section class="panel">
+                <h4>Fixations</h4>
+                <div class="post-body">
+                  <p>—</p>
                 </div>
-                <div class="col">
-                  <h4>Favorite artists (music)</h4>
-                  <div class="post-body">
-                    <ul>
-                      <p>—</p>
-                    </ul>
-                  </div>
+              </section>
+        
+              <section class="panel">
+                <h4>Favorite artists (music)</h4>
+                <div class="post-body">
+                  <p>—</p>
                 </div>
-              </div>
-            </div>
-          
-            <!-- RIGHT TOP: attributes -->
-            <div class="about-cell span-3">
-              <h4>About</h4>
-              <dl class="attr-list post-body">
-                <dt>Age</dt>                         <dd>—</dd>
-                <dt>Occupation</dt>                  <dd>—</dd>
-                <dt>Favorite programming language</dt><dd>—</dd>
-                <dt>Favorite color</dt>              <dd>—</dd>
-                <dt>Fluent languages</dt>            <dd>—</dd>
-              </dl>
-            </div>
-          
-            <!-- RIGHT BOTTOM: Personal Anthems (keep ids so your JS works) -->
-            <div class="about-cell span-3 anthem-player">
-              <h4>Personal Anthems</h4>
-              <ul class="anthem-list" id="anthemList"></ul>
-              <audio id="anthemAudio" class="anthem-audio" preload="none" controls></audio>
+              </section>
             </div>
           </div>
-
-
-
-          <div class="about-cell span-2">
-            <h4>Favorite films</h4>
-            <div class="post-body"><ul></ul></div>
+        
+          <!-- RIGHT COLUMN (span 3): About (attributes) + Personal Anthems -->
+          <div class="about-cell span-3">
+            <div class="about-col about-right">
+              <section class="panel">
+                <h4>About</h4>
+                <dl class="attr-list post-body">
+                  <dt>Age</dt>                         <dd>—</dd>
+                  <dt>Occupation</dt>                  <dd>—</dd>
+                  <dt>Favorite programming language</dt><dd>—</dd>
+                  <dt>Favorite color</dt>              <dd>—</dd>
+                  <dt>Fluent languages</dt>            <dd>—</dd>
+                </dl>
+              </section>
+        
+              <section class="panel anthem-player">
+                <h4>Personal Anthems</h4>
+                <ul class="anthem-list" id="anthemList"></ul>
+                <audio id="anthemAudio" class="anthem-audio" preload="none" controls></audio>
+              </section>
+            </div>
           </div>
-
-          <div class="about-cell notes-cell span-1 tall-2">
-            <h4>Notes</h4>
-            <div class="post-body"><!-- intentionally empty --></div>
-          </div>
-
-          <div class="about-cell span-2 anthem-player">
-            <h4>Personal Anthems</h4>
-            <ul class="anthem-list" id="anthemList"></ul>
-            <audio id="anthemAudio" class="anthem-audio" preload="none" controls></audio>
-          </div>
-        </div>
+        </div>   
       </section>
 
       <section class="about-banner" aria-label="Banner image"></section>
-
       <section class="container section">
         <article class="post-body card" style="margin-bottom:18px">
           <!-- Removed the topmost "About" H1 + quick links -->
