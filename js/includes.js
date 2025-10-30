@@ -80,4 +80,37 @@ document.addEventListener('DOMContentLoaded', async () => {
       (document.querySelector('main') || document.body).appendChild(linkWrap);
     }
   }
+
+  // ---- Proportional panel sizing for the about page columns ----
+  function proportionalize(colSelector){
+    const col = document.querySelector(colSelector);
+    if (!col) return;
+    const panels = Array.from(col.querySelectorAll('.panel'));
+    if (panels.length < 2) return;
+
+    // Measure each panel's natural content height (no constraints)
+    const measures = panels.map(p => {
+      // temporarily let it size naturally to measure content
+      const prev = p.style.flex;
+      p.style.flex = '0 0 auto';
+      const h = p.scrollHeight;
+      p.style.flex = prev;
+      return h;
+    });
+
+    const total = measures.reduce((a,b)=>a+b,0) || 1;
+
+    // If everything is empty (both ~equal tiny), make them 1:1
+    const allTiny = measures.every(h => h < 8);
+
+    panels.forEach((p, i) => {
+      const grow = allTiny ? 1 : measures[i] / total; // proportional split
+      p.style.flex = `${grow} 1 0px`;
+    });
+  }
+
+  // Apply to both columns on the Vat-brain page
+  proportionalize('.about-left');
+  proportionalize('.about-right');
+
 });
