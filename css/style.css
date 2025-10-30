@@ -115,14 +115,27 @@ hr{ border:0; height:1px; background:var(--stroke) }
   padding:14px;
   box-shadow:none;
 }
+
+/* Post-card background image support */
+.post-card{ position: relative; overflow: hidden; }
+.post-card::before{
+  content: "";
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  background-image: var(--card-img, none);
+  background-size: cover;
+  background-position: center;
+  opacity: .28;
+  z-index: 0;
+}
+.post-card > *{ position: relative; z-index: 1; }
+
 .card{
   background:linear-gradient(180deg,#0d1116,#0a0d11);
   border:1px dashed var(--stroke); border-radius:var(--r2); padding:14px; box-shadow:var(--shadow);
 }
 .post-time,.post-meta{ color:var(--ink-dim) }
 .post-body p,.post-card p,.card p{ text-align: justify }
-
-
 
 /* ---------- About (Vat-brain) ---------- */
 .about-upper{
