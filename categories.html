@@ -43,8 +43,13 @@
       const sub = usp.get('sub') || '';
       h.innerHTML = (sub ? `${cat} • <span style="opacity:.7">${sub}</span>` : cat);
       try{
-        const res = await fetch('posts/posts.json');
-        const posts = await res.json();
+        const res = (await fetch('posts/posts.json').catch(() => null)) || (await fetch('posts.json'));
+        if (!res) throw new Error('Could not fetch posts/posts.json or posts.json');
+        const text = await res.text();
+        let posts;
+        try { posts = JSON.parse(text); }
+        catch (e) { throw new Error('posts.json parse error: ' + e.message); }
+
         const filter = p => (cat==='All' || p.category===cat) && (!sub || p.subcategory===sub);
         const fmt = iso => new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
         const items = posts.filter(filter)
@@ -59,9 +64,10 @@
         grid.innerHTML = items || '<p class="post-body" style="color:#cfcac3">No posts yet.</p>';
         retargetPostLinks(grid);
         if (window.MathJax?.typeset) MathJax.typeset();
-      }catch(e){
-        grid.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
-      }
+        }catch(e){
+          console.error('Failed to load posts:', e);
+          grid.innerHTML = `<p class="post-body" style="color:#cfcac3">Could not load posts: ${e.message}</p>`;
+        }
     }
     loadCategory();
   </script>
