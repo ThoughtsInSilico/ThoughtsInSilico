@@ -8,9 +8,6 @@
   --ink-dim: #cfcac3;
   --stroke: #232831;
 
-  --sidebar-top: #0d0f1a;
-  --sidebar-bot: #0a0d12;
-
   --shadow: 0 10px 30px rgba(0,0,0,.45);
   --r2: 14px;
 
@@ -38,10 +35,14 @@ body{
 }
 img,video{ max-width:100%; height:auto; display:block }
 
-a{ color:#6ea8ff; text-decoration:none }
+a{ color:#9cbcff; text-decoration:none }
 a:hover{ text-decoration:underline }
 
-h1{ font: 700 var(--fs0)/1.08 Cinzel, serif; margin:0 0 6px }
+h1{
+  font: 700 var(--fs0)/1.08 Cinzel, serif;
+  margin:0 0 6px;
+  text-shadow:0 0 .5px var(--ink);
+}
 h2{ font: 700 var(--fs1)/1.12 Cinzel, serif; margin:22px 0 10px }
 h3{ font: 700 var(--fs2)/1.14 Cinzel, serif; margin:16px 0 8px }
 p,li{ font-size: var(--fs4) }
@@ -49,23 +50,36 @@ small,.muted{ color: var(--ink-dim) }
 
 /* ---------- Shell ---------- */
 .wrapper{ max-width: var(--wrap); margin:0 auto; padding: 22px 18px }
-.header{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding: 8px 0 12px; border-bottom:1px dashed var(--stroke) }
+.header{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding: 8px 0 12px; border-bottom:1px dashed var(--stroke)
+}
 .nav{ display:flex; gap:12px; flex-wrap:wrap }
 .nav a{ font-size: var(--fs4) }
 
-/* ---------- Main layout ---------- */
+/* ---------- Main layout (content + RIGHT sidebar) ---------- */
 .layout{
-  display:grid; grid-template-columns: 1fr 320px; gap:22px; align-items:start; margin-top:20px;
+  display:grid;
+  grid-template-columns: 1fr 320px;
+  gap:22px;
+  align-items:start;
+  margin-top:20px;
 }
 
-/* Sidebar */
+/* ---------- Sidebar (RIGHT column) ---------- */
 .sidebar{
-  position:sticky; top:0; height:100vh; overflow-y:auto;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+
+  /* ✅ Sidebar image stays attached to the sidebar’s width and tiles down */
   background:
-    url('../img/sidebar-image.jpg') center top / 100% auto repeat-y,
-    linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
+    linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.35)),
+    url('../img/sidebar-image.jpg') center top / 100% auto repeat-y;
   background-blend-mode: multiply;
-  border-right:1px solid var(--stroke);
+
+  border-left:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
   padding:22px 18px 28px;
 }
@@ -74,7 +88,10 @@ small,.muted{ color: var(--ink-dim) }
 .sidebar .cats > li{ margin: 8px 0 }
 .sidebar .cats a{ color:#9cbcff }
 .sidebar .cats a:hover{ color:#c7daff }
-.sidebar input[type="search"]{ width:100%; padding: 8px 10px; border-radius:8px; border:1px solid var(--stroke); background:#0b0e10; color:var(--ink) }
+.sidebar input[type="search"]{
+  width:100%; padding: 8px 10px; border-radius:8px;
+  border:1px solid var(--stroke); background:#0b0e10; color:var(--ink)
+}
 
 /* ---------- Cards ---------- */
 .post-card,.feature-card,.anthem-card{
@@ -84,7 +101,8 @@ small,.muted{ color: var(--ink-dim) }
   padding:14px;
   box-shadow:none;
 }
-/* Post-card background image hook */
+
+/* ✅ Post-card background image hook (only shows if --card-img is set) */
 .post-card{ position: relative; overflow: hidden; }
 .post-card::before{
   content: "";
@@ -106,17 +124,20 @@ small,.muted{ color: var(--ink-dim) }
 }
 
 /* ---------- Post page ---------- */
-.article{
-  background: transparent;
-  border-radius: var(--r2);
-}
+.article{ background: transparent; border-radius: var(--r2) }
 .article .meta{ color: var(--ink-dim); font-size: var(--fs5) }
 .article hr{ border:0; border-top:1px dashed var(--stroke) }
 
 /* ---------- Footer ---------- */
-.footer{ border-top:1px dashed var(--stroke); margin-top:30px; padding: 18px 0 40px; font-size: var(--fs5); color: var(--ink-dim) }
+.footer{
+  border-top:1px dashed var(--stroke);
+  margin-top:30px;
+  padding: 18px 0 40px;
+  font-size: var(--fs5);
+  color: var(--ink-dim)
+}
 
-/* ---------- “About” bits (from your previous file) ---------- */
+/* ---------- About page bits (unchanged look) ---------- */
 .about-grid{
   display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; margin-top:16px;
 }
@@ -143,7 +164,7 @@ small,.muted{ color: var(--ink-dim) }
 }
 @media (max-width: 900px){
   .layout{ grid-template-columns:1fr }
-  .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke) }
+  .sidebar{ position:relative; height:auto; border-left:none; border-top:1px solid var(--stroke) }
   .about-grid{ grid-template-columns: repeat(2, 1fr) }
   .about-banner{ background-position:center }
 }
@@ -151,7 +172,12 @@ small,.muted{ color: var(--ink-dim) }
   .about-grid{ grid-template-columns: 1fr }
 }
 
-/* ===== Interlude (self-contained; does not affect other components) ===== */
+/* ===================================================================
+   INTERLUDE (namespaced; cannot affect other parts of the site)
+   - random image “tabs” that fade after 1s
+   - bottom-right “Loading…” that grows with scroll
+   - center media moves slightly with scroll
+   =================================================================== */
 .interlude{ position: relative; min-height: 240vh; padding-block: 12vh 24vh; overflow: visible; }
 .interlude-grid{ position: relative; display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: min(1300px, 92vw); margin-inline: auto; }
 
