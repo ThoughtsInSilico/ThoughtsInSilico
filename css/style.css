@@ -210,6 +210,46 @@ main{ position:relative; z-index:0; }
 .anthem-list button:hover{ background:rgba(255,255,255,.03) }
 .anthem-list button[aria-current="true"]{ border-color:#fff; background:rgba(255,255,255,.05) }
 
+/* Play icon for anthem buttons */
+.anthem-list button{
+  position: relative;
+  padding-left: 36px;               /* room for the icon */
+}
+
+/* circle */
+.anthem-list button::before{
+  content:"";
+  position:absolute; left:10px; top:50%; transform:translateY(-50%);
+  width:18px; height:18px; border-radius:50%;
+  border:1.5px solid var(--ink);
+  opacity:.9;
+}
+
+/* triangle */
+.anthem-list button::after{
+  content:"";
+  position:absolute; left:15px; top:50%; transform:translateY(-50%);
+  width:0; height:0;
+  border-left:7px solid var(--ink);
+  border-top:4px solid transparent;
+  border-bottom:4px solid transparent;
+  opacity:.9;
+}
+
+/* selected track: filled circle + inverted triangle */
+.anthem-list button[aria-current="true"]::before{
+  background: var(--ink);
+}
+.anthem-list button[aria-current="true"]::after{
+  border-left-color: var(--bg);
+}
+
+/* nice keyboard focus */
+.anthem-list button:focus-visible{
+  box-shadow: 0 0 0 2px rgba(255,255,255,.18);
+  outline: none;
+}
+
 .anthem-audio{ width:100%; margin-top:6px }
 .now-playing{ margin:8px 0 6px; font-weight:700; }
 
