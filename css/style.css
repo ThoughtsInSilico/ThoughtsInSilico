@@ -288,8 +288,7 @@ footer{ margin-top:auto; }
 .back-home{ margin-top:auto }
 main > footer{ margin-top:0 }
 
-/* ============== Mobile sidebar (phones only) ============== */
-.hamburger{ display:none } /* hidden on desktop */
+
 
 @media (max-width: 900px){
 
@@ -336,6 +335,11 @@ main > footer{ margin-top:0 }
   .double-grid{ grid-template-columns: 1fr; }  /* stack */
   .about-col{ gap: 10px; }
 }
+
+@media (min-width: 901px){
+  .hamburger{ display: none; }
+}
+
 
 @media (max-width: 520px){
   .about-grid{ grid-template-columns:1fr; }
