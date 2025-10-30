@@ -293,53 +293,48 @@ main > footer{ margin-top:0 }
 
 @media (max-width: 900px){
 
-  /* Give the hamburger its own line above the title; remove left gutter */
-  .layout{ padding-left:0 !important; padding-top:56px; }
+  /* Remove desktop gutter; make room above for the button */
+  .layout{ padding-left: 0 !important; padding-top: 56px; }
 
-  /* Hamburger button (three bars) */
-    .hamburger{
+  /* Hamburger button (always visible, tapable) */
+  .hamburger{
     position: fixed;
     left: 12px;
     bottom: 16px;          /* change to top:12px; bottom:auto; if you prefer top-left */
     top: auto;
     z-index: 3000;
-    display: inline-flex !important;   /* ensure visible on mobile */
-    pointer-events: auto;              /* accept taps */
+    display: inline-flex !important;
+    pointer-events: auto;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 5px;
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    border: 1px solid var(--stroke);
+    width: 42px; height: 42px;
+    border-radius: 10px; border: 1px solid var(--stroke);
     background: rgba(18,20,24,.7);
     backdrop-filter: blur(6px);
   }
-
   .hamburger span{
     display:block; width:26px; height:3px; background:#fff; border-radius:2px;
-    transition:transform .2s ease, opacity .2s ease;
+    transition: transform .2s ease, opacity .2s ease;
   }
   body.nav-open .hamburger span:nth-child(1){ transform: translateY(6px) rotate(45deg); }
-  body.nav-open .hamburger span:nth-child(2){ opacity:0; }
+  body.nav-open .hamburger span:nth-child(2){ opacity: 0; }
   body.nav-open .hamburger span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
 
-  /* Slide the fixed sidebar in/out */
-  .sidebar{ transform:translateX(-100%); transition:transform .25s ease; }
-  body.nav-open .sidebar{ transform:translateX(0); }
+  /* Slide the fixed sidebar in/out ONLY on phones */
+  .sidebar{ transform: translateX(-100%); transition: transform .25s ease; }
+  body.nav-open .sidebar{ transform: translateX(0); }
 
-  /* Lock background scroll when menu is open */
-  body.nav-open{ overflow:hidden; }
+  /* Lock page scroll when menu is open */
+  body.nav-open{ overflow: hidden; }
 
   /* About page responsive tweaks */
-  .about-grid{ grid-template-columns:repeat(2, 1fr); }
-  .about-banner{ background-position:center; }
-  .triple-grid{ grid-template-columns:1fr; } /* stack the 3 mini-columns on phones */
-
-  .double-grid{ grid-template-columns: 1fr; } /* stack the two columns on phones */
-
-  .about-col{ gap:10px; }
+  .about-grid{ grid-template-columns: repeat(2, 1fr); }
+  .about-banner{ background-position: center; }
+  .triple-grid{ grid-template-columns: 1fr; }  /* stack */
+  .double-grid{ grid-template-columns: 1fr; }  /* stack */
+  .about-col{ gap: 10px; }
 }
 
 @media (max-width: 520px){
