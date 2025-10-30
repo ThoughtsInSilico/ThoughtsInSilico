@@ -37,6 +37,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1) Sidebar
   await includeInto(document.getElementById('sidebar-include'));
 
+  // PHONE MENU: hamburger toggle
+  const btn = document.getElementById('navToggle');
+  const sidebarEl = document.getElementById('site-sidebar');
+  if (btn && sidebarEl) {
+    const close = () => { document.body.classList.remove('nav-open'); btn.setAttribute('aria-expanded','false'); };
+    const open  = () => { document.body.classList.add('nav-open');    btn.setAttribute('aria-expanded','true'); };
+    btn.addEventListener('click', () =>
+      document.body.classList.contains('nav-open') ? close() : open()
+    );
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    sidebarEl.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+  }
+
+
   // Highlight active link after sidebar is present
   const path = (location.pathname.split('/').pop() || 'index.html');
   document.querySelectorAll('.sidebar nav a').forEach(a => {
