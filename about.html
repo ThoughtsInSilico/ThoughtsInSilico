@@ -58,8 +58,10 @@
           
                 <section class="panel anthem-player">
                   <h4>Personal Anthems</h4>
-                  <ul class="anthem-list" id="anthemList"></ul>
-                  <audio id="anthemAudio" class="anthem-audio" preload="none" controls>
+                    <ul class="anthem-list" id="anthemList"></ul>
+                    <div id="nowPlaying" class="now-playing" aria-live="polite"></div>
+                    <audio id="anthemAudio" class="anthem-audio" preload="none" controls></audio>
+
                     <script>
                       // ---- Personal Anthems: add your tracks here ----
                       const ANTHEMS = [
