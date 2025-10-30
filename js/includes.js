@@ -44,6 +44,11 @@ const SIDEBAR_TRACKS = [
 document.addEventListener('DOMContentLoaded', async () => {
   // 1) Sidebar
   await includeInto(document.getElementById('sidebar-include'));
+  // Hamburger toggle (desktop + phone)
+  const hb = document.querySelector('.hamburger');
+  if (hb) hb.addEventListener('click', () => {
+    document.body.classList.toggle('nav-open');
+  });
 
   // Hamburger toggle (works on phone & desktop)
   const hb = document.querySelector('.hamburger');
