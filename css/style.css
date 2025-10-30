@@ -297,13 +297,14 @@ main > footer{ margin-top:0 }
   .layout{ padding-left:0 !important; padding-top:56px; }
 
   /* Hamburger button (three bars) */
-  .hamburger{
+    .hamburger{
     position: fixed;
     left: 12px;
-    bottom: 16px;         /* always visible near bottom; change to top:12px if you prefer top */
+    bottom: 16px;          /* change to top:12px; bottom:auto; if you prefer top-left */
     top: auto;
-    z-index: 2000;
-    display: inline-flex !important;   /* make sure nothing hides it */
+    z-index: 3000;
+    display: inline-flex !important;   /* ensure visible on mobile */
+    pointer-events: auto;              /* accept taps */
     flex-direction: column;
     align-items: center;
     justify-content: center;
