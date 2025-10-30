@@ -48,8 +48,14 @@
     (async function(){
       const grid = document.getElementById('posts-grid');
       try{
-        const res = await fetch('posts/posts.json');
-        const posts = await res.json();
+        // more robust fetch + clear error messages
+        const res = (await fetch('posts/posts.json').catch(() => null)) || (await fetch('posts.json'));
+        if (!res) throw new Error('Could not fetch posts/posts.json or posts.json');
+        const text = await res.text();
+        let posts;
+        try { posts = JSON.parse(text); }
+        catch (e) { throw new Error('posts.json parse error: ' + e.message); }
+
         posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
         const fmt = iso => new Date(iso).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
         grid.innerHTML = posts.slice(0, 9).map(p => `
@@ -66,7 +72,8 @@
         });
         if (window.MathJax?.typeset) MathJax.typeset();
       }catch(e){
-        grid.innerHTML = '<p class="post-body" style="color:#cfcac3">Could not load posts.</p>';
+        console.error('Failed to load posts:', e);
+        grid.innerHTML = `<p class="post-body" style="color:#cfcac3">Could not load posts: ${e.message}</p>`;
       }
     })();
   </script>
