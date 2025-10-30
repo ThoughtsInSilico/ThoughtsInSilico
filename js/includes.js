@@ -36,7 +36,7 @@ async function includeInto(el) {
 // === Sidebar "Currently Listening" tracks (edit this list) ===
 const SIDEBAR_TRACKS = [
   // Example entries — change to your files in /audio/
-  // { title: 'Mahler: Symphony No. 5 — Adagietto', src: 'audio/mahler-5-adagietto.mp3' },
+  { title: 'Cristo Redentor (composer: Duke Pearson)', src: 'audio/cristo-redentor.mp3' },
   // { title: 'Schubert: Death and the Maiden — I. Allegro (Takács)', src: 'audio/schubert-datm-i-takacs.mp3' },
 ];
 
