@@ -49,25 +49,21 @@ main{ position:relative; z-index:0; }
 
 /* SIDEBAR (desktop): fixed, full-height */
 .sidebar{
-  position: fixed;
-  left: 0; top: 0; bottom: 0;
-  width: 280px;
-  /* overflow/padding move to .sidebar-panel */
-  background:
-    url('../img/sidebar-image.jpg') center top / 100% auto repeat-y,
-    linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
-  background-blend-mode: multiply;
+  position: fixed;  left: 0; top: 0; bottom: 0;  width: 280px;
   border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
   z-index: 10;
 }
 
 /* New inner wrapper actually scrolls and contains padding */
-.sidebar-panel{
-  height: 100%;
-  overflow-y: auto;
-  padding: 22px 18px 28px;
+.sidebar-panel{  
+  height: 100%;  overflow-y: auto;  padding: 22px 18px 28px;
+  background:
+    url('../img/sidebar-image.jpg') center top / 100% auto repeat-y,
+    linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
+  background-blend-mode: multiply;
 }
+
 
 .sidebar nav h3{
   font-size:12px; color:var(--ink-dim);
@@ -309,8 +305,8 @@ main > footer{ margin-top:0 }
   .hamburger{
     position: fixed;
     left: 12px;
-    bottom: 16px;          /* change to: top:12px; bottom:auto; if you prefer top-left */
     top: auto;
+    bottom: auto;
     z-index: 3000;
     display: inline-flex !important;
     pointer-events: auto;
@@ -323,6 +319,10 @@ main > footer{ margin-top:0 }
     background: rgba(18,20,24,.7);
     backdrop-filter: blur(6px);
   }
+    /* shell should not block clicks when panel is hidden */
+  .sidebar{ pointer-events: none; }
+  body.nav-open .sidebar{ pointer-events: auto; }
+  
   .hamburger span{
     display:block; width:26px; height:3px; background:#fff; border-radius:2px;
     transition: transform .2s ease, opacity .2s ease;
