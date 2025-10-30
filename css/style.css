@@ -96,10 +96,11 @@ hr{ border:0; height:1px; background:var(--stroke) }
 
 .main{
   min-height:100vh;
-  overflow:hidden;
-  display:flex;               /* make the content a column */
+  display:flex;           /* so the footer/back link can sit at the bottom */
   flex-direction:column;
+  /* no overflow:hidden */
 }
+
 
 
 /* ---------- Home hero ---------- */
