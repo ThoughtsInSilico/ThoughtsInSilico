@@ -142,12 +142,12 @@ main{ position:relative; z-index:0; }
   border-bottom:1px solid var(--stroke);
 }
 .about-grid{
-  display:grid; grid-template-columns:repeat(6, 1fr); grid-auto-rows:1fr;
+  display:grid; grid-template-columns:repeat(6, 1fr); grid-auto-rows: auto;
   gap:0; border:1px solid var(--stroke);
 }
 .about-cell{
-  border-right:1px solid var(--stroke);
-  border-bottom:1px solid var(--stroke);
+  border-right:1px solid #2e3643;
+  border-bottom:1px solid #2e3643;
   padding:16px;
   background:rgba(13,17,22,0.62);
   backdrop-filter:blur(1px);
@@ -157,6 +157,26 @@ main{ position:relative; z-index:0; }
 .span-1{ grid-column:span 1 } .span-2{ grid-column:span 2 } .span-3{ grid-column:span 3 }
 .span-4{ grid-column:span 4 } .span-6{ grid-column:span 6 }
 .tall-2{ grid-row:span 2 }
+
+/* --- mini 2-column block inside the left about-cell --- */
+.double-grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.double-grid .col{ padding-right:12px; border-right:1px solid #2e3643; }
+.double-grid .col:last-child{ padding-right:0; border-right:0; }
+
+/* --- compact label/value list for the right-top attributes box --- */
+.attr-list{
+  display:grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 6px 12px;
+  margin: 0;
+}
+.attr-list dt{ color: var(--ink-dim); }
+.attr-list dd{ margin: 0; }
+
 
 /* --- mini 3-column block inside the left about-cell --- */
 .triple-grid{
@@ -259,6 +279,8 @@ main > footer{ margin-top:0 }
   .about-grid{ grid-template-columns:repeat(2, 1fr); }
   .about-banner{ background-position:center; }
   .triple-grid{ grid-template-columns:1fr; } /* stack the 3 mini-columns on phones */
+
+  .double-grid{ grid-template-columns: 1fr; } /* stack the two columns on phones */
 }
 
 @media (max-width: 520px){
