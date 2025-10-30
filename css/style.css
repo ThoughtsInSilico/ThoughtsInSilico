@@ -122,6 +122,8 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .post-time,.post-meta{ color:var(--ink-dim) }
 .post-body p,.post-card p,.card p{ text-align: justify }
 
+
+
 /* ---------- About (Vat-brain) ---------- */
 .about-upper{
   background: url('../img/about-upper.jpg') center/cover no-repeat fixed;
