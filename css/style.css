@@ -1,5 +1,5 @@
 /* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Girassol&family=IM+Fell+DW+Pica:ital@0;1&family=Special+Elite&family=Palette+Mosaic&family=Homemade+Apple&family=Cabin+Sketch:wght@400;700&family=Cinzel:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Girassol&family=Stardos+Stencil:wght@400;700&family=Cinzel:wght@400;600;700&display=swap');
 
 /* ---------- Tokens ---------- */
 :root{
@@ -8,92 +8,106 @@
   --ink-dim: #cfcac3;
   --stroke: #232831;
 
+  --sidebar-top: #0d0f1a;
+  --sidebar-bot: #0a0d12;
+
   --shadow: 0 10px 30px rgba(0,0,0,.45);
   --r2: 14px;
 
-  --fs0: clamp(34px, 5vw, 72px);
-  --fs1: clamp(24px, 3.2vw, 52px);
-  --fs2: clamp(18px, 2.2vw, 28px);
-  --fs3: 18px;
-  --fs4: 16px;
-  --fs5: 14px;
-
-  --wrap: min(1180px, 94vw);
+  --border: var(--stroke);
+  --muted: var(--ink-dim);
 }
 
 /* ---------- Base ---------- */
-*{ box-sizing: border-box }
-html,body{ height:100% }
-body{
-  margin:0;
-  color:var(--ink);
-  background: var(--bg);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  line-height:1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*{ box-sizing:border-box }
+html,body{
+  margin:0; padding:0; background:var(--bg); color:var(--ink);
+  font:18px/1.7 'Stardos Stencil', system-ui, serif;
 }
-img,video{ max-width:100%; height:auto; display:block }
-
-a{ color:#9cbcff; text-decoration:none }
+a{ color:var(--ink); text-decoration:none }
 a:hover{ text-decoration:underline }
+img{ max-width:100%; display:block }
+hr{ border:0; height:1px; background:var(--stroke) }
 
-h1{
-  font: 700 var(--fs0)/1.08 Cinzel, serif;
-  margin:0 0 6px;
-  text-shadow:0 0 .5px var(--ink);
-}
-h2{ font: 700 var(--fs1)/1.12 Cinzel, serif; margin:22px 0 10px }
-h3{ font: 700 var(--fs2)/1.14 Cinzel, serif; margin:16px 0 8px }
-p,li{ font-size: var(--fs4) }
-small,.muted{ color: var(--ink-dim) }
-
-/* ---------- Shell ---------- */
-.wrapper{ max-width: var(--wrap); margin:0 auto; padding: 22px 18px }
-.header{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding: 8px 0 12px; border-bottom:1px dashed var(--stroke)
-}
-.nav{ display:flex; gap:12px; flex-wrap:wrap }
-.nav a{ font-size: var(--fs4) }
-
-/* ---------- Main layout (content + RIGHT sidebar) ---------- */
-.layout{
-  display:grid;
-  grid-template-columns: 1fr 320px;
-  gap:22px;
-  align-items:start;
-  margin-top:20px;
+/* ---------- Titles ---------- */
+.site-title{
+  font-family:'Girassol', system-ui, serif;
+  font-size: clamp(28px, 5vw, 46px);
+  line-height:1.1; margin:0;
+  text-shadow:0 0 .5px var(--ink), 0 0 24px rgba(0,0,0,.55);
 }
 
-/* ---------- Sidebar (RIGHT column) ---------- */
+/* ---------- Layout ---------- */
+.layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
+
+/* SIDEBAR: image + your exact overlay alphas (0.38 / 0.45) */
 .sidebar{
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-
-  /* ✅ Sidebar image stays attached to the sidebar’s width and tiles down */
+  position:sticky; top:0; height:100vh; overflow-y:auto;
   background:
-    linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.35)),
-    url('../img/sidebar-image.jpg') center top / 100% auto repeat-y;
+    url('../img/sidebar-image.jpg') center top / 100% auto repeat-y,
+    linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
   background-blend-mode: multiply;
-
-  border-left:1px solid var(--stroke);
+  border-right:1px solid var(--stroke);
   box-shadow: inset 0 0 24px rgba(0,0,0,.35);
   padding:22px 18px 28px;
 }
-.sidebar h2{ font: 700 22px/1.2 Cinzel, serif; letter-spacing:.02em; color: var(--ink); margin:0 0 10px }
-.sidebar .cats{ list-style:none; padding:0; margin:10px 0 14px }
-.sidebar .cats > li{ margin: 8px 0 }
-.sidebar .cats a{ color:#9cbcff }
-.sidebar .cats a:hover{ color:#c7daff }
-.sidebar input[type="search"]{
-  width:100%; padding: 8px 10px; border-radius:8px;
-  border:1px solid var(--stroke); background:#0b0e10; color:var(--ink)
+.sidebar nav h3{
+  font-size:12px; color:var(--ink-dim);
+  letter-spacing:.08em; margin:18px 0 8px;
+}
+.sidebar nav ul{ list-style:none; margin:0; padding:0 }
+.sidebar nav li{ margin:2px 0 }
+.sidebar nav a, .sidebar .nav-parent{
+  display:block; padding:5px 8px; border-radius:8px; border:1px dashed transparent;
+}
+.sidebar nav a:hover, .sidebar nav a:focus-visible, .sidebar .nav-parent:hover{
+  border-color:var(--stroke); background:rgba(255,255,255,.03); outline:none;
 }
 
-/* ---------- Cards ---------- */
+/* Ensure submenu never shows bullets */
+.sidebar .nav-submenu{ list-style:none !important; margin:4px 0 0 12px; padding:0 }
+
+/* Hover-only submenu: parent is NOT a link */
+.has-submenu > .nav-submenu{ display:none; }
+.has-submenu:hover > .nav-submenu{ display:block }
+.nav-parent{ cursor:default }
+
+/* ---- Sidebar search (clear & high-contrast) ---- */
+.sidebar-search{ margin:12px 0 10px; }
+.sidebar-search input[type="search"]{
+  width:100%;
+  height: 36px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid rgba(232,230,227,.70);
+  background: rgba(0,0,0,.65);       /* darker field for contrast */
+  color: var(--ink);
+  outline: none;
+  backdrop-filter: blur(2px);
+}
+.sidebar-search input::placeholder{
+  color: rgba(232,230,227,.80);
+}
+.sidebar-search input:focus{
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.18);
+  background: rgba(0,0,0,.78);
+}
+
+.main{ min-height:100vh; overflow:hidden }
+
+/* ---------- Home hero ---------- */
+.hero{
+  min-height: 62vh;
+  background:url('../img/index-background.jpg') center/cover no-repeat fixed;
+  border-bottom:1px solid var(--stroke);
+}
+
+/* ---------- Containers / cards ---------- */
+.container{ width:min(1100px, 100% - 40px); margin:0 auto }
+.section{ padding:28px 0 }
+.posts-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
+
 .post-card,.feature-card,.anthem-card{
   background: transparent;
   border:1px dashed var(--stroke);
@@ -101,109 +115,73 @@ small,.muted{ color: var(--ink-dim) }
   padding:14px;
   box-shadow:none;
 }
-
-/* ✅ Post-card background image hook (only shows if --card-img is set) */
-.post-card{ position: relative; overflow: hidden; }
-.post-card::before{
-  content: "";
-  position: absolute; inset: -1px;
-  border-radius: inherit;
-  background-image: var(--card-img, none);
-  background-size: cover;
-  background-position: center;
-  opacity: .28;
-  z-index: 0;
+.card{
+  background:linear-gradient(180deg,#0d1116,#0a0d11);
+  border:1px dashed var(--stroke); border-radius:var(--r2); padding:14px; box-shadow:var(--shadow);
 }
-.post-card > *{ position: relative; z-index: 1; }
+.post-time,.post-meta{ color:var(--ink-dim) }
+.post-body p,.post-card p,.card p{ text-align: justify }
 
-.post-time{ display:block; color:var(--ink-dim); font-size: var(--fs5) }
-
-/* ---------- Grids ---------- */
-.posts-grid{
-  display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:22px;
+/* ---------- About (Vat-brain) ---------- */
+.about-upper{
+  background: url('../img/about-upper.jpg') center/cover no-repeat fixed;
+  border-bottom:1px solid var(--stroke);
 }
-
-/* ---------- Post page ---------- */
-.article{ background: transparent; border-radius: var(--r2) }
-.article .meta{ color: var(--ink-dim); font-size: var(--fs5) }
-.article hr{ border:0; border-top:1px dashed var(--stroke) }
-
-/* ---------- Footer ---------- */
-.footer{
-  border-top:1px dashed var(--stroke);
-  margin-top:30px;
-  padding: 18px 0 40px;
-  font-size: var(--fs5);
-  color: var(--ink-dim)
-}
-
-/* ---------- About page bits (unchanged look) ---------- */
 .about-grid{
-  display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; margin-top:16px;
+  display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr;
+  gap:0; border:1px solid var(--stroke);
 }
-.about-card{
-  border:1px dashed var(--stroke); border-radius: var(--r2); padding: 12px; background: rgba(255,255,255,0.02);
+.about-cell{
+  border-right:1px solid var(--stroke);
+  border-bottom:1px solid var(--stroke);
+  padding:16px;
+  background: rgba(13,17,22,0.62);
+  backdrop-filter: blur(1px);
 }
-.about-card h3{ font: 700 20px/1.2 Cinzel, serif; margin:0 0 6px }
-.about-card p{ margin:6px 0 0 }
+.about-cell h4{ margin:0 0 10px; font-size:16px; letter-spacing:.08em }
 
+.span-1{ grid-column: span 1 } .span-2{ grid-column: span 2 } .span-3{ grid-column: span 3 }
+.span-4{ grid-column: span 4 } .span-6{ grid-column: span 6 }
+.tall-2{ grid-row: span 2 }
+
+/* Notes column: fully transparent */
+.notes-cell{
+  background: transparent;
+  border-right:1px solid transparent;
+  border-bottom:1px solid transparent;
+}
+
+/* Personal Anthems (decluttered) */
+.anthem-player h4{ margin:0 0 8px; font-size:16px; letter-spacing:.08em }
+.anthem-list{ list-style:none; margin:8px 0 10px; padding:0 }
+.anthem-list li{ margin:6px 0; }
+.anthem-list button{
+  font:inherit; padding:4px 8px;
+  border:1px dashed var(--stroke); border-radius:8px;
+  background:transparent; color:var(--ink); cursor:pointer;
+}
+.anthem-list button:hover{ background:rgba(255,255,255,.03) }
+.anthem-audio{ width:100%; margin-top:6px }
+
+/* Full-screen banner: dimmer & centered relative to main (offset 140px for 280px sidebar) */
 .about-banner{
-  position:relative;
-  background: url('../img/index-background.jpg') center/cover no-repeat fixed;
-  border-radius: var(--r2);
-  min-height: 260px;
-  border:1px dashed var(--stroke);
-  box-shadow: var(--shadow);
+  position:relative; height: 100vh;
+  background:url('../img/banner.jpg') no-repeat fixed;
+  background-size: cover;
+  background-position: calc(50% + 140px) center;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
   margin:0;
 }
 .about-banner::after{ content:""; position:absolute; inset:0; background: rgba(0,0,0,.38); }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1100px){
-  .posts-grid{ grid-template-columns: repeat(2, minmax(0,1fr)) }
-}
 @media (max-width: 900px){
   .layout{ grid-template-columns:1fr }
-  .sidebar{ position:relative; height:auto; border-left:none; border-top:1px solid var(--stroke) }
+  .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke) }
   .about-grid{ grid-template-columns: repeat(2, 1fr) }
   .about-banner{ background-position:center }
 }
 @media (max-width: 520px){
   .about-grid{ grid-template-columns: 1fr }
-}
-
-/* ===================================================================
-   INTERLUDE (namespaced; cannot affect other parts of the site)
-   - random image “tabs” that fade after 1s
-   - bottom-right “Loading…” that grows with scroll
-   - center media moves slightly with scroll
-   =================================================================== */
-.interlude{ position: relative; min-height: 240vh; padding-block: 12vh 24vh; overflow: visible; }
-.interlude-grid{ position: relative; display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: min(1300px, 92vw); margin-inline: auto; }
-
-.center-wrap{ position: sticky; top: 14vh; align-self: start; display: grid; place-items: center; height: min(70vh, 720px); width: 100%; }
-.center-wrap .center-media{ width: min(56vw, 720px); max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 10px; will-change: transform; transition: transform 60ms linear; }
-
-.effects-layer{ position: relative; z-index: 2; min-height: 0; }
-.tab-img{
-  position: absolute; pointer-events: none; opacity: 0; transform: translateZ(0);
-  filter: drop-shadow(0 8px 18px rgba(0,0,0,.25)); border-radius: 6px;
-  animation: interlude-tab-fade 1s 1s forwards; /* 1s delay then fade out */
-}
-@keyframes interlude-tab-fade { to { opacity: 0 } }
-
-.loading-corner{
-  position: sticky; top: calc(100vh - 48px); justify-self: end; align-self: start; z-index: 3;
-  display: inline-flex; flex-direction: column; align-items: flex-end; gap: 6px; padding: 6px 0; min-width: 140px;
-}
-.loading-corner .loading-item{
-  font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 14px; text-transform: uppercase; letter-spacing: .08em; opacity: .9; white-space: nowrap;
-}
-.loading-corner .loading-item span{ display:inline-block; animation: interlude-blink 1200ms steps(2, jump-none) infinite; }
-@keyframes interlude-blink { 50% { opacity: .35 } }
-
-@media (max-width: 980px){
-  .interlude{ min-height: 160vh; }
-  .center-wrap{ top: 10vh; }
 }
