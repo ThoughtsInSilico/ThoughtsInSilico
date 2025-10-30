@@ -1,149 +1,90 @@
-/* =========================================================
-   R's Blog — Global Stylesheet
-   (Full file replacement; format-only, no content changes)
-   ========================================================= */
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Girassol&family=IM+Fell+DW+Pica:ital@0;1&family=Special+Elite&family=Palette+Mosaic&family=Homemade+Apple&family=Cabin+Sketch:wght@400;700&family=Cinzel:wght@400;600;700&display=swap');
 
-/* ---------- CSS Variables ---------- */
+/* ---------- Tokens ---------- */
 :root{
-  /* Core theme */
-  --bg: #ffffff;
-  --text: #111111;
-  --muted: #666666;
-  --accent: #0b57d0;
+  --bg: #0b0e10;
+  --ink: #e8e6e3;
+  --ink-dim: #cfcac3;
+  --stroke: #232831;
 
-  /* Lines & chrome */
-  --stroke: #c9c9c9;
-  --shadow: 0 10px 30px rgba(0,0,0,.15);
+  --sidebar-top: #0d0f1a;
+  --sidebar-bot: #0a0d12;
 
-  /* Radii & spacing */
-  --r1: 8px;
-  --r2: 12px;
-  --gap: clamp(10px, 2vw, 24px);
+  --shadow: 0 10px 30px rgba(0,0,0,.45);
+  --r2: 14px;
 
-  /* Typography scale */
-  --fs-1: clamp(28px, 4vw, 40px);
-  --fs-2: clamp(20px, 2.4vw, 26px);
-  --fs-3: 18px;
-  --fs-4: 16px;
-  --fs-5: 14px;
+  --fs0: clamp(34px, 5vw, 72px);
+  --fs1: clamp(24px, 3.2vw, 52px);
+  --fs2: clamp(18px, 2.2vw, 28px);
+  --fs3: 18px;
+  --fs4: 16px;
+  --fs5: 14px;
 
-  /* Layout widths */
-  --wrap: min(1100px, 92vw);
-  --sidebar-w: 280px;
-
-  /* Interlude (custom module) */
-  --inter-gap: var(--gap);
-  --inter-col-w: 260px;
-  --inter-center-w: min(56vw, 720px);
-  --inter-tab-h: 28px;
-  --inter-tab-gap: 6px;
-  --inter-load-gap: 8px;
-
-  /* Randomized tab images */
-  --tab-min: 72px;           /* smallest tab image width  */
-  --tab-max: 160px;          /* largest tab image width   */
-  --center-shift: 220px;     /* center media travel 0→100% */
+  --wrap: min(1180px, 94vw);
 }
 
 /* ---------- Base ---------- */
-*,
-*::before,
-*::after { box-sizing: border-box; }
-
-html, body {
-  height: 100%;
-  background: var(--bg);
-  color: var(--text);
-}
-
+*{ box-sizing: border-box }
+html,body{ height:100% }
 body{
-  margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  line-height: 1.55;
+  margin:0;
+  color:var(--ink);
+  background: var(--bg);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  line-height:1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+img,video{ max-width:100%; height:auto; display:block }
 
-img, video{ max-width: 100%; height: auto; }
+a{ color:#6ea8ff; text-decoration:none }
+a:hover{ text-decoration:underline }
 
-/* Links */
-a{ color: var(--accent); text-decoration: none; }
-a:hover{ text-decoration: underline; }
+h1{ font: 700 var(--fs0)/1.08 Cinzel, serif; margin:0 0 6px }
+h2{ font: 700 var(--fs1)/1.12 Cinzel, serif; margin:22px 0 10px }
+h3{ font: 700 var(--fs2)/1.14 Cinzel, serif; margin:16px 0 8px }
+p,li{ font-size: var(--fs4) }
+small,.muted{ color: var(--ink-dim) }
 
-/* Text helpers */
-h1{ font-size: var(--fs-1); margin: 0 0 10px; line-height: 1.1; }
-h2{ font-size: var(--fs-2); margin: 26px 0 10px; line-height: 1.15; }
-h3{ font-size: var(--fs-3); margin: 20px 0 8px; }
-p, li{ font-size: var(--fs-4); }
-small, .muted{ color: var(--muted); }
+/* ---------- Shell ---------- */
+.wrapper{ max-width: var(--wrap); margin:0 auto; padding: 22px 18px }
+.header{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding: 8px 0 12px; border-bottom:1px dashed var(--stroke) }
+.nav{ display:flex; gap:12px; flex-wrap:wrap }
+.nav a{ font-size: var(--fs4) }
 
-/* ---------- Page Frame ---------- */
-.wrapper{
-  max-width: var(--wrap);
-  margin: 0 auto;
-  padding: 20px var(--gap);
-}
-
-.header{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap);
-  padding: 18px 0 6px;
-  border-bottom: 1px dashed var(--stroke);
-}
-
-.nav{ display: flex; gap: 14px; flex-wrap: wrap; }
-.nav a{ font-size: var(--fs-4); }
-
-/* ---------- Main Layout with Sidebar ---------- */
+/* ---------- Main layout ---------- */
 .layout{
-  display: grid;
-  grid-template-columns: 1fr var(--sidebar-w);
-  gap: var(--gap);
-  align-items: start;
-  margin-top: 20px;
+  display:grid; grid-template-columns: 1fr 320px; gap:22px; align-items:start; margin-top:20px;
 }
 
-/* Sidebar with background image that sticks to its width */
+/* Sidebar */
 .sidebar{
-  position: relative;
-  border: 1px dashed var(--stroke);
-  border-radius: var(--r2);
-  padding: 14px;
+  position:sticky; top:0; height:100vh; overflow-y:auto;
   background:
-    /* Your chosen sidebar image, width-bound to the sidebar */
     url('../img/sidebar-image.jpg') center top / 100% auto repeat-y,
-    transparent;
+    linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
+  background-blend-mode: multiply;
+  border-right:1px solid var(--stroke);
+  box-shadow: inset 0 0 24px rgba(0,0,0,.35);
+  padding:22px 18px 28px;
 }
+.sidebar h2{ font: 700 22px/1.2 Cinzel, serif; letter-spacing:.02em; color: var(--ink); margin:0 0 10px }
+.sidebar .cats{ list-style:none; padding:0; margin:10px 0 14px }
+.sidebar .cats > li{ margin: 8px 0 }
+.sidebar .cats a{ color:#9cbcff }
+.sidebar .cats a:hover{ color:#c7daff }
+.sidebar input[type="search"]{ width:100%; padding: 8px 10px; border-radius:8px; border:1px solid var(--stroke); background:#0b0e10; color:var(--ink) }
 
-/* Cards (posts, features, etc.) */
-.post-card,
-.feature-card,
-.anthem-card{
+/* ---------- Cards ---------- */
+.post-card,.feature-card,.anthem-card{
   background: transparent;
-  border: 1px dashed var(--stroke);
-  border-radius: var(--r2);
-  padding: 14px;
-  box-shadow: none;
+  border:1px dashed var(--stroke);
+  border-radius:var(--r2);
+  padding:14px;
+  box-shadow:none;
 }
-
-/* Subtle hover for cards */
-.post-card:hover,
-.feature-card:hover,
-.anthem-card:hover{
-  box-shadow: 0 4px 18px rgba(0,0,0,.08);
-}
-
-/* Grid of posts (Recent / Category) */
-.posts-grid{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gap);
-}
-
-/* ---------- Post-card: optional background image per post ---------- */
-/* Use inline style="--card-img: url('...')" from JS/HTML. */
+/* Post-card background image hook */
 .post-card{ position: relative; overflow: hidden; }
 .post-card::before{
   content: "";
@@ -157,142 +98,86 @@ small, .muted{ color: var(--muted); }
 }
 .post-card > *{ position: relative; z-index: 1; }
 
-/* Timestamps and small metadata */
-.post-time{ display:block; color: var(--muted); font-size: var(--fs-5); }
+.post-time{ display:block; color:var(--ink-dim); font-size: var(--fs5) }
+
+/* ---------- Grids ---------- */
+.posts-grid{
+  display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:22px;
+}
+
+/* ---------- Post page ---------- */
+.article{
+  background: transparent;
+  border-radius: var(--r2);
+}
+.article .meta{ color: var(--ink-dim); font-size: var(--fs5) }
+.article hr{ border:0; border-top:1px dashed var(--stroke) }
 
 /* ---------- Footer ---------- */
-.footer{
-  border-top: 1px dashed var(--stroke);
-  margin-top: 30px;
-  padding: 20px 0 40px;
-  font-size: var(--fs-5);
-  color: var(--muted);
+.footer{ border-top:1px dashed var(--stroke); margin-top:30px; padding: 18px 0 40px; font-size: var(--fs5); color: var(--ink-dim) }
+
+/* ---------- “About” bits (from your previous file) ---------- */
+.about-grid{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; margin-top:16px;
 }
-
-/* =========================================================
-   INTERLUDE MODULE
-   - Randomized image “tabs” that fade after 1s
-   - Bottom-right “Loading…” pile that grows with scroll
-   - Center media moves with scroll and stops near end
-   ========================================================= */
-
-/* Outer section (drop between Recent Posts and Trvthnukes) */
-.interlude{
-  position: relative;
-  min-height: 240vh;                /* tune if you want a longer/shorter play */
-  padding-block: 12vh 24vh;
-  overflow: visible;
+.about-card{
+  border:1px dashed var(--stroke); border-radius: var(--r2); padding: 12px; background: rgba(255,255,255,0.02);
 }
+.about-card h3{ font: 700 20px/1.2 Cinzel, serif; margin:0 0 6px }
+.about-card p{ margin:6px 0 0 }
 
-/* Three-column grid shell (center + old left/right, but we now use layers) */
-.interlude-grid{
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;       /* single column; side rails are replaced by layers */
-  gap: var(--inter-gap);
-  max-width: min(1300px, 92vw);
-  margin-inline: auto;
-}
-
-/* Center media stays visible; now we move it with scroll via transform */
-.center-wrap{
-  position: sticky;
-  top: 14vh;                        /* distance from top while sticky */
-  align-self: start;
-  display: grid;
-  place-items: center;
-  height: min(70vh, 720px);
-  width: 100%;
-}
-
-.center-media{
-  width: var(--inter-center-w);
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
+.about-banner{
+  position:relative;
+  background: url('../img/index-background.jpg') center/cover no-repeat fixed;
+  border-radius: var(--r2);
+  min-height: 260px;
+  border:1px dashed var(--stroke);
   box-shadow: var(--shadow);
-  background: #000;
-
-  /* moving center image (updated by JS) */
-  will-change: transform;
-  transition: transform 60ms linear;
+  margin:0;
 }
-
-/* Effects layer (absolute-positioned tab images live here) */
-.effects-layer{
-  position: relative;
-  z-index: 2;
-  min-height: 0; /* inherits interlude height; tabs are absolutely placed */
-}
-
-/* Each randomized tab image */
-.tab-img{
-  position: absolute;
-  pointer-events: none;
-  opacity: 0;                        /* JS sets to 1 on spawn, then we fade */
-  transform: translateZ(0);
-  will-change: opacity, transform, top, left;
-  filter: drop-shadow(0 8px 18px rgba(0,0,0,.25));
-  border-radius: 6px;
-  animation: tab-fade 1s 1s forwards; /* 1s delay then 1s fade-out */
-}
-
-/* Fade-out animation */
-@keyframes tab-fade { to { opacity: 0 } }
-
-/* Bottom-right loading pile, stuck ~48px from viewport bottom */
-.loading-corner{
-  position: sticky;
-  top: calc(100vh - 48px);
-  justify-self: end;
-  align-self: start;
-  z-index: 3;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-  padding: 6px 0;
-  min-width: 140px;
-}
-
-.loading-corner .loading-item{
-  font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  opacity: .9;
-  white-space: nowrap;
-}
-
-.loading-corner .loading-item span{
-  display: inline-block;
-  animation: blink 1200ms steps(2, jump-none) infinite;
-}
-
-@keyframes blink { 50% { opacity: .35 } }
+.about-banner::after{ content:""; position:absolute; inset:0; background: rgba(0,0,0,.38); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px){
-  .posts-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .posts-grid{ grid-template-columns: repeat(2, minmax(0,1fr)) }
+}
+@media (max-width: 900px){
+  .layout{ grid-template-columns:1fr }
+  .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--stroke) }
+  .about-grid{ grid-template-columns: repeat(2, 1fr) }
+  .about-banner{ background-position:center }
+}
+@media (max-width: 520px){
+  .about-grid{ grid-template-columns: 1fr }
 }
 
+/* ===== Interlude (self-contained; does not affect other components) ===== */
+.interlude{ position: relative; min-height: 240vh; padding-block: 12vh 24vh; overflow: visible; }
+.interlude-grid{ position: relative; display: grid; grid-template-columns: 1fr; gap: 1.5rem; max-width: min(1300px, 92vw); margin-inline: auto; }
+
+.center-wrap{ position: sticky; top: 14vh; align-self: start; display: grid; place-items: center; height: min(70vh, 720px); width: 100%; }
+.center-wrap .center-media{ width: min(56vw, 720px); max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 10px; will-change: transform; transition: transform 60ms linear; }
+
+.effects-layer{ position: relative; z-index: 2; min-height: 0; }
+.tab-img{
+  position: absolute; pointer-events: none; opacity: 0; transform: translateZ(0);
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.25)); border-radius: 6px;
+  animation: interlude-tab-fade 1s 1s forwards; /* 1s delay then fade out */
+}
+@keyframes interlude-tab-fade { to { opacity: 0 } }
+
+.loading-corner{
+  position: sticky; top: calc(100vh - 48px); justify-self: end; align-self: start; z-index: 3;
+  display: inline-flex; flex-direction: column; align-items: flex-end; gap: 6px; padding: 6px 0; min-width: 140px;
+}
+.loading-corner .loading-item{
+  font-family: "Courier New", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px; text-transform: uppercase; letter-spacing: .08em; opacity: .9; white-space: nowrap;
+}
+.loading-corner .loading-item span{ display:inline-block; animation: interlude-blink 1200ms steps(2, jump-none) infinite; }
+@keyframes interlude-blink { 50% { opacity: .35 } }
+
 @media (max-width: 980px){
-  .layout{ grid-template-columns: 1fr; }
-  .posts-grid{ grid-template-columns: 1fr; }
-  .sidebar{ order: 2; }
   .interlude{ min-height: 160vh; }
   .center-wrap{ top: 10vh; }
 }
-
-@media (max-width: 640px){
-  .header{ flex-direction: column; align-items: flex-start; }
-}
-
-/* =========================================================
-   Notes:
-   - Sidebar image is width-bound: `100% auto repeat-y` keeps it attached.
-   - Post cards can show per-post images via `--card-img: url('...')`.
-   - Interlude behavior is driven by the JS you inserted in index.html.
-   - No content changed; only presentation/styling.
-   ========================================================= */
