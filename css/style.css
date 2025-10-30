@@ -38,7 +38,11 @@ hr{ border:0; height:1px; background:var(--stroke) }
 }
 
 /* ---------- Layout ---------- */
-.layout{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
+.layout{
+  display: block;
+  min-height: 100vh;
+  padding-left: 280px;   /* <-- reserve space for the fixed sidebar */
+}
 /* keep the fixed sidebar layered above, main stays interactive */
 .sidebar{ z-index: 10; }
 main{ position: relative; z-index: 0; }
@@ -210,6 +214,11 @@ main{ position: relative; z-index: 0; }
 }
 @media (max-width: 520px){
   .about-grid{ grid-template-columns: 1fr }
+}
+
+@media (max-width: 900px){
+  .sidebar{ position: static; width: auto; max-height: none; }
+  .layout{ padding-left: 0; }
 }
 
 
