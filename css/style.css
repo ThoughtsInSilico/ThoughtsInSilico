@@ -94,7 +94,13 @@ hr{ border:0; height:1px; background:var(--stroke) }
   background: rgba(0,0,0,.78);
 }
 
-.main{ min-height:100vh; overflow:hidden }
+.main{
+  min-height:100vh;
+  overflow:hidden;
+  display:flex;               /* make the content a column */
+  flex-direction:column;
+}
+
 
 /* ---------- Home hero ---------- */
 .hero{
@@ -226,3 +232,11 @@ footer{                          /* your footer element/partial */
   margin-top: auto;              /* pushes it to the bottom of <main> */
   padding-top: 12px;
 }
+
+/* put the injected "Back to Home" at the end of <main> */
+.back-home{ margin-top:auto }
+
+/* keep the footer right after the back link, at the very bottom */
+main > footer{ margin-top:0 }
+
+
