@@ -237,6 +237,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     var stableMask = false;
     var lastQ = -1;
 
+    
+    // Fill a typed array with crypto RNG in <=65536-byte chunks.
+    // Returns true if crypto was used; false if crypto is unavailable.
+    function cryptoFill(view){
+      if (!(typeof window.crypto !== 'undefined' &&
+            typeof window.crypto.getRandomValues === 'function')) return false;
+      var n = view.length;
+      var step = Math.floor(65536 / view.BYTES_PER_ELEMENT); // bytes per call limit
+      for (var i = 0; i < n; i += step){
+        window.crypto.getRandomValues(view.subarray(i, Math.min(n, i + step)));
+      }
+      return true;
+    }
+
+
     function safeCrypto(){
       return (typeof window.crypto !== 'undefined' &&
               typeof window.crypto.getRandomValues === 'function');
@@ -272,8 +287,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function bernoulliMask(q){
       var n = mask.length;
       var thr = Math.floor(q * 4294967296); // q * 2^32
-      if (safeCrypto()){
-        window.crypto.getRandomValues(r32);
+      if (cryptoFill(r32)){
         for (var i=0;i<n;i++) mask[i] = (r32[i] < thr) ? 1 : 0;
       } else {
         var scale = 4294967296;
@@ -282,15 +296,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       lastQ = q;
     }
 
+
     function fillBW(){
       var n = noise.length;
-      if (safeCrypto()){
-        window.crypto.getRandomValues(noise);
+      if (cryptoFill(noise)){
         for (var i=0;i<n;i++) noise[i] = (noise[i] & 1) ? 255 : 0;
       } else {
         for (var j=0;j<n;j++) noise[j] = (Math.random() < 0.5) ? 255 : 0;
       }
     }
+
 
     function compose(){
       var d = frame.data; // Uint8ClampedArray
