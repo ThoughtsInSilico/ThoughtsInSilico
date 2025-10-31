@@ -106,6 +106,16 @@ const SIDEBAR_TRACKS = [
 document.addEventListener('DOMContentLoaded', async () => {
   // 1) Sidebar
   await includeInto(document.getElementById('sidebar-include'));
+
+  const hb = document.getElementById('navToggle');
+  if (hb) {
+    hb.addEventListener('click', () => {
+      const open = !document.body.classList.contains('nav-open');
+      document.body.classList.toggle('nav-open', open);
+      hb.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  
   // Hamburger toggle (desktop + phone)
   const hb = document.querySelector('.hamburger');
   if (hb) hb.addEventListener('click', () => {
