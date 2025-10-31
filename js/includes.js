@@ -51,27 +51,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // ---- Sidebar "Currently Listening" wiring ----
-(function(){
-  const list  = document.getElementById('sl-list');
-  const audio = document.getElementById('sl-audio');
-  if (!list || !audio) return; // partial not present
-
-  function renderSidebarList(active = -1){
-    list.innerHTML = SIDEBAR_TRACKS.length
-      ? SIDEBAR_TRACKS.map((t,i)=>
-          `<li><button type="button" data-i="${i}" ${i===active?'aria-current="true"':''}>${t.title}</button></li>`
-        ).join('')
-      : '<li><em>Add tracks in <code>audio/</code>…</em></li>';
-  }
-
-  renderSidebarList();
-
-  list.addEventListener('click', e=>{
-    const btn = e.target.closest('button[data-i]'); if(!btn) return;
-    const i = +btn.dataset.i;
-    audio.src = SIDEBAR_TRACKS[i].src;
-    audio.play().catch(()=>{});
-    renderSidebarList(i);
+  (function(){
+    const list  = document.getElementById('sl-list');
+    const audio = document.getElementById('sl-audio');
+    if (!list || !audio) return; // partial not present
+  
+    function renderSidebarList(active = -1){
+      list.innerHTML = SIDEBAR_TRACKS.length
+        ? SIDEBAR_TRACKS.map((t,i)=>
+            `<li><button type="button" data-i="${i}" ${i===active?'aria-current="true"':''}>${t.title}</button></li>`
+          ).join('')
+        : '<li><em>Add tracks in <code>audio/</code>…</em></li>';
+        }
+  
+    renderSidebarList();
+  
+    list.addEventListener('click', e=>{
+      const btn = e.target.closest('button[data-i]'); if(!btn) return;
+      const i = +btn.dataset.i;
+      audio.src = SIDEBAR_TRACKS[i].src;
+      audio.play().catch(()=>{});
+      renderSidebarList(i);
   });
 
   // Optional: auto-load first track (but don’t autoplay):
