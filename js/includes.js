@@ -367,14 +367,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       requestAnimationFrame(loop);
     }
 
+    requestAnimationFrame(loop);   // start the loop first
+    updateReadout();               // then do the UI wiring
+    
     range.addEventListener('input', ()=>{ q = Math.min(1, Math.max(0, +range.value)); updateReadout(); });
     range.addEventListener('change', ()=>{ q = Math.min(1, Math.max(0, +range.value)); updateReadout(); });
     if (stable) {stable.addEventListener('change', ()=> renderer.setStable(stable.checked) );}
 
-
-    updateReadout();
-    requestAnimationFrame(loop);
-  }
 
   document.addEventListener('DOMContentLoaded', init);
 })();
