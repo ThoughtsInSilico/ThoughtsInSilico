@@ -69,6 +69,22 @@ window.GlobalPlayer = (function () {
     audio.preload = 'none';
     audio.style.width = '100%';
 
+        // ✕ close button
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'gp-close';
+        closeBtn.setAttribute('aria-label', 'Close player');
+        closeBtn.textContent = '✕';
+        closeBtn.addEventListener('click', () => {
+          audio.pause();
+          shell.style.display = 'none';
+        });
+    
+        // Append in this order so the ✕ sits on top-right
+        shell.appendChild(closeBtn);
+        shell.appendChild(titleEl);
+        shell.appendChild(audio);
+
     shell.appendChild(titleEl);
     shell.appendChild(audio);
     document.body.appendChild(shell);
