@@ -162,7 +162,7 @@ main{ position:relative; z-index:0; }
   background: transparent;
   border: 1px dashed var(--stroke);
   border-radius: var(--r2);
-  padding: 14px;
+  padding: 12px;
   text-align: center;          /* centers all text inside */
 }
 
@@ -175,26 +175,8 @@ main{ position:relative; z-index:0; }
 }
 
 /* optional: tidy spacing/colors */
-.book-card h3{ margin: 10px 0 6px; }
 .book-card .author{ color: var(--ink-dim); margin: 0 0 6px; }
 .book-card .blurb{ margin: 0; }
-
-
-/* Library cards — match the original look */
-.book-card{
-  background: transparent;
-  border: 1px dashed var(--stroke);
-  border-radius: var(--r2);
-  padding: 12px;
-}
-
-.book-card img{
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  display: block;
-  margin-bottom: 10px;
-}
 
 /* Title + meta */
 .book-card h3{
@@ -461,9 +443,6 @@ main > footer{ margin-top:0 }
 }
 
 /* Global (site-wide) audio player */
-#global-player{ position: fixed; right: 14px; bottom: 14px; z-index: 4000; display: none; }
-#global-player.on{ display: block; }
-#global-player .gp-card{
   background: rgba(12,14,18,.92);
   border: 1px dashed rgba(255,255,255,.85);
   border-radius: 14px;
