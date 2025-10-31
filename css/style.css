@@ -452,13 +452,7 @@ main > footer{ margin-top:0 }
     box-shadow: 0 12px 30px rgba(0,0,0,.45);
   }
 #global-player .gp-title{ font-weight: 700; margin: 0 26px 6px 0; }
-#global-player .gp-close{
-  position:absolute; top:4px; right:6px; width:28px; height:28px;
-  background: transparent; color: var(--ink); border: 1px dotted rgba(255,255,255,.6);
-  border-radius: 8px; cursor: pointer;
-}
 #global-player audio{ width:100%; display:block; }
-
 #global-player .gp-close{
   position: absolute;
   top: 6px;
@@ -516,4 +510,20 @@ main > footer{ margin-top:0 }
   height:1px; width:1px;
   overflow:hidden; clip: rect(1px,1px,1px,1px);
   white-space:nowrap; border:0; padding:0; margin:-1px;
+}
+
+.entropy-control .entropy-title{
+  font: 700 12px/1 system-ui, sans-serif;
+  letter-spacing: .02em;
+  opacity: .85;
+  margin-right: 6px;
+}
+
+.entropy-control .toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 12px/1 system-ui, sans-serif;
+  color: var(--ink-dim);
+  user-select: none;
 }
