@@ -47,22 +47,28 @@ hr{ border:0; height:1px; background:var(--stroke) }
 .sidebar{ z-index:10; }
 main{ position:relative; z-index:0; }
 
-/* SIDEBAR (desktop): fixed, full-height */
+/* SIDEBAR (desktop): fixed, full-height – shell has NO border or bg */
 .sidebar{
-  position: fixed;  left: 0; top: 0; bottom: 0;  width: 280px;
-  border-right:1px solid var(--stroke);
-  box-shadow: inset 0 0 24px rgba(0,0,0,.35);
+  position: fixed; left: 0; top: 0; bottom: 0; width: 280px;
   z-index: 10;
 }
 
-/* New inner wrapper actually scrolls and contains padding */
-.sidebar-panel{  
-  height: 100%;  overflow-y: auto;  padding: 22px 18px 28px;
+.sidebar-panel{
+  height: 100%;
+  overflow-y: auto;
+  padding: 22px 18px 28px;
+
+  /* background stays here so it slides with the panel */
   background:
     url('../img/sidebar-image.jpg') center top / 100% auto repeat-y,
     linear-gradient(180deg, rgba(16,18,22,0.38), rgba(10,12,16,0.45));
   background-blend-mode: multiply;
+
+  /* MOVE these here (were on .sidebar) to remove the lingering line */
+  border-right: 1px solid var(--stroke);
+  box-shadow: inset 0 0 24px rgba(0,0,0,.35);
 }
+
 
 
 .sidebar nav h3{
