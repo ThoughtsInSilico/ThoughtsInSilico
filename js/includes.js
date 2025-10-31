@@ -42,7 +42,6 @@ window.GlobalPlayer = (function () {
     if (shell) return;
     shell = document.createElement('div');
     shell.id = 'global-player';
-    // minimal inline styles so it works even before CSS is tweaked
     Object.assign(shell.style, {
       position: 'fixed',
       right: '16px',
@@ -80,7 +79,6 @@ window.GlobalPlayer = (function () {
     play(track) {
       ensure();
       if (!track || !track.src) return;
-      // always re-use the same <audio>, so only one source plays
       if (audio.src !== new URL(track.src, location.href).href) {
         audio.src = track.src;
       }
@@ -94,20 +92,18 @@ window.GlobalPlayer = (function () {
 })();
 
 
-
 // === Sidebar "Currently Listening" tracks (edit this list) ===
 const SIDEBAR_TRACKS = [
-  // Example entries — change to your files in /audio/
   { title: 'Cristo Redentor (composer: Duke Pearson)', src: 'audio/cristo-redentor.mp3' },
   // { title: 'Schubert: Death and the Maiden — I. Allegro (Takács)', src: 'audio/schubert-datm-i-takacs.mp3' },
 ];
-
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 1) Sidebar
   await includeInto(document.getElementById('sidebar-include'));
 
-  const hb = document.getElementById('navToggle');
+  // 2) Hamburger toggle
+  const hb = document.getElementById('navToggle') || document.querySelector('.hamburger');
   if (hb) {
     hb.addEventListener('click', () => {
       const open = !document.body.classList.contains('nav-open');
@@ -116,11 +112,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // ---- Sidebar "Currently Listening" wiring (uses GlobalPlayer) ----
+  // 3) Sidebar "Currently Listening" wiring (uses GlobalPlayer)
   {
     const list  = document.getElementById('sl-list');
     const nowEl = document.getElementById('sl-now');
-  
+
     if (list) {
       function render(active = -1) {
         list.innerHTML = SIDEBAR_TRACKS.length
@@ -129,15 +125,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             ).join('')
           : '<li><em>Add tracks in <code>audio/</code>…</em></li>';
       }
-  
+
       render();
-  
+
       list.addEventListener('click', (e) => {
         const btn = e.target.closest('button[data-i]');
         if (!btn) return;
         const i = +btn.dataset.i;
         const track = SIDEBAR_TRACKS[i];
-  
+
         window.GlobalPlayer.play(track);
         if (nowEl) nowEl.textContent = track.title || '';
         render(i);
@@ -145,25 +141,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
   // Optional: auto-load first track (but don’t autoplay):
-  // if (SIDEBAR_TRACKS.length){ audio.src = SIDEBAR_TRACKS[0].src; renderSidebarList(0); }
-})();
+  // if (SIDEBAR_TRACKS.length){ window.GlobalPlayer.play(SIDEBAR_TRACKS[0]); }
 
-
-  // Highlight active link after sidebar is present
+  // 4) Highlight active link after sidebar is present
   const path = (location.pathname.split('/').pop() || 'index.html');
   document.querySelectorAll('.sidebar nav a').forEach(a => {
     const href = a.getAttribute('href') || '';
     if (href === path || href.startsWith(path + '?')) a.setAttribute('aria-current', 'page');
   });
 
-  // 2) Footer
+  // 5) Footer
   await includeInto(document.getElementById('footer-include'));
 
-  // 3) Year
+  // 6) Year
   const yearEl = document.querySelector('[data-year], #y');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // 4) Inject "Back to Home" ABOVE the footer on all non-home pages
+  // 7) Inject "Back to Home" ABOVE the footer on all non-home pages
   const isHome = document.body.classList.contains('home') || /(?:^|\/)index\.html?$/.test(location.pathname);
   if (!isHome) {
     const footerEl = document.querySelector('main footer') || document.querySelector('footer');
@@ -173,22 +167,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     linkWrap.innerHTML = '<a href="./">← Back to Home</a>';
 
     if (footerEl && footerEl.parentNode) {
-      footerEl.parentNode.insertBefore(linkWrap, footerEl); // directly above footer
+      footerEl.parentNode.insertBefore(linkWrap, footerEl);
     } else {
       (document.querySelector('main') || document.body).appendChild(linkWrap);
     }
   }
 
-  // ---- Proportional panel sizing for the about page columns ----
+  // 8) Proportional panel sizing for the about page columns
   function proportionalize(colSelector){
     const col = document.querySelector(colSelector);
     if (!col) return;
     const panels = Array.from(col.querySelectorAll('.panel'));
     if (panels.length < 2) return;
 
-    // Measure each panel's natural content height (no constraints)
     const measures = panels.map(p => {
-      // temporarily let it size naturally to measure content
       const prev = p.style.flex;
       p.style.flex = '0 0 auto';
       const h = p.scrollHeight;
@@ -197,18 +189,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const total = measures.reduce((a,b)=>a+b,0) || 1;
-
-    // If everything is empty (both ~equal tiny), make them 1:1
     const allTiny = measures.every(h => h < 8);
 
     panels.forEach((p, i) => {
-      const grow = allTiny ? 1 : measures[i] / total; // proportional split
+      const grow = allTiny ? 1 : measures[i] / total;
       p.style.flex = `${grow} 1 0px`;
     });
   }
 
-  // Apply to both columns on the Vat-brain page
   proportionalize('.about-left');
   proportionalize('.about-right');
-
 });
