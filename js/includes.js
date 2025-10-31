@@ -341,7 +341,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('resize', renderer.resize, { passive: true });
 
     let q = +range.value || 0;     // replacement probability
-    let running = false;
     const fps = 24, frameMS = Math.round(1000 / fps);
     let last = 0;
 
@@ -375,10 +374,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         c.clearRect(0, 0, overlay.width, overlay.height);
         running = false;
         return;
-      }
-      if (!running){
-        running = true;
-        requestAnimationFrame(loop);
       }
     }
 
