@@ -360,7 +360,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Controls (optional)
     var ui     = document.querySelector('[data-entropy-global]');
     var range  = ui ? ui.querySelector('#entropy-range') : null;
-    var stable = ui ? ui.querySelector('#entropy-stable') : null;
     var out    = ui ? ui.querySelector('[data-entropy-out]') : null;
 
     var q = range ? Math.min(1, Math.max(0, parseFloat(range.value)||0)) : 0;
@@ -369,11 +368,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function updateReadout(){
       if (!out) return;
-      var bits = (q * H_NOISE).toFixed(3);
-      var pct  = Math.round(q * 100);
-      out.textContent = 'Injected noise: q × H(N) = ' + bits +
-        ' bits/pixel (fair B/W, H(N)=1) • Noise probability: ' + pct + '%';
+      var pct = Math.round(q * 100);
+      out.textContent = 'Noise: ' + pct + '%';
     }
+
 
     function loop(t){
       if (!last) last = 0;
@@ -394,11 +392,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       };
       range.addEventListener('input', setFromRange, false);
       range.addEventListener('change', setFromRange, false);
-    }
-    if (stable){
-      stable.addEventListener('change', function(){
-        renderer.setStable(!!stable.checked);
-      }, false);
     }
 
     updateReadout();
