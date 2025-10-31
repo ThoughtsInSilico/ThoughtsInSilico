@@ -216,112 +216,114 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// --- Global replacement-noise overlay (minimal, DPR-correct, exact q)
+// --- Global replacement-noise overlay (ES5, DPR-correct, per-pixel replacement)
 (function(){
-  const H_NOISE = 1; // fair B/W noise: 1 bit/pixel
-  const hasCrypto = typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function';
+  // Fair black/white noise has H(N)=1 bit/pixel
+  var H_NOISE = 1;
 
   function makeRenderer(canvas){
-    const ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
 
     // CSS size & DPR
-    let cssW = 0, cssH = 0, dpr = 1, W = 0, H = 0;
+    var cssW = 0, cssH = 0, dpr = 1, W = 0, H = 0;
 
     // Reused buffers
-    let mask = null;        // Uint8Array (1=replace, 0=keep)
-    let rand32 = null;      // Uint32Array for exact Bernoulli(q)
-    let noise = null;       // Uint8Array (0 or 255)
-    let frame = null;       // ImageData (RGBA)
+    var mask = null;   // Uint8Array (1=replace, 0=keep)
+    var r32  = null;   // Uint32Array (RNG)
+    var noise= null;   // Uint8Array (0 or 255)
+    var frame= null;   // ImageData (RGBA)
 
-    // Stable positions (mask) behavior
-    let stableMask = false;
-    let lastQ = -1;
+    // Stable positions (mask)
+    var stableMask = false;
+    var lastQ = -1;
+
+    function safeCrypto(){
+      return (typeof window.crypto !== 'undefined' &&
+              typeof window.crypto.getRandomValues === 'function');
+    }
 
     function resize(){
-      // Use documentElement sizes as fallback to avoid 0×0 on some engines
-      const cw = Math.max(document.documentElement.clientWidth  || 0, window.innerWidth  || 0);
-      const ch = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-      const nd = (window.devicePixelRatio || 1);
-    
+      // Avoid 0×0 on some engines at DOMContentLoaded
+      var cw = Math.max((document.documentElement.clientWidth||0), (window.innerWidth||0));
+      var ch = Math.max((document.documentElement.clientHeight||0), (window.innerHeight||0));
+      var nd = (window.devicePixelRatio || 1);
+
       if (cw === cssW && ch === cssH && nd === dpr) return;
-    
+
       cssW = cw; cssH = ch; dpr = nd;
       W = Math.max(1, Math.round(cssW * dpr));
       H = Math.max(1, Math.round(cssH * dpr));
-    
+
       canvas.width  = W;
       canvas.height = H;
       canvas.style.width  = cssW + 'px';
       canvas.style.height = cssH + 'px';
-    
-      const n = W * H;
-      mask   = new Uint8Array(n);
-      rand32 = new Uint32Array(n);
-      noise  = new Uint8Array(n);
-      // Context-bound allocation is safest across engines
+
+      var n = W * H;
+      mask = new Uint8Array(n);
+      r32  = new Uint32Array(n);
+      noise= new Uint8Array(n);
+      // Context-bound ImageData (safer than new ImageData on WebKit)
       frame = ctx.createImageData(W, H);
-    
-      lastQ = -1; // force rebuild for new size
+
+      lastQ = -1; // force new density after resize
     }
 
-
     function bernoulliMask(q){
-      const n = mask.length;
-      const thr = Math.floor(q * 4294967296); // q * 2^32
-      if (hasCrypto){
-        crypto.getRandomValues(rand32);
-        for (let i=0;i<n;i++) mask[i] = (rand32[i] < thr) ? 1 : 0;
+      var n = mask.length;
+      var thr = Math.floor(q * 4294967296); // q * 2^32
+      if (safeCrypto()){
+        window.crypto.getRandomValues(r32);
+        for (var i=0;i<n;i++) mask[i] = (r32[i] < thr) ? 1 : 0;
       } else {
-        const scale = 4294967296;
-        for (let i=0;i<n;i++) mask[i] = ((Math.random()*scale)|0) < thr ? 1 : 0;
+        var scale = 4294967296;
+        for (var j=0;j<n;j++) mask[j] = (((Math.random()*scale)|0) < thr) ? 1 : 0;
       }
       lastQ = q;
     }
 
     function fillBW(){
-      const n = noise.length;
-      if (hasCrypto){
-        crypto.getRandomValues(noise);
-        for (let i=0;i<n;i++) noise[i] = (noise[i] & 1) ? 255 : 0;
+      var n = noise.length;
+      if (safeCrypto()){
+        window.crypto.getRandomValues(noise);
+        for (var i=0;i<n;i++) noise[i] = (noise[i] & 1) ? 255 : 0;
       } else {
-        for (let i=0;i<n;i++) noise[i] = (Math.random() < 0.5) ? 255 : 0;
+        for (var j=0;j<n;j++) noise[j] = (Math.random() < 0.5) ? 255 : 0;
       }
     }
 
     function compose(){
-      const d = frame.data; // Uint8ClampedArray
-      const n = mask.length;
-      for (let i=0, j=0; i<n; i++, j+=4){
+      var d = frame.data; // Uint8ClampedArray
+      var n = mask.length;
+      var i=0, j=0, v=0;
+      for (; i<n; i++, j+=4){
         if (mask[i]){
-          const v = noise[i];
+          v = noise[i];
           d[j]=d[j+1]=d[j+2]=v; d[j+3]=255;   // opaque replacement
         } else {
-          d[j]=d[j+1]=d[j+2]=0; d[j+3]=0;     // transparent: keep page pixel
+          d[j]=d[j+1]=d[j+2]=0; d[j+3]=0;     // transparent (keep page pixel)
         }
       }
     }
 
     function blit(){
-      // Force a replacement write of the whole pixel buffer.
-      const prev = ctx.globalCompositeOperation;
+      // Force full replacement so prior alpha state can’t hide pixels
+      var prev = ctx.globalCompositeOperation;
       ctx.globalCompositeOperation = 'copy';
-      ctx.putImageData(frame, 0, 0);
+      ctx.putImageData(frame, 0, 0);  // internal pixels (W,H)
       ctx.globalCompositeOperation = prev || 'source-over';
     }
 
-
     return {
-      setStable(v){ stableMask = !!v; },
-      resize,
-      render(q){
+      setStable: function(v){ stableMask = !!v; },
+      resize: resize,
+      render: function(q){
         if (!frame) resize();
 
-        // Regenerate mask positions:
-        // - every frame if not stable
-        // - on q change if stable
+        // Rebuild positions every frame unless stable; if stable, rebuild on q change
         if (!stableMask || lastQ !== q) bernoulliMask(q);
 
-        // Always refresh noise values for flicker
+        // Always refresh noise values (flicker)
         fillBW();
 
         compose();
@@ -331,59 +333,67 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function init(){
-    const ui = document.querySelector('[data-entropy-global]');
-
-    // Overlay canvas
-    const overlay = document.createElement('canvas');
+    // Always initialise overlay; controls are optional
+    var overlay = document.createElement('canvas');
     overlay.className = 'entropy-overlay';
     document.body.appendChild(overlay);
 
-    const range  = ui ? ui.querySelector('#entropy-range') : null;
-    const stable = ui ? ui.querySelector('#entropy-stable') : null;
-    const out    = ui ? ui.querySelector('[data-entropy-out]') : null;
-    
-    const renderer = makeRenderer(overlay);
+    var renderer = makeRenderer(overlay);
     renderer.resize();
-    window.addEventListener('resize', renderer.resize, { passive: true });
+    window.addEventListener('resize', renderer.resize, false);
 
-    let q = range ? Math.min(1, Math.max(0, parseFloat(range.value) || 0)) : 1;
-    const fps = 24, frameMS = Math.round(1000 / fps);
+    // Controls (optional)
+    var ui     = document.querySelector('[data-entropy-global]');
+    var range  = ui ? ui.querySelector('#entropy-range') : null;
+    var stable = ui ? ui.querySelector('#entropy-stable') : null;
+    var out    = ui ? ui.querySelector('[data-entropy-out]') : null;
+
+    var q = range ? Math.min(1, Math.max(0, parseFloat(range.value)||0)) : 1;
+    var fps = 24, frameMS = Math.round(1000 / fps);
+    var last = 0;
 
     function updateReadout(){
       if (!out) return;
-      const bits = (q * H_NOISE).toFixed(3);
-      const pct  = Math.round(q * 100);
-      out.textContent = `Injected noise: q × H(N) = ${bits} bits/pixel (fair B/W, H(N)=1) • Noise probability: ${pct}%`;
+      var bits = (q * H_NOISE).toFixed(3);
+      var pct  = Math.round(q * 100);
+      out.textContent = 'Injected noise: q × H(N) = ' + bits +
+        ' bits/pixel (fair B/W, H(N)=1) • Noise probability: ' + pct + '%';
     }
 
     function loop(t){
-      if (!loop.last) loop.last = 0;
-
-      // Always alive; clear when q==0
+      if (!last) last = 0;
       if (q === 0){
-        const c = overlay.getContext('2d');
+        var c = overlay.getContext('2d');
         c.clearRect(0, 0, overlay.width, overlay.height);
-      } else if (t - loop.last >= frameMS){
-        loop.last = t;
+      } else if (t - last >= frameMS){
+        last = t;
         renderer.render(q);
       }
-
-      requestAnimationFrame(loop);
+      window.requestAnimationFrame(loop);
     }
-
-    requestAnimationFrame(loop);   // start the loop first
-    updateReadout();               // then do the UI wiring
 
     if (range){
-      const setFromRange = () => { q = Math.min(1, Math.max(0, parseFloat(range.value) || 0)); updateReadout(); };
-      range.addEventListener('input', setFromRange);
-      range.addEventListener('change', setFromRange);
+      var setFromRange = function(){
+        q = Math.min(1, Math.max(0, parseFloat(range.value)||0));
+        updateReadout();
+      };
+      range.addEventListener('input', setFromRange, false);
+      range.addEventListener('change', setFromRange, false);
     }
     if (stable){
-      stable.addEventListener('change', ()=> renderer.setStable(stable.checked));
+      stable.addEventListener('change', function(){
+        renderer.setStable(!!stable.checked);
+      }, false);
     }
 
+    updateReadout();
+    window.requestAnimationFrame(loop);
+  }
 
-  document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init, false);
+  } else {
+    init();
+  }
 })();
 
