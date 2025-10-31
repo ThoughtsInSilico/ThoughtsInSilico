@@ -476,3 +476,44 @@ main > footer{ margin-top:0 }
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
+
+
+/* Shannon entropy "static" hero */
+.entropy-hero{
+  position: relative;
+  border:1px dashed var(--stroke);
+  border-radius: var(--r2);
+  overflow: hidden;
+  min-height: 180px;
+  margin: 12px 0 18px;
+}
+.entropy-hero .entropy-canvas{
+  display:block;
+  width:100%;
+  height:min(34vh,320px);
+  background: #0b0e10;
+}
+.entropy-hero .entropy-controls{
+  position:absolute; inset:auto 10px 10px 10px;
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+  background: rgba(0,0,0,.35);
+  border: 1px dashed var(--stroke);
+  border-radius: 10px;
+  padding: 8px;
+  backdrop-filter: blur(4px);
+}
+.entropy-hero .entropy-controls button{
+  background: transparent;
+  color: var(--ink);
+  border:1px dotted rgba(255,255,255,.6);
+  border-radius:8px;
+  padding:6px 10px;
+  cursor:pointer;
+}
+.entropy-hero .entropy-controls button:focus-visible{
+  outline:2px solid #fff; outline-offset:2px;
+}
+.entropy-hero .entropy-meter{
+  margin-left:auto; font: 600 12px/1.2 system-ui, sans-serif; color: var(--ink-dim);
+}
+
