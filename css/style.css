@@ -150,6 +150,29 @@ main{ position:relative; z-index:0; }
   box-shadow:none;
 }
 
+/* Library cards */
+.book-card{
+  background: transparent;
+  border: 1px dashed var(--stroke);
+  border-radius: var(--r2);
+  padding: 14px;
+  text-align: center;          /* centers all text inside */
+}
+
+.book-card img{
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin: 0 auto 10px;         /* centers the image in the card */
+}
+
+/* optional: tidy spacing/colors */
+.book-card h3{ margin: 10px 0 6px; }
+.book-card .author{ color: var(--ink-dim); margin: 0 0 6px; }
+.book-card .blurb{ margin: 0; }
+
+
 /* Library cards — match the original look */
 .book-card{
   background: transparent;
