@@ -1,49 +1,18 @@
-<button id="navToggle" class="hamburger" aria-label="Open menu"
-        aria-controls="site-sidebar" aria-expanded="false">
+<!-- ONE button only, outside the sliding panel so it never moves -->
+<button id="navToggle"
+        class="hamburger"
+        aria-label="Toggle menu"
+        aria-controls="site-sidebar"
+        aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
 
-<aside class="sidebar" role="navigation" aria-label="Primary">
-  <div class="sidebar-panel">
-  <!-- Hamburger stays in the partial, but OUTSIDE the translated panel -->
-  <button class="hamburger" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
-
+<!-- Sidebar shell (fixed) -->
+<aside class="sidebar" id="site-sidebar" role="navigation" aria-label="Primary">
+  <!-- The part that actually slides and holds the background image -->
   <div class="sidebar-panel">
     <div class="brand"><a class="site-title" href="./">Silico: Book of Genesis</a></div>
-  
-      <nav>
-        <h3>Categories</h3>
-        <ul>
-          <li><a href="about.html">The Vat-brain Speaks</a></li>
-          <li><a href="categories.html?cat=Book%20Reviews">Book Reviews</a></li>
-          <li class="has-submenu">
-            <span class="nav-parent">Fiction ▾</span>
-            <ul class="nav-submenu" aria-label="Fiction submenu">
-              <li><a href="categories.html?cat=Fiction&sub=Short%20Stories">Short Stories</a></li>
-              <li><a href="categories.html?cat=Fiction&sub=Poetry">Poetry</a></li>
-            </ul>
-          </li>
-          <li><a href="categories.html?cat=Mathematics">Mathematics</a></li>
-          <li><a href="categories.html?cat=Technognostics">Technognostics</a></li>
-          <li><a href="categories.html?cat=Music">Music</a></li>
-          <li><a href="library.html">My Library</a></li>
-          <li><a href="categories.html?cat=Miscellaneous">Miscellaneous</a></li>
-        </ul>
-  
-        <div class="sidebar-search" style="margin-top:14px;">
-          <form action="search.html" method="get" role="search" aria-label="Search posts">
-            <input type="search" name="q" placeholder="Search posts…" aria-label="Search posts" />
-          </form>
-        </div>
-  
-        <hr class="sidebar-sep">
-        
-        <<h3>Currently listening <small>(click title to play)</small></h3>
-        <ul class="anthem-list" id="sl-list"></ul>
-        <audio id="sl-audio" class="anthem-audio" preload="none" controls></audio>
-      </nav>
-    </div>
+
+    <!-- … your nav / search / “Currently listening” list + audio … -->
   </div>
 </aside>
