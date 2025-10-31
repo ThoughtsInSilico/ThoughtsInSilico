@@ -211,7 +211,7 @@ main{ position:relative; z-index:0; }
 /* ---------- About (Vat-brain) ---------- */
 .about-upper{
   background:url('../img/about-upper.jpg') center/cover no-repeat fixed;
-  border-bottom:1px solid var(--stroke);
+  border-bottom:0;
 }
 .about-grid{
   display:grid; grid-template-columns:repeat(6, 1fr); grid-auto-rows: auto;
