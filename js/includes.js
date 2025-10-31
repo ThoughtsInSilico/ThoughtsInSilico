@@ -190,7 +190,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // 7) Inject "Back to Home" ABOVE the footer on all non-home pages
-    const isHome = document.body.classList.contains('home') || /(?:^|\/)index\.html?$/.test(location.pathname);
     if (!isHome) {
       // ⟵ target the REAL site footer only
       const footerEl = document.querySelector('footer.site-footer');
