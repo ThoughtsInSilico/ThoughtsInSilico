@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const n = W * H;
       const r = new Uint32Array(n);
       crypto.getRandomValues(r);
-      const threshold = Math.floor(q * 0x1_0000_0000); // q * 2^32
+      const threshold = Math.floor(q * 4294967296); // q * 2^32 without numeric separators
       for (let i=0;i<n;i++){
         mask[i] = (r[i] < threshold) ? 1 : 0;
       }
@@ -346,6 +346,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let last = 0;
 
     function updateReadout(){
+      if (!out) return;
       const bits = (q * H_NOISE).toFixed(3);
       const pct  = Math.round(q * 100);
       out.textContent = `Injected noise: q × H(N) = ${bits} bits/pixel (fair B/W, H(N)=1) • Noise probability: ${pct}%`;
@@ -357,6 +358,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (q === 0){
         const c = overlay.getContext('2d');
         c.clearRect(0, 0, overlay.width, overlay.height); // internal W,H
+        ctx.putImageData(frame, 0, 0);
         running = false;
         return;
       }
