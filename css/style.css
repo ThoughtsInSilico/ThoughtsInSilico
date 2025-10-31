@@ -527,3 +527,16 @@ main > footer{ margin-top:0 }
   color: var(--ink-dim);
   user-select: none;
 }
+
+/* Keep the entropy slider from sitting under the hamburger on small screens */
+@media (max-width: 900px){
+  .entropy-control{
+    left: auto;              /* ensure it's anchored to the right only */
+    right: 12px;
+    max-width: min(360px, 80vw);  /* prevent spanning the whole top row */
+    text-wrap: nowrap;
+  }
+  .entropy-control input[type="range"]{
+    width: 160px;            /* narrower slider on phones */
+  }
+}
