@@ -358,7 +358,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (q === 0){
         const c = overlay.getContext('2d');
         c.clearRect(0, 0, overlay.width, overlay.height); // internal W,H
-        ctx.putImageData(frame, 0, 0);
         running = false;
         return;
       }
@@ -395,6 +394,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     updateReadout(); // initial
+    maybeRun();
   }
 
   document.addEventListener('DOMContentLoaded', init);
