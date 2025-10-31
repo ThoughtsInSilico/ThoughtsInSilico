@@ -46,6 +46,7 @@
         const h1 = doc.querySelector('h1') || doc.querySelector('.post-title');
         const time = doc.querySelector('time[datetime]');
         document.title = (h1 ? h1.textContent.trim() : 'Post') + ' • Silico: Book of Genesis';
+        titleEl.innerHTML = h1 ? h1.innerHTML : 'Untitled';
         if (time) metaEl.textContent = new Date(time.getAttribute('datetime')).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
         const article = doc.querySelector('article') || doc.querySelector('main') || doc.body;
         const cleaned = article.cloneNode(true);
@@ -82,9 +83,19 @@
           old.replaceWith(s);
         });
 
-        bodyEl.querySelectorAll('a[href^="posts/"]').forEach(a=>{
-          a.href = 'post.html?u=' + encodeURIComponent(a.getAttribute('href'));
+        // Route links that point to files under /posts/ through the reader
+        bodyEl.querySelectorAll('a[href]').forEach(a => {
+          try {
+            const uAbs = new URL(a.getAttribute('href'), location.href);
+            // strip the repo segment if present (GitHub Pages)
+            const path = uAbs.pathname.replace(/^\/[^/]+\//, '/');
+            if (path.startsWith('/posts/')) {
+              a.href = 'post.html?u=' + encodeURIComponent(uAbs.href);
+            }
+          } catch (_) {}
         });
+
+
         if (window.MathJax?.typeset) MathJax.typeset();
         if(location.hash) {
           const target = document.getElementById(location.hash.slice(1));
