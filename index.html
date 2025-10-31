@@ -19,8 +19,18 @@
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
-      <section class="hero" aria-label="Background art"></section>
 
+      <!-- Shannon entropy static panel -->
+      <section class="entropy-hero">
+        <canvas class="entropy-canvas" aria-label="Noise canvas" role="img"></canvas>
+        <div class="entropy-controls" role="group" aria-label="Entropy controls">
+          <button type="button" data-entropy-dec>Decrease Shannon entropy</button>
+          <button type="button" data-entropy-inc>Increase Shannon entropy</button>
+          <button type="button" data-entropy-reset>Reset</button>
+          <span class="entropy-meter" data-entropy-meter title="Estimated binary Shannon entropy">0 bits</span>
+        </div>
+      </section>
+     
       <section class="container section">
         <h1 class="site-title" style="font-size: clamp(28px,5vw,46px);">Recent Posts</h1>
         <hr class="hr-dots"/>
