@@ -171,23 +171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const yearEl = document.querySelector('[data-year], #y');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
   
-    const isHome = document.body.classList.contains('home') || /(?:^|\/)index\.html?$/.test(location.pathname);
-  if (!isHome) {
-    const footerEl =
-      document.querySelector('footer.site-footer, footer[role="contentinfo"], main > footer:last-of-type') ||
-      document.querySelector('footer');
-  
-    const linkWrap = document.createElement('p');
-    linkWrap.className = 'back-home container';
-    linkWrap.style.padding = '0 0 18px';
-    linkWrap.innerHTML = '<a href="./">← Back to Home</a>';
-  
-    if (footerEl && footerEl.parentNode) {
-      footerEl.parentNode.insertBefore(linkWrap, footerEl);
-    } else {
-      (document.querySelector('main') || document.body).appendChild(linkWrap);
-    }
-  }
+    
 
   // 7) Inject "Back to Home" ABOVE the footer on all non-home pages
     if (!isHome) {
