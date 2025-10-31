@@ -24,15 +24,18 @@
       <!-- Global Shannon entropy slider (Signal to Static) -->
       <div class="entropy-control" data-entropy-global>
         <div class="entropy-title">Signal to Static</div>
-        <label class="visually-hidden" for="entropy-range">Shannon entropy (q)</label>
+        <label class="visually-hidden" for="entropy-range">
+          Noise Injection Level — Probability each pixel is replaced (q)
+        </label>
         <input id="entropy-range" type="range" min="0" max="1" step="0.001" value="0">
         <label class="toggle" for="entropy-stable">
           <input id="entropy-stable" type="checkbox"> Stable mask
         </label>
         <output data-entropy-out aria-live="polite">
-          Injected entropy ≈ 0.000 bits/pixel (black/white replacement)
+          Injected noise: q × H(N) = 0.000 bits/pixel • Noise probability: 0%
         </output>
       </div>
+
 
       
       <section class="container section">
