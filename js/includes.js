@@ -216,11 +216,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// --- Global replacement-noise overlay (per-pixel, animated, DPR-correct, exact q)
+// --- Global replacement-noise overlay (minimal, DPR-correct, exact q)
 (function(){
-  const H_NOISE = 1; // fair black/white noise: 1 bit/pixel
+  const H_NOISE = 1; // fair B/W noise: 1 bit/pixel
   const hasCrypto = typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function';
-  
+
   function makeRenderer(canvas){
     const ctx = canvas.getContext('2d');
 
@@ -228,37 +228,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     let cssW = 0, cssH = 0, dpr = 1, W = 0, H = 0;
 
     // Reused buffers
-    let mask = null;        // Uint8Array, 1=replace, 0=keep
-    let noiseVal = null;    // Uint8Array, 0 or 255
-    let frame = null;       // ImageData (reused)
-    let rand32 = null;      // Uint32Array reused for exact Bernoulli(q)
+    let mask = null;        // Uint8Array (1=replace, 0=keep)
+    let rand32 = null;      // Uint32Array for exact Bernoulli(q)
+    let noise = null;       // Uint8Array (0 or 255)
+    let frame = null;       // ImageData (RGBA)
 
-    
-
-    // Stable mask (positions) & which q it encodes
+    // Stable positions (mask) behavior
     let stableMask = false;
     let lastQ = -1;
 
-
-    function ensureBuffers(){
-      const need = W * H;
-      if (!mask || mask.length !== need){
-        mask     = new Uint8Array(need);
-        noiseVal = new Uint8Array(need);
-        frame    = new ImageData(W, H);   // browser-allocated backing store
-        rand32   = new Uint32Array(need); // reused RNG buffer
-      }
-    }
-
-    
-
     function resize(){
-      const newCssW = window.innerWidth  | 0;
-      const newCssH = window.innerHeight | 0;
-      const newDpr  = (window.devicePixelRatio || 1); // keep fractional DPR
-      if (newCssW === cssW && newCssH === cssH && newDpr === dpr) return;
+      const nw = window.innerWidth  | 0;
+      const nh = window.innerHeight | 0;
+      const nd = (window.devicePixelRatio || 1);
+      if (nw === cssW && nh === cssH && nd === dpr) return;
 
-      cssW = newCssW; cssH = newCssH; dpr = newDpr;
+      cssW = nw; cssH = nh; dpr = nd;
       W = Math.round(cssW * dpr);
       H = Math.round(cssH * dpr);
 
@@ -267,80 +252,70 @@ document.addEventListener('DOMContentLoaded', async () => {
       canvas.style.width  = cssW + 'px';
       canvas.style.height = cssH + 'px';
 
-      mask = noiseVal = frame = null;
-      ensureBuffers();
-      lastQ = -1; // force mask rebuild next frame
+      const n = W * H;
+      mask  = new Uint8Array(n);
+      rand32= new Uint32Array(n);
+      noise = new Uint8Array(n);
+      frame = new ImageData(W, H);
+
+      lastQ = -1; // force rebuild for new size
     }
 
-
-    function fillMaskExact(q){
-      const n = W * H;
-      const threshold = Math.floor(q * 4294967296); // q * 2^32
+    function bernoulliMask(q){
+      const n = mask.length;
+      const thr = Math.floor(q * 4294967296); // q * 2^32
       if (hasCrypto){
-        crypto.getRandomValues(rand32);   // fill in-place; no per-frame allocation
-        for (let i=0;i<n;i++){
-          mask[i] = (rand32[i] < threshold) ? 1 : 0;
-        }
+        crypto.getRandomValues(rand32);
+        for (let i=0;i<n;i++) mask[i] = (rand32[i] < thr) ? 1 : 0;
       } else {
         const scale = 4294967296;
-        for (let i=0;i<n;i++){
-          mask[i] = ((Math.random() * scale) | 0) < threshold ? 1 : 0;
-        }
+        for (let i=0;i<n;i++) mask[i] = ((Math.random()*scale)|0) < thr ? 1 : 0;
       }
       lastQ = q;
     }
 
-
-    function fillNoiseBW(){
-      const n = W * H;
+    function fillBW(){
+      const n = noise.length;
       if (hasCrypto){
-        const r = new Uint8Array(n);
-        crypto.getRandomValues(r);
-        for (let i=0;i<n;i++){
-          noiseVal[i] = (r[i] & 1) ? 255 : 0;
-        }
-      }else{
-        for (let i=0;i<n;i++){
-          noiseVal[i] = (Math.random() < 0.5) ? 255 : 0;
-        }
+        crypto.getRandomValues(noise);
+        for (let i=0;i<n;i++) noise[i] = (noise[i] & 1) ? 255 : 0;
+      } else {
+        for (let i=0;i<n;i++) noise[i] = (Math.random() < 0.5) ? 255 : 0;
       }
     }
 
-    
-
-    // Compose directly into frame.data (RGBA in internal pixels)
-    function composeFrame(){
-      const data = frame.data; // Uint8ClampedArray
-      const n = W * H;
+    function compose(){
+      const d = frame.data; // Uint8ClampedArray
+      const n = mask.length;
       for (let i=0, j=0; i<n; i++, j+=4){
         if (mask[i]){
-          const v = noiseVal[i];
-          data[j] = data[j+1] = data[j+2] = v;
-          data[j+3] = 255; // opaque -> replacement (no blending)
-        }else{
-          data[j] = data[j+1] = data[j+2] = 0;
-          data[j+3] = 0;   // transparent -> keep page pixel
+          const v = noise[i];
+          d[j]=d[j+1]=d[j+2]=v; d[j+3]=255;   // opaque replacement
+        } else {
+          d[j]=d[j+1]=d[j+2]=0; d[j+3]=0;     // transparent: keep page pixel
         }
       }
     }
 
-    // Blit using internal pixel units (W,H)
     function blit(){
-      ctx.putImageData(frame, 0, 0);
+      ctx.putImageData(frame, 0, 0); // internal pixels (W,H)
     }
 
     return {
-      setStableMask(v){ stableMask = !!v; },
+      setStable(v){ stableMask = !!v; },
       resize,
       render(q){
-        ensureBuffers();
-        // Rebuild positions if not stable, or if q changed while stable
-        if (!stableMask || lastQ !== q){
-          fillMaskExact(q);
-        }
-        // Always refresh noise values for flicker (twinkle)
-        fillNoiseBW();
-        composeFrame();
+        if (!frame) resize();
+
+        // Regenerate mask positions:
+        // - every frame if not stable
+        // - on q change if stable
+        if (!stableMask || lastQ !== q) bernoulliMask(q);
+
+        // Always refresh noise values for flicker
+        fillBW();
+
+        compose();
         blit();
       }
     };
@@ -350,6 +325,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ui = document.querySelector('[data-entropy-global]');
     if (!ui) return;
 
+    // Overlay canvas
     const overlay = document.createElement('canvas');
     overlay.className = 'entropy-overlay';
     document.body.appendChild(overlay);
@@ -362,9 +338,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderer.resize();
     window.addEventListener('resize', renderer.resize, { passive: true });
 
-    let q = +range.value || 0;     // replacement probability
+    let q = +range.value || 0;
     const fps = 24, frameMS = Math.round(1000 / fps);
-    let last = 0;
 
     function updateReadout(){
       if (!out) return;
@@ -373,47 +348,29 @@ document.addEventListener('DOMContentLoaded', async () => {
       out.textContent = `Injected noise: q × H(N) = ${bits} bits/pixel (fair B/W, H(N)=1) • Noise probability: ${pct}%`;
     }
 
-
     function loop(t){
-      // Clear when q==0 and skip drawing, but keep the loop alive.
+      if (!loop.last) loop.last = 0;
+
+      // Always alive; clear when q==0
       if (q === 0){
         const c = overlay.getContext('2d');
         c.clearRect(0, 0, overlay.width, overlay.height);
-      }else{
-        // ~24 FPS throttling
-        if (!loop.last) loop.last = 0;
-        if (t - loop.last >= frameMS){
-          loop.last = t;
-          renderer.render(q);
-        }
+      } else if (t - loop.last >= frameMS){
+        loop.last = t;
+        renderer.render(q);
       }
+
       requestAnimationFrame(loop);
     }
 
-  
+    range.addEventListener('input', ()=>{ q = Math.min(1, Math.max(0, +range.value)); updateReadout(); });
+    range.addEventListener('change', ()=>{ q = Math.min(1, Math.max(0, +range.value)); updateReadout(); });
+    stable.addEventListener('change', ()=> renderer.setStable(stable.checked) );
 
-    range.addEventListener('input', ()=>{
-      q = Math.min(1, Math.max(0, +range.value));
-      updateReadout();
-    });
-    range.addEventListener('change', ()=>{
-      q = Math.min(1, Math.max(0, +range.value));
-      updateReadout();
-    });
-
-
-    stable.addEventListener('change', ()=>{
-      renderer.setStableMask(stable.checked);
-    });
-
-
-    updateReadout(); // initial
+    updateReadout();
     requestAnimationFrame(loop);
   }
 
   document.addEventListener('DOMContentLoaded', init);
 })();
-
-
-
 
