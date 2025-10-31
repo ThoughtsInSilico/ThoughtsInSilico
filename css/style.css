@@ -457,3 +457,21 @@ main > footer{ margin-top:0 }
   border-radius: 8px; cursor: pointer;
 }
 #global-player audio{ width:100%; display:block; }
+
+#global-player .gp-close{
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  line-height: 1;
+  background: transparent;
+  color: var(--ink);
+  border: 1px dotted rgba(255,255,255,.7);
+  border-radius: 8px;
+  cursor: pointer;
+}
+#global-player .gp-close:focus-visible{
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
