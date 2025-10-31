@@ -267,6 +267,9 @@ main{ position:relative; z-index:0; }
 /* Larger spacing between paragraphs inside posts */
 .post-body p{ margin: 0 0 20px; }
 
+.post-card.post-layout .post-body > :is(ol, ul, blockquote, figure){
+  margin: 0 0 20px;
+}
 
 /* Stack on narrow screens */
 @media (max-width: 560px){
@@ -620,7 +623,7 @@ main > footer{ margin-top:0 }
 /* Post-specific: equal-width pair for Olympiads post */
 .post-card.post-layout .post-body .img-row.equal-pair{
   display: grid;
-  grid-template-columns: 1fr 1fr;  /* equal widths */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   align-items: start;
   margin: 12px 0 16px;
@@ -631,6 +634,7 @@ main > footer{ margin-top:0 }
   height: auto;
   display: block;
   border-radius: 10px; /* optional: matches your card rounding */
+  object-fit: contain;
 }
 
 
