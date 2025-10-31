@@ -172,24 +172,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (yearEl) yearEl.textContent = new Date().getFullYear();
     const isHome = document.body.classList.contains('home') || /(?:^|\/)index\.html?$/.test(location.pathname);
   
-    
-
-  // 7) Inject "Back to Home" ABOVE the footer on all non-home pages
-    if (!isHome) {
-      // ⟵ target the REAL site footer only
-      const footerEl = document.querySelector('footer.site-footer');
-      const linkWrap = document.createElement('p');
-      linkWrap.className = 'back-home container';
-      linkWrap.style.padding = '0 0 18px';
-      linkWrap.innerHTML = '<a href="./">← Back to Home</a>';
-    
-      if (footerEl && footerEl.parentNode) {
-        footerEl.parentNode.insertBefore(linkWrap, footerEl);
-      } else {
-        (document.querySelector('main') || document.body).appendChild(linkWrap);
-      }
-    }
-  
 
   // 8) Proportional panel sizing for the about page columns
   function proportionalize(colSelector){
