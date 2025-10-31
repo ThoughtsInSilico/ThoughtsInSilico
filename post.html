@@ -32,12 +32,6 @@
   </div>
 
   <script>
-    function sanitizeHtml(html){
-      const t = document.createElement('template');
-      t.innerHTML = html;
-      t.content.querySelectorAll('script').forEach(n => n.remove());
-      return t.innerHTML;
-    }
     async function loadPost(){
       const usp = new URLSearchParams(location.search);
       const u = usp.get('u');
@@ -51,13 +45,43 @@
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const h1 = doc.querySelector('h1') || doc.querySelector('.post-title');
         const time = doc.querySelector('time[datetime]');
-        titleEl.innerHTML = h1 ? h1.innerHTML : 'Untitled';
+        document.title = (h1 ? h1.textContent.trim() : 'Post') + ' • Silico: Book of Genesis';
         if (time) metaEl.textContent = new Date(time.getAttribute('datetime')).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'});
         const article = doc.querySelector('article') || doc.querySelector('main') || doc.body;
         const cleaned = article.cloneNode(true);
         const firstH1 = cleaned.querySelector('h1'); if(firstH1) firstH1.remove();
         const firstTime = cleaned.querySelector('time[datetime]'); if(firstTime) firstTime.remove();
-        bodyEl.innerHTML = sanitizeHtml(cleaned.innerHTML);
+        bodyEl.innerHTML = cleaned.innerHTML;
+        
+        // Make all relative URLs inside the injected post absolute to the post's folder
+        const abs = new URL(u, location.href);
+        const dir = abs.href.replace(/[^/]*$/, '');
+        
+        bodyEl.querySelectorAll('[src]').forEach(el => {
+          const v = el.getAttribute('src');
+          if (v && !/^([a-z]+:)?\/\//i.test(v) && !v.startsWith('/')) {
+            el.setAttribute('src', new URL(v, dir).href);
+          }
+        });
+        
+        bodyEl.querySelectorAll('a[href]').forEach(a => {
+          const v = a.getAttribute('href');
+          if (v && !/^([a-z]+:)?\/\//i.test(v) && !v.startsWith('/')) {
+            a.setAttribute('href', new URL(v, dir).href);
+          }
+        });
+
+
+        
+        // Re-execute any <script> tags that were inside the post (e.g., "Similar reads")
+        bodyEl.querySelectorAll('script').forEach(old => {
+          const s = document.createElement('script');
+          // copy attributes (src, type, etc.)
+          for (const { name, value } of old.attributes) s.setAttribute(name, value);
+          s.textContent = old.textContent;
+          old.replaceWith(s);
+        });
+
         bodyEl.querySelectorAll('a[href^="posts/"]').forEach(a=>{
           a.href = 'post.html?u=' + encodeURIComponent(a.getAttribute('href'));
         });
