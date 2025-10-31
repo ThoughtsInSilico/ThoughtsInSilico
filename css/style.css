@@ -262,6 +262,8 @@ main{ position:relative; z-index:0; }
 .post-time,.post-meta{ color:var(--ink-dim) }
 .post-body p,.post-card p,.card p{ text-align:justify }
 
+/* Larger spacing between paragraphs inside posts */
+.post-body p{ margin: 0 0 20px; }
 
 
 /* Stack on narrow screens */
