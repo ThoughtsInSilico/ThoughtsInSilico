@@ -443,13 +443,14 @@ main > footer{ margin-top:0 }
 }
 
 /* Global (site-wide) audio player */
-  background: rgba(12,14,18,.92);
-  border: 1px dashed rgba(255,255,255,.85);
-  border-radius: 14px;
-  padding: 10px 10px 8px;
-  width: min(420px, 90vw);
-  box-shadow: 0 12px 30px rgba(0,0,0,.45);
-}
+  #global-player{
+    background: rgba(12,14,18,.92);
+    border: 1px dashed rgba(255,255,255,.85);
+    border-radius: 14px;
+    padding: 10px 10px 8px;
+    width: min(420px, 90vw);
+    box-shadow: 0 12px 30px rgba(0,0,0,.45);
+  }
 #global-player .gp-title{ font-weight: 700; margin: 0 26px 6px 0; }
 #global-player .gp-close{
   position:absolute; top:4px; right:6px; width:28px; height:28px;
