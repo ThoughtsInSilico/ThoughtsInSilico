@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     var stable = ui ? ui.querySelector('#entropy-stable') : null;
     var out    = ui ? ui.querySelector('[data-entropy-out]') : null;
 
-    var q = range ? Math.min(1, Math.max(0, parseFloat(range.value)||0)) : 1;
+    var q = range ? Math.min(1, Math.max(0, parseFloat(range.value)||0)) : 0;
     var fps = 24, frameMS = Math.round(1000 / fps);
     var last = 0;
 
