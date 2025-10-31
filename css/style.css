@@ -203,15 +203,45 @@ main{ position:relative; z-index:0; }
   gap: 16px;
 }
 
-/* Library grids: centered, card-sized columns */
+
+/* ===== Library grids: 4-up, left-start, responsive ===== */
 #library-books .posts-grid,
 #library-movies .posts-grid,
-#library-websites .posts-grid{
+#library-websites .posts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 280px));
-  justify-content: center;   /* centers rows when there aren't many cards */
-  gap: 16px;
+  grid-template-columns: repeat(4, 1fr); /* 4 per row on desktop */
+  gap: 24px;
+  justify-content: start;                /* last row starts at the left */
 }
+
+/* Responsive fallbacks */
+@media (max-width: 1024px) {
+  #library-books .posts-grid,
+  #library-movies .posts-grid,
+  #library-websites .posts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  #library-books .posts-grid,
+  #library-movies .posts-grid,
+  #library-websites .posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  #library-books .posts-grid,
+  #library-movies .posts-grid,
+  #library-websites .posts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Make sure headings don’t get overridden by anything else */
+.book-card h3,
+.book-card .author,
+.book-card p { text-align: center; }
+
 
 
 /* Post-card background image via CSS var */
