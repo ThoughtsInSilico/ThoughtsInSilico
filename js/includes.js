@@ -351,18 +351,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       out.textContent = `Injected noise: q × H(N) = ${bits} bits/pixel (fair B/W, H(N)=1) • Noise probability: ${pct}%`;
     }
 
-    function loop(t){
-      if (!running) return;
 
+    function loop(t){
+      // Clear when q==0 and skip drawing, but keep the loop alive.
       if (q === 0){
         const c = overlay.getContext('2d');
-        c.clearRect(0, 0, overlay.width, overlay.height); // internal W,H
-        running = false;
-        return;
-      }
-      if (t - last >= frameMS){
-        last = t;
-        renderer.render(q);
+        c.clearRect(0, 0, overlay.width, overlay.height);
+      }else{
+        // ~24 FPS throttling
+        if (!loop.last) loop.last = 0;
+        if (t - loop.last >= frameMS){
+          loop.last = t;
+          renderer.render(q);
+        }
       }
       requestAnimationFrame(loop);
     }
@@ -379,16 +380,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     range.addEventListener('input', ()=>{
       q = Math.min(1, Math.max(0, +range.value));
-      maybeRun();
+      updateReadout();
     });
+    range.addEventListener('change', ()=>{
+      q = Math.min(1, Math.max(0, +range.value));
+      updateReadout();
+    });
+
 
     stable.addEventListener('change', ()=>{
-      renderer.setStableMask(stable.checked);   // positions fixed/unfixed
-      // On next render, if stable and q changed, mask regenerates once.
-      maybeRun();
+      renderer.setStableMask(stable.checked);
     });
 
+
     updateReadout(); // initial
+    requestAnimationFrame(loop);
     maybeRun();
   }
 
