@@ -216,55 +216,189 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// --- Global Shannon-entropy static overlay (driven by a continuous slider)
+// --- Global replacement-noise overlay (per-pixel, animated, DPR-aware)
 (function(){
-  function entropy2(p){ 
-    if (p<=0 || p>=1) return 0; 
-    return -(p*Math.log2(p) + (1-p)*Math.log2(1-p)); 
+  // Binary entropy H(p) in bits; used for readout of H(N)=1 bit for fair B/W
+  function entropy2(p){
+    if (p<=0 || p>=1) return 0;
+    return -(p*Math.log2(p) + (1-p)*Math.log2(1-p));
   }
-  function clamp(x,min,max){ return x<min?min:(x>max?max:x); }
+  const H_NOISE = 1; // fair black/white noise has 1 bit/pixel
 
-  function drawStatic(canvas, p){
-    const ctx = canvas.getContext('2d');
-    const w = window.innerWidth | 0;
-    const h = window.innerHeight | 0;
-    if (canvas.width !== w || canvas.height !== h){ canvas.width = w; canvas.height = h; }
-    const n = w*h;
-    const buf = new Uint8ClampedArray(n*4);
-    for (let i=0;i<n;i++){
-      const v = (Math.random() < p) ? 255 : 0; // binary noise by probability p
-      const j = i*4;
-      buf[j]=buf[j+1]=buf[j+2]=v; buf[j+3]=255;
+  function makeRenderer(canvas){
+    const ctx = canvas.getContext('2d', { willReadFrequently: false });
+
+    let cssW = 0, cssH = 0, dpr = 1, W = 0, H = 0;
+    let mask     = null; // Uint8Array: 1=replace, 0=keep
+    let noiseVal = null; // Uint8Array: 0 or 255 (B/W) where replacing
+    let rgba     = null; // Uint8ClampedArray for frame RGBA
+    let stableMask = false; // reuse mask across frames if true
+
+    // Offscreen work surface (optional performance)
+    const hasOffscreen = typeof OffscreenCanvas !== 'undefined';
+    const work = hasOffscreen ? new OffscreenCanvas(1,1) : document.createElement('canvas');
+    const wctx = work.getContext('2d');
+
+    function ensureBuffers(){
+      const need = W*H;
+      if (!mask || mask.length !== need){
+        mask     = new Uint8Array(need);
+        noiseVal = new Uint8Array(need);
+        rgba     = new Uint8ClampedArray(need*4);
+      }
     }
-    ctx.putImageData(new ImageData(buf, w, h), 0, 0);
+
+    function resize(){
+      const newCssW = window.innerWidth|0;
+      const newCssH = window.innerHeight|0;
+      const newDpr  = Math.max(1, Math.round(window.devicePixelRatio || 1));
+
+      if (newCssW === cssW && newCssH === cssH && newDpr === dpr) return;
+
+      cssW = newCssW; cssH = newCssH; dpr = newDpr;
+      W = canvas.width  = cssW * dpr;
+      H = canvas.height = cssH * dpr;
+      canvas.style.width  = cssW + 'px';
+      canvas.style.height = cssH + 'px';
+
+      work.width  = W; work.height = H;
+
+      mask = noiseVal = rgba = null;
+      ensureBuffers();
+    }
+
+    function fillBernoulliMask(q){
+      // threshold in [0..255]
+      const T = Math.floor(q * 255);
+      // Fill with crypto RNG and threshold
+      crypto.getRandomValues(mask);
+      for (let i=0;i<mask.length;i++){
+        // mask[i] is 0..255; <= T => replace (prob ~ q)
+        mask[i] = (mask[i] <= T) ? 1 : 0;
+      }
+    }
+
+    function fillNoiseBW(){
+      // Each byte random; use lowest bit to choose 0 or 255 (unbiased)
+      crypto.getRandomValues(noiseVal);
+      for (let i=0;i<noiseVal.length;i++){
+        noiseVal[i] = (noiseVal[i] & 1) ? 255 : 0;
+      }
+    }
+
+    function composeFrame(){
+      // For each pixel: if mask=1 -> write noise (opaque); else alpha=0 (keep page pixel)
+      const n = W*H;
+      for (let i=0, j=0; i<n; i++, j+=4){
+        if (mask[i]){
+          const v = noiseVal[i];
+          rgba[j] = rgba[j+1] = rgba[j+2] = v;
+          rgba[j+3] = 255; // opaque: true replacement (no blending)
+        }else{
+          rgba[j] = rgba[j+1] = rgba[j+2] = 0;
+          rgba[j+3] = 0;   // transparent: keep underlying page pixel
+        }
+      }
+    }
+
+    function blit(){
+      const frame = new ImageData(rgba, W, H);
+      wctx.putImageData(frame, 0, 0);
+      ctx.clearRect(0,0,cssW,cssH);
+      ctx.drawImage(work, 0, 0, W, H, 0, 0, cssW, cssH); // scale to CSS pixels
+    }
+
+    return {
+      setStableMask(v){ stableMask = !!v; },
+      render(q){
+        ensureBuffers();
+        // (Re)build mask each frame unless stable
+        if (!stableMask) fillBernoulliMask(q);
+        else if (!mask) fillBernoulliMask(q); // first time
+
+        // Always regenerate noise (flicker); spec: unbiased B/W
+        fillNoiseBW();
+
+        composeFrame();
+        blit();
+      },
+      resize
+    };
   }
 
-  function initGlobalEntropyUI(){
+  function init(){
     const ui = document.querySelector('[data-entropy-global]');
-    if (!ui) return; // only activate on pages that include the slider
+    if (!ui) return;
 
-    // Create overlay canvas that affects the whole page
+    // Full-screen overlay canvas; pointer-events: none via CSS.
     const overlay = document.createElement('canvas');
     overlay.className = 'entropy-overlay';
     document.body.appendChild(overlay);
 
-    const range = ui.querySelector('input[type="range"]');
-    const out = ui.querySelector('[data-entropy-out]');
+    const range  = ui.querySelector('#entropy-range');
+    const stable = ui.querySelector('#entropy-stable');
+    const out    = ui.querySelector('[data-entropy-out]');
 
-    let p = +range.value || 0; // probability of white pixels
-    function render(){
-      // Redraw noise and set visual strength via opacity
-      drawStatic(overlay, p);
-      overlay.style.opacity = (p === 0 ? 0 : Math.min(1, p * 0.95));
-      if (out) out.textContent = entropy2(clamp(p, 0.0005, 0.9995)).toFixed(3) + ' bits';
+    const renderer = makeRenderer(overlay);
+    renderer.resize();
+    window.addEventListener('resize', renderer.resize, { passive: true });
+
+    let q = +range.value || 0;             // replacement probability (slider maps directly)
+    let running = false;
+    const targetFPS = 24;
+    const frameMS = Math.round(1000 / targetFPS);
+    let last = 0;
+
+    function updateReadout(){
+      // H(N)=1 bit/pixel for fair B/W; injected = q * H(N) = q
+      const bits = (q * 1).toFixed(3);
+      const pct  = Math.round(q * 100);
+      out.textContent = `Injected noise: q × H(N) = ${bits} bits/pixel • Noise probability: ${pct}%`;
     }
 
-    range.addEventListener('input', () => { p = clamp(+range.value, 0, 1); render(); });
+    function loop(t){
+      if (!running) return;
+      if (q === 0){
+        const ctx = overlay.getContext('2d');
+        ctx.clearRect(0,0,overlay.width,overlay.height);
+        running = false;
+        return;
+      }
+      if (t - last >= frameMS){
+        last = t;
+        renderer.render(q);
+      }
+      requestAnimationFrame(loop);
+    }
 
-    window.addEventListener('resize', render, { passive: true });
-    render();
+    function maybeRun(){
+      updateReadout();
+      if (q === 0){
+        running = false;
+        const ctx = overlay.getContext('2d');
+        ctx.clearRect(0,0,overlay.width,overlay.height);
+        return;
+      }
+      if (!running){
+        running = true;
+        requestAnimationFrame(loop);
+      }
+    }
+
+    range.addEventListener('input', ()=>{
+      q = Math.min(1, Math.max(0, +range.value));
+      maybeRun();
+    });
+
+    stable.addEventListener('change', ()=>{
+      renderer.setStableMask(stable.checked); // reuse mask across frames when checked
+      // immediate refresh
+      maybeRun();
+    });
+
+    // Initial paint/readout
+    updateReadout();
   }
 
-  document.addEventListener('DOMContentLoaded', initGlobalEntropyUI);
+  document.addEventListener('DOMContentLoaded', init);
 })();
-
