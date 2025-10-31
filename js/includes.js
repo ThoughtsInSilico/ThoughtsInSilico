@@ -168,24 +168,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   await includeInto(document.getElementById('footer-include'));
 
   // 6) Year
-  const yearEl = document.querySelector('[data-year], #y');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-  // 7) Inject "Back to Home" ABOVE the footer on all non-home pages
-  const isHome = document.body.classList.contains('home') || /(?:^|\/)index\.html?$/.test(location.pathname);
+    const yearEl = document.querySelector('[data-year], #y');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+  
+    const isHome = document.body.classList.contains('home') || /(?:^|\/)index\.html?$/.test(location.pathname);
   if (!isHome) {
-    const footerEl = document.querySelector('main footer') || document.querySelector('footer');
+    const footerEl =
+      document.querySelector('footer.site-footer, footer[role="contentinfo"], main > footer:last-of-type') ||
+      document.querySelector('footer');
+  
     const linkWrap = document.createElement('p');
     linkWrap.className = 'back-home container';
     linkWrap.style.padding = '0 0 18px';
     linkWrap.innerHTML = '<a href="./">← Back to Home</a>';
-
+  
     if (footerEl && footerEl.parentNode) {
       footerEl.parentNode.insertBefore(linkWrap, footerEl);
     } else {
       (document.querySelector('main') || document.body).appendChild(linkWrap);
     }
   }
+
 
   // 8) Proportional panel sizing for the about page columns
   function proportionalize(colSelector){
