@@ -216,113 +216,143 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// --- Global replacement-noise overlay (per-pixel, animated, DPR-aware)
+// --- Global replacement-noise overlay (per-pixel, animated, DPR-correct, exact q)
 (function(){
-  // Binary entropy H(p) in bits; used for readout of H(N)=1 bit for fair B/W
-  function entropy2(p){
-    if (p<=0 || p>=1) return 0;
-    return -(p*Math.log2(p) + (1-p)*Math.log2(1-p));
-  }
-  const H_NOISE = 1; // fair black/white noise has 1 bit/pixel
+  // H(N) for fair black/white noise
+  const H_NOISE = 1; // bits/pixel
 
   function makeRenderer(canvas){
     const ctx = canvas.getContext('2d', { willReadFrequently: false });
 
+    // CSS size (logical), DPR, and internal pixel size
     let cssW = 0, cssH = 0, dpr = 1, W = 0, H = 0;
-    let mask     = null; // Uint8Array: 1=replace, 0=keep
-    let noiseVal = null; // Uint8Array: 0 or 255 (B/W) where replacing
-    let rgba     = null; // Uint8ClampedArray for frame RGBA
-    let stableMask = false; // reuse mask across frames if true
 
-    // Offscreen work surface (optional performance)
+    // Working buffers (reused):
+    // mask: 1=replace, 0=keep; noiseVal: replacement values (0 or 255); rgba: frame pixels
+    let mask = null, noiseVal = null, rgba = null;
+
+    // Reusable ImageData to avoid per-frame allocations
+    let frame = null;
+
+    // Stable mask behavior
+    let stableMask = false;
+    let lastQ = -1; // remember the q that the mask currently encodes (for stable mode)
+
+    // Offscreen work surface for fast blitting
     const hasOffscreen = typeof OffscreenCanvas !== 'undefined';
     const work = hasOffscreen ? new OffscreenCanvas(1,1) : document.createElement('canvas');
     const wctx = work.getContext('2d');
 
     function ensureBuffers(){
-      const need = W*H;
+      const need = W * H;
       if (!mask || mask.length !== need){
         mask     = new Uint8Array(need);
         noiseVal = new Uint8Array(need);
-        rgba     = new Uint8ClampedArray(need*4);
+        rgba     = new Uint8ClampedArray(need * 4);
+        frame    = new ImageData(rgba, W, H); // data view reused; overwritten via frame.data.set(rgba)
       }
     }
 
     function resize(){
-      const newCssW = window.innerWidth|0;
-      const newCssH = window.innerHeight|0;
-      const newDpr  = Math.max(1, Math.round(window.devicePixelRatio || 1));
+      const newCssW = window.innerWidth  | 0;
+      const newCssH = window.innerHeight | 0;
+      const newDpr  = (window.devicePixelRatio || 1); // keep fractional DPR
 
       if (newCssW === cssW && newCssH === cssH && newDpr === dpr) return;
 
       cssW = newCssW; cssH = newCssH; dpr = newDpr;
-      W = canvas.width  = cssW * dpr;
-      H = canvas.height = cssH * dpr;
+
+      // Internal pixel size: round css*dpr to integer pixels
+      W = Math.round(cssW * dpr);
+      H = Math.round(cssH * dpr);
+
+      // Size the canvas: internal px and CSS px
+      canvas.width  = W;
+      canvas.height = H;
       canvas.style.width  = cssW + 'px';
       canvas.style.height = cssH + 'px';
 
-      work.width  = W; work.height = H;
+      // Match offscreen work surface
+      work.width  = W;
+      work.height = H;
 
-      mask = noiseVal = rgba = null;
+      // Force fresh buffers
+      mask = noiseVal = rgba = frame = null;
       ensureBuffers();
+      lastQ = -1; // ensure mask rebuild on next render
     }
 
-    function fillBernoulliMask(q){
-      // threshold in [0..255]
-      const T = Math.floor(q * 255);
-      // Fill with crypto RNG and threshold
-      crypto.getRandomValues(mask);
-      for (let i=0;i<mask.length;i++){
-        // mask[i] is 0..255; <= T => replace (prob ~ q)
-        mask[i] = (mask[i] <= T) ? 1 : 0;
+    // Exact Bernoulli(q) using 32-bit RNG: P(replace)=q (up to 1 ulp)
+    function fillBernoulliMaskExact(q){
+      const n = W * H;
+      const r = new Uint32Array(n);
+      crypto.getRandomValues(r);
+      const threshold = Math.floor(q * 0x1_0000_0000); // q * 2^32
+      for (let i = 0; i < n; i++){
+        mask[i] = (r[i] < threshold) ? 1 : 0;
       }
+      lastQ = q; // remember which q this mask encodes
     }
 
+    // Unbiased B/W noise values (0 or 255) using crypto RNG
     function fillNoiseBW(){
-      // Each byte random; use lowest bit to choose 0 or 255 (unbiased)
-      crypto.getRandomValues(noiseVal);
-      for (let i=0;i<noiseVal.length;i++){
-        noiseVal[i] = (noiseVal[i] & 1) ? 255 : 0;
+      const n = W * H;
+      const r = new Uint8Array(n);
+      crypto.getRandomValues(r);
+      for (let i = 0; i < n; i++){
+        noiseVal[i] = (r[i] & 1) ? 255 : 0;
       }
     }
 
+    // Compose the frame: per-pixel replacement; no alpha blending
     function composeFrame(){
-      // For each pixel: if mask=1 -> write noise (opaque); else alpha=0 (keep page pixel)
-      const n = W*H;
-      for (let i=0, j=0; i<n; i++, j+=4){
+      const n = W * H;
+      // rgba buffer already allocated; write in internal pixel coordinates
+      for (let i = 0, j = 0; i < n; i++, j += 4){
         if (mask[i]){
           const v = noiseVal[i];
           rgba[j] = rgba[j+1] = rgba[j+2] = v;
-          rgba[j+3] = 255; // opaque: true replacement (no blending)
+          rgba[j+3] = 255; // opaque: replace page pixel
         }else{
           rgba[j] = rgba[j+1] = rgba[j+2] = 0;
-          rgba[j+3] = 0;   // transparent: keep underlying page pixel
+          rgba[j+3] = 0;   // transparent: keep page pixel
         }
       }
     }
 
+    // Blit using internal pixel coordinates (W,H) — DPR-correct
     function blit(){
-      const frame = new ImageData(rgba, W, H);
+      // Reuse ImageData; copy in-place to avoid realloc
+      frame.data.set(rgba);
       wctx.putImageData(frame, 0, 0);
-      ctx.clearRect(0,0,cssW,cssH);
-      ctx.drawImage(work, 0, 0, W, H, 0, 0, cssW, cssH); // scale to CSS pixels
+
+      // Draw at 1:1 internal size; browser handles CSS scaling to cssW×cssH
+      ctx.clearRect(0, 0, W, H);     // use internal W,H (not CSS)
+      ctx.drawImage(work, 0, 0);     // work is exactly W×H
     }
 
     return {
       setStableMask(v){ stableMask = !!v; },
+      resize,
       render(q){
         ensureBuffers();
-        // (Re)build mask each frame unless stable
-        if (!stableMask) fillBernoulliMask(q);
-        else if (!mask) fillBernoulliMask(q); // first time
 
-        // Always regenerate noise (flicker); spec: unbiased B/W
+        // Rebuild mask rules:
+        // - If stable OFF: rebuild mask every frame (new positions)
+        // - If stable ON: keep positions, but if q changed, rebuild once for new density
+        if (!stableMask){
+          fillBernoulliMaskExact(q);
+        }else if (lastQ !== q){
+          fillBernoulliMaskExact(q);
+        }
+
+        // Always refresh noise values each frame (twinkle); if you want frozen values too,
+        // we can add a second toggle to keep noiseVal fixed.
         fillNoiseBW();
 
         composeFrame();
         blit();
-      },
-      resize
+      }
     };
   }
 
@@ -330,7 +360,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ui = document.querySelector('[data-entropy-global]');
     if (!ui) return;
 
-    // Full-screen overlay canvas; pointer-events: none via CSS.
+    // Full-screen overlay canvas
     const overlay = document.createElement('canvas');
     overlay.className = 'entropy-overlay';
     document.body.appendChild(overlay);
@@ -343,27 +373,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderer.resize();
     window.addEventListener('resize', renderer.resize, { passive: true });
 
-    let q = +range.value || 0;             // replacement probability (slider maps directly)
+    let q = +range.value || 0; // replacement probability
     let running = false;
+
+    // Target ~24 FPS
     const targetFPS = 24;
     const frameMS = Math.round(1000 / targetFPS);
     let last = 0;
 
     function updateReadout(){
-      // H(N)=1 bit/pixel for fair B/W; injected = q * H(N) = q
-      const bits = (q * 1).toFixed(3);
+      const bits = (q * H_NOISE).toFixed(3);       // q × 1 bit/pixel
       const pct  = Math.round(q * 100);
-      out.textContent = `Injected noise: q × H(N) = ${bits} bits/pixel • Noise probability: ${pct}%`;
+      out.textContent = `Injected noise: q × H(N) = ${bits} bits/pixel (fair B/W, H(N)=1) • Noise probability: ${pct}%`;
     }
 
     function loop(t){
       if (!running) return;
+
       if (q === 0){
-        const ctx = overlay.getContext('2d');
-        ctx.clearRect(0,0,overlay.width,overlay.height);
+        const c = overlay.getContext('2d');
+        // Clear using internal pixel size (DPR-correct)
+        c.clearRect(0, 0, overlay.width, overlay.height);
         running = false;
         return;
       }
+
       if (t - last >= frameMS){
         last = t;
         renderer.render(q);
@@ -375,8 +409,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateReadout();
       if (q === 0){
         running = false;
-        const ctx = overlay.getContext('2d');
-        ctx.clearRect(0,0,overlay.width,overlay.height);
+        const c = overlay.getContext('2d');
+        c.clearRect(0, 0, overlay.width, overlay.height);
         return;
       }
       if (!running){
@@ -386,17 +420,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     range.addEventListener('input', ()=>{
-      q = Math.min(1, Math.max(0, +range.value));
+      const val = +range.value;
+      q = Math.min(1, Math.max(0, val));
       maybeRun();
     });
 
     stable.addEventListener('change', ()=>{
-      renderer.setStableMask(stable.checked); // reuse mask across frames when checked
-      // immediate refresh
+      renderer.setStableMask(stable.checked);
+      // Force immediate mask rebuild on next render by nudging q (no visual jump)
+      // (Not strictly necessary now that render() handles lastQ vs q, but harmless.)
       maybeRun();
     });
 
-    // Initial paint/readout
+    // Initial readout (q=0 -> overlay fully cleared)
     updateReadout();
   }
 
