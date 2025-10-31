@@ -327,22 +327,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function init(){
     const ui = document.querySelector('[data-entropy-global]');
-    if (!ui) return;
 
     // Overlay canvas
     const overlay = document.createElement('canvas');
     overlay.className = 'entropy-overlay';
     document.body.appendChild(overlay);
 
-    const range  = ui.querySelector('#entropy-range');
-    const stable = ui.querySelector('#entropy-stable');
-    const out    = ui.querySelector('[data-entropy-out]');
-
+    const range  = ui ? ui.querySelector('#entropy-range') : null;
+    const stable = ui ? ui.querySelector('#entropy-stable') : null;
+    const out    = ui ? ui.querySelector('[data-entropy-out]') : null;
+    
     const renderer = makeRenderer(overlay);
     renderer.resize();
     window.addEventListener('resize', renderer.resize, { passive: true });
 
-    let q = +range.value || 0;
+    let q = range ? Math.min(1, Math.max(0, parseFloat(range.value) || 0)) : 1;
     const fps = 24, frameMS = Math.round(1000 / fps);
 
     function updateReadout(){
@@ -370,9 +369,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     requestAnimationFrame(loop);   // start the loop first
     updateReadout();               // then do the UI wiring
     
-    range.addEventListener('input', ()=>{ q = Math.min(1, Math.max(0, +range.value)); updateReadout(); });
-    range.addEventListener('change', ()=>{ q = Math.min(1, Math.max(0, +range.value)); updateReadout(); });
-    if (stable) {stable.addEventListener('change', ()=> renderer.setStable(stable.checked) );}
+    if (range){
+      const setFromRange = () => { q = Math.min(1, Math.max(0, parseFloat(range.value) || 0)); updateReadout(); };
+      range.addEventListener('input', setFromRange);
+      range.addEventListener('change', setFromRange);
+    }
+    if (stable){
+      stable.addEventListener('change', ()=> renderer.setStable(stable.checked));
+    }
 
 
   document.addEventListener('DOMContentLoaded', init);
