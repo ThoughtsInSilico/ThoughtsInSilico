@@ -374,6 +374,12 @@ main > footer{ margin-top:0 }
   .triple-grid{ grid-template-columns: 1fr; }  /* stack */
   .double-grid{ grid-template-columns: 1fr; }  /* stack */
   .about-col{ gap: 10px; }
+
+  /* Let the about-upper background cover the top hamburger gutter on phones */
+  .about-upper{
+    margin-top: -56px;   /* pull the section up to “occupy” the reserved space */
+    padding-top: 56px;   /* keep the title/content pushed down below the button */
+  }
 }
 
 
