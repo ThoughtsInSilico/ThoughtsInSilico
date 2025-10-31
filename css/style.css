@@ -476,7 +476,7 @@ main > footer{ margin-top:0 }
 .entropy-overlay{
   position: fixed;
   inset: 0;
-  z-index: 2000;           /* below the control, above content */
+  z-index: 2999;           /* below the control, above content */
   pointer-events: none;  /* never blocks clicking the page */
   image-rendering: pixelated;
 }
