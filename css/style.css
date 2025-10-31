@@ -189,11 +189,12 @@ main{ position:relative; z-index:0; }
   margin: 0 0 6px;
 }
 
-/* IMPORTANT: don’t justify library text */
+/* Center text inside book/movie/website cards */
 .book-card p{
   margin: 0;
-  text-align: left;
+  text-align: center;
 }
+
 
 /* Optional: keep grid spacing tidy for library */
 #library-books .posts-grid,
@@ -201,6 +202,17 @@ main{ position:relative; z-index:0; }
 #library-websites .posts-grid{
   gap: 16px;
 }
+
+/* Library grids: centered, card-sized columns */
+#library-books .posts-grid,
+#library-movies .posts-grid,
+#library-websites .posts-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 280px));
+  justify-content: center;   /* centers rows when there aren't many cards */
+  gap: 16px;
+}
+
 
 /* Post-card background image via CSS var */
 .post-card{ position:relative; overflow:hidden; }
