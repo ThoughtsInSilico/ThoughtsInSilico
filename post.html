@@ -1,126 +1,115 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post • Silico: Book of Genesis</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <meta name="theme-color" content="#000000" />
-  <script>
-    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
-  </script>
-  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script src="js/includes.js" defer></script>
-</head>
-
-<body>
-  <div class="layout">
-    <!-- Sidebar include -->
-    <div id="sidebar-include" data-src="partials/sidebar.html"></div>
-
-    <main class="main">
-      <section class="container section">
-        <h1 class="post-title" id="title" style="font-size: clamp(28px,5vw,46px);">Loading…</h1>
-        <p class="post-meta" id="meta"></p>
-        <hr class="hr-dots"/>
-        <article id="body" class="post-body"></article>
-      </section>
-
-      <!-- Footer include -->
-      <div id="footer-include" data-src="partials/footer.html"></div>
-    </main>
-  </div>
-
-  <script>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post • Silico: Book of Genesis</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <meta name="theme-color" content="#000000" />
     <script>
-      async function loadPost(){
-        const usp     = new URLSearchParams(location.search);
-        const u       = usp.get('u');
-        const titleEl = document.getElementById('title');
-        const metaEl  = document.getElementById('meta');
-        const bodyEl  = document.getElementById('body');
-    
-        if (!u){ titleEl.textContent = 'No post selected'; return; }
-    
-        try{
-          // Resolve the target URL absolutely (works from any page/folder).
-          const absUrl = new URL(u, location.href).href;
-    
-          const res  = await fetch(absUrl, { cache:'no-store' });
-          if (!res.ok) throw new Error(`HTTP ${res.status} for ${absUrl}`);
-    
-          const html = await res.text();
-          const doc  = new DOMParser().parseFromString(html, 'text/html');
-    
-          // Title / date
-          const h1   = doc.querySelector('h1') || doc.querySelector('.post-title');
-          const time = doc.querySelector('time[datetime]');
-          document.title      = (h1 ? h1.textContent.trim() : 'Post') + ' • Silico: Book of Genesis';
-          titleEl.innerHTML   = h1 ? h1.innerHTML : 'Untitled';
-          metaEl.textContent  = time ? new Date(time.getAttribute('datetime'))
-                                      .toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'}) : '';
-    
-          // Extract body (prefer <article>, fall back to <main>, then <body>)
-          const srcRoot = doc.querySelector('article') || doc.querySelector('main') || doc.body;
-          const cleaned = srcRoot.cloneNode(true);
-          // Remove the first heading/date inside the cloned body
-          const firstH1   = cleaned.querySelector('h1');           if (firstH1)  firstH1.remove();
-          const firstTime = cleaned.querySelector('time[datetime]');if (firstTime)firstTime.remove();
-    
-          // Inject HTML
-          bodyEl.innerHTML = cleaned.innerHTML;
-    
-          // Make all relative URLs (img/src, link/src, a/href) absolute to the fetched post's folder.
-          const baseDir = new URL(absUrl).href.replace(/[^/]*$/, '');
-    
-          bodyEl.querySelectorAll('[src]').forEach(el => {
-            const v = el.getAttribute('src');
-            if (v && !/^([a-z]+:)?\/\//i.test(v) && !v.startsWith('/')){
-              el.setAttribute('src', new URL(v, baseDir).href);
-            }
-          });
-          bodyEl.querySelectorAll('a[href]').forEach(a => {
-            const v = a.getAttribute('href');
-            if (v && !/^([a-z]+:)?\/\//i.test(v) && !v.startsWith('/')){
-              a.setAttribute('href', new URL(v, baseDir).href);
-            }
-          });
-    
-          // Re-run any inline scripts the post contains (e.g., "Similar reads")
-          bodyEl.querySelectorAll('script').forEach(old => {
-            const s = document.createElement('script');
-            for (const {name, value} of old.attributes) s.setAttribute(name, value);
-            s.textContent = old.textContent;
-            old.replaceWith(s);
-          });
-    
-          // Route links to *other* HTML files under /posts/ through the reader
-          bodyEl.querySelectorAll('a[href]').forEach(a => {
-            try{
-              const target = new URL(a.getAttribute('href'), location.href);
-              const path   = target.pathname.replace(/^\/[^/]+\//, '/'); // strip repo segment on GH Pages
-              if (path.startsWith('/posts/') && /\.html?$/i.test(path)){
-                a.href = 'post.html?u=' + encodeURIComponent(target.href);
-              }
-            }catch(_){}
-          });
-    
-          if (window.MathJax?.typeset) MathJax.typeset();
-    
-          if (location.hash){
-            const target = document.getElementById(location.hash.slice(1));
-            if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
-          }
-        }catch(e){
-          console.error('loadPost failed:', e);
-          titleEl.textContent = 'Could not load post';
-          bodyEl.innerHTML = `<p class="post-body" style="color:#cfcac3">
-            Error loading <code>${(u||'').toString()}</code> — ${e.message}.
-          </p>`;
-        }
-      }
-      loadPost();
+      window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
     </script>
-  </script>
-</body>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="js/includes.js" defer></script>
+  </head>
+
+  <body>
+    <div class="layout">
+      <!-- Sidebar include -->
+      <div id="sidebar-include" data-src="partials/sidebar.html"></div>
+  
+      <main class="main">
+        <section class="container section">
+          <h1 class="post-title" id="title" style="font-size: clamp(28px,5vw,46px);">Loading…</h1>
+          <p class="post-meta" id="meta"></p>
+          <hr class="hr-dots"/>
+          <article id="body" class="post-body"></article>
+        </section>
+  
+        <!-- Footer include -->
+        <div id="footer-include" data-src="partials/footer.html"></div>
+      </main>
+    </div>
+  
+    
+      <script>
+        async function loadPost(){
+          const usp     = new URLSearchParams(location.search);
+          const u       = usp.get('u');
+          const titleEl = document.getElementById('title');
+          const metaEl  = document.getElementById('meta');
+          const bodyEl  = document.getElementById('body');
+    
+          if (!u){ titleEl.textContent = 'No post selected'; return; }
+    
+          try{
+            const absUrl = new URL(u, location.href).href;
+            const res  = await fetch(absUrl, { cache:'no-store' });
+            if (!res.ok) throw new Error(`HTTP ${res.status} for ${absUrl}`);
+    
+            const html = await res.text();
+            const doc  = new DOMParser().parseFromString(html, 'text/html');
+    
+            const h1   = doc.querySelector('h1') || doc.querySelector('.post-title');
+            const time = doc.querySelector('time[datetime]');
+            document.title     = (h1 ? h1.textContent.trim() : 'Post') + ' • Silico: Book of Genesis';
+            titleEl.innerHTML  = h1 ? h1.innerHTML : 'Untitled';
+            metaEl.textContent = time ? new Date(time.getAttribute('datetime'))
+                                        .toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'}) : '';
+    
+            const srcRoot = doc.querySelector('article') || doc.querySelector('main') || doc.body;
+            const cleaned = srcRoot.cloneNode(true);
+            const firstH1   = cleaned.querySelector('h1');            if (firstH1)  firstH1.remove();
+            const firstTime = cleaned.querySelector('time[datetime]'); if (firstTime) firstTime.remove();
+    
+            bodyEl.innerHTML = cleaned.innerHTML;
+    
+            const baseDir = new URL(absUrl).href.replace(/[^/]*$/, '');
+            bodyEl.querySelectorAll('[src]').forEach(el => {
+              const v = el.getAttribute('src');
+              if (v && !/^([a-z]+:)?\/\//i.test(v) && !v.startsWith('/')){
+                el.setAttribute('src', new URL(v, baseDir).href);
+              }
+            });
+            bodyEl.querySelectorAll('a[href]').forEach(a => {
+              const v = a.getAttribute('href');
+              if (v && !/^([a-z]+:)?\/\//i.test(v) && !v.startsWith('/')){
+                a.setAttribute('href', new URL(v, baseDir).href);
+              }
+            });
+    
+            bodyEl.querySelectorAll('script').forEach(old => {
+              const s = document.createElement('script');
+              for (const {name, value} of old.attributes) s.setAttribute(name, value);
+              s.textContent = old.textContent;
+              old.replaceWith(s);
+            });
+    
+            bodyEl.querySelectorAll('a[href]').forEach(a => {
+              try{
+                const target = new URL(a.getAttribute('href'), location.href);
+                const path   = target.pathname.replace(/^\/[^/]+\//, '/');
+                if (path.startsWith('/posts/') && /\.html?$/i.test(path)){
+                  a.href = 'post.html?u=' + encodeURIComponent(target.href);
+                }
+              }catch(_){}
+            });
+    
+            if (window.MathJax?.typeset) MathJax.typeset();
+    
+            if (location.hash){
+              const target = document.getElementById(location.hash.slice(1));
+              if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+            }
+          }catch(e){
+            console.error('loadPost failed:', e);
+            titleEl.textContent = 'Could not load post';
+            bodyEl.innerHTML = `<p class="post-body" style="color:#cfcac3">
+              Error loading <code>${(u||'').toString()}</code> — ${e.message}.
+            </p>`;
+          }
+        }
+        loadPost();
+      </script>
+  </body>
 </html>
