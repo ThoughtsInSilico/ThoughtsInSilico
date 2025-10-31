@@ -1,10 +1,8 @@
-<!-- Hamburger stays OUTSIDE the sliding panel -->
 <button id="navToggle" class="hamburger" aria-label="Open menu"
         aria-controls="site-sidebar" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
 
-<!-- Single sidebar + one .sidebar-panel wrapper -->
 <aside id="site-sidebar" class="sidebar" role="navigation" aria-label="Primary">
   <div class="sidebar-panel">
     <div class="brand">
@@ -36,14 +34,13 @@
         </form>
       </div>
 
-      <!-- Separator (white & thicker per your CSS) -->
       <hr class="sidebar-sep" />
 
       <h3>Currently listening <small>(click title to play)</small></h3>
       <article class="anthem-card">
         <ul id="sl-list" class="anthem-list"></ul>
         <div id="sl-now" class="now-playing" aria-live="polite"></div>
-        <audio id="sl-audio" class="anthem-audio" preload="none" controls></audio>
+        <!-- NOTE: no <audio> element here; the global player handles playback -->
       </article>
     </nav>
   </div>
