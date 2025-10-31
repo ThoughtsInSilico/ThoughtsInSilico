@@ -331,22 +331,25 @@ main > footer{ margin-top:0 }
 
   /* Phone hamburger (always visible & tappable) */
   .hamburger{
-    position: fixed;
-    left: 12px;
-    top: 12px;
-    z-index: 3000;
-    display: inline-flex !important;
-    pointer-events: auto;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    width: 42px; height: 42px;
-    border-radius: 10px; border: 1px solid var(--stroke);
-    background: rgba(18,20,24,.7);
-    backdrop-filter: blur(6px);
-  }
-    /* shell should not block clicks when panel is hidden */
+  position: fixed;
+  left: 12px;
+  top: 12px;          /* was top:auto; put it at the very top */
+  bottom: auto;
+  z-index: 3000;
+  display: inline-flex !important;
+  pointer-events: auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 42px; height: 42px;
+  border-radius: 10px; border: 1px solid var(--stroke);
+  background: rgba(18,20,24,.7);
+  backdrop-filter: blur(6px);
+}
+
+  
+  /* shell should not block clicks when panel is hidden */
   .sidebar{ pointer-events: none; }
   body.nav-open .sidebar{ pointer-events: auto; }
   
