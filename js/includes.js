@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 6) Year
     const yearEl = document.querySelector('[data-year], #y');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
+    const isHome = document.body.classList.contains('home') || /(?:^|\/)index\.html?$/.test(location.pathname);
   
     
 
