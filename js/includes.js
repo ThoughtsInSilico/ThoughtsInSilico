@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       mask  = new Uint8Array(n);
       rand32= new Uint32Array(n);
       noise = new Uint8Array(n);
-      frame = new ImageData(W, H);
+      frame = ctx.createImageData(W, H);
 
       lastQ = -1; // force rebuild for new size
     }
