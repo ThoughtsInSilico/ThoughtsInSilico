@@ -238,28 +238,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     let lastQ = -1;
 
     function resize(){
-      const nw = window.innerWidth  | 0;
-      const nh = window.innerHeight | 0;
+      // Use documentElement sizes as fallback to avoid 0×0 on some engines
+      const cw = Math.max(document.documentElement.clientWidth  || 0, window.innerWidth  || 0);
+      const ch = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
       const nd = (window.devicePixelRatio || 1);
-      if (nw === cssW && nh === cssH && nd === dpr) return;
-
-      cssW = nw; cssH = nh; dpr = nd;
-      W = Math.round(cssW * dpr);
-      H = Math.round(cssH * dpr);
-
+    
+      if (cw === cssW && ch === cssH && nd === dpr) return;
+    
+      cssW = cw; cssH = ch; dpr = nd;
+      W = Math.max(1, Math.round(cssW * dpr));
+      H = Math.max(1, Math.round(cssH * dpr));
+    
       canvas.width  = W;
       canvas.height = H;
       canvas.style.width  = cssW + 'px';
       canvas.style.height = cssH + 'px';
-
+    
       const n = W * H;
-      mask  = new Uint8Array(n);
-      rand32= new Uint32Array(n);
-      noise = new Uint8Array(n);
-      frame = ctx.createImageData(W, H);
-
+      mask   = new Uint8Array(n);
+      rand32 = new Uint32Array(n);
+      noise  = new Uint8Array(n);
+      // Context-bound allocation is safest across engines
+      frame  = ctx.createImageData(W, H);
+    
       lastQ = -1; // force rebuild for new size
     }
+
 
     function bernoulliMask(q){
       const n = mask.length;
@@ -365,7 +369,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     range.addEventListener('input', ()=>{ q = Math.min(1, Math.max(0, +range.value)); updateReadout(); });
     range.addEventListener('change', ()=>{ q = Math.min(1, Math.max(0, +range.value)); updateReadout(); });
-    stable.addEventListener('change', ()=> renderer.setStable(stable.checked) );
+    if (stable) {stable.addEventListener('change', ()=> renderer.setStable(stable.checked) );}
+
 
     updateReadout();
     requestAnimationFrame(loop);
