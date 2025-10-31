@@ -219,6 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // --- Global replacement-noise overlay (per-pixel, animated, DPR-correct, exact q)
 (function(){
   const H_NOISE = 1; // fair black/white noise: 1 bit/pixel
+  const hasCrypto = typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function';
 
   function makeRenderer(canvas){
     const ctx = canvas.getContext('2d');
@@ -264,27 +265,42 @@ document.addEventListener('DOMContentLoaded', async () => {
       lastQ = -1; // force mask rebuild next frame
     }
 
-    // Exact Bernoulli(q) with 32-bit RNG: P(replace)=q (up to 1 ulp)
+
     function fillMaskExact(q){
       const n = W * H;
-      const r = new Uint32Array(n);
-      crypto.getRandomValues(r);
-      const threshold = Math.floor(q * 4294967296); // q * 2^32 without numeric separators
-      for (let i=0;i<n;i++){
-        mask[i] = (r[i] < threshold) ? 1 : 0;
+      const threshold = Math.floor(q * 4294967296); // q * 2^32
+      if (hasCrypto){
+        const r = new Uint32Array(n);
+        crypto.getRandomValues(r);
+        for (let i=0;i<n;i++){
+          mask[i] = (r[i] < threshold) ? 1 : 0;
+        }
+      }else{
+        const scale = 4294967296; // 2^32 fallback
+        for (let i=0;i<n;i++){
+          mask[i] = ((Math.random()*scale)|0) < threshold ? 1 : 0;
+        }
       }
       lastQ = q;
     }
 
-    // Unbiased B/W noise values
+
     function fillNoiseBW(){
       const n = W * H;
-      const r = new Uint8Array(n);
-      crypto.getRandomValues(r);
-      for (let i=0;i<n;i++){
-        noiseVal[i] = (r[i] & 1) ? 255 : 0;
+      if (hasCrypto){
+        const r = new Uint8Array(n);
+        crypto.getRandomValues(r);
+        for (let i=0;i<n;i++){
+          noiseVal[i] = (r[i] & 1) ? 255 : 0;
+        }
+      }else{
+        for (let i=0;i<n;i++){
+          noiseVal[i] = (Math.random() < 0.5) ? 255 : 0;
+        }
       }
     }
+
+    
 
     // Compose directly into frame.data (RGBA in internal pixels)
     function composeFrame(){
@@ -368,15 +384,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       requestAnimationFrame(loop);
     }
 
-    function maybeRun(){
-      updateReadout();
-      if (q === 0){
-        const c = overlay.getContext('2d');
-        c.clearRect(0, 0, overlay.width, overlay.height);
-        running = false;
-        return;
-      }
-    }
+  
 
     range.addEventListener('input', ()=>{
       q = Math.min(1, Math.max(0, +range.value));
@@ -395,7 +403,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateReadout(); // initial
     requestAnimationFrame(loop);
-    maybeRun();
   }
 
   document.addEventListener('DOMContentLoaded', init);
