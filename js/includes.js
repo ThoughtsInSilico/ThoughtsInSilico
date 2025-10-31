@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       rand32 = new Uint32Array(n);
       noise  = new Uint8Array(n);
       // Context-bound allocation is safest across engines
-      frame  = ctx.createImageData(W, H);
+      frame = ctx.createImageData(W, H);
     
       lastQ = -1; // force rebuild for new size
     }
@@ -302,8 +302,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function blit(){
-      ctx.putImageData(frame, 0, 0); // internal pixels (W,H)
+      // Force a replacement write of the whole pixel buffer.
+      const prev = ctx.globalCompositeOperation;
+      ctx.globalCompositeOperation = 'copy';
+      ctx.putImageData(frame, 0, 0);
+      ctx.globalCompositeOperation = prev || 'source-over';
     }
+
 
     return {
       setStable(v){ stableMask = !!v; },
@@ -368,7 +373,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     requestAnimationFrame(loop);   // start the loop first
     updateReadout();               // then do the UI wiring
-    
+
     if (range){
       const setFromRange = () => { q = Math.min(1, Math.max(0, parseFloat(range.value) || 0)); updateReadout(); };
       range.addEventListener('input', setFromRange);
