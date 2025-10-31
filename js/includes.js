@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 (function(){
   const H_NOISE = 1; // fair black/white noise: 1 bit/pixel
   const hasCrypto = typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function';
-
+  
   function makeRenderer(canvas){
     const ctx = canvas.getContext('2d');
 
@@ -231,19 +231,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     let mask = null;        // Uint8Array, 1=replace, 0=keep
     let noiseVal = null;    // Uint8Array, 0 or 255
     let frame = null;       // ImageData (reused)
+    let rand32 = null;      // Uint32Array reused for exact Bernoulli(q)
+
+    
 
     // Stable mask (positions) & which q it encodes
     let stableMask = false;
     let lastQ = -1;
+
 
     function ensureBuffers(){
       const need = W * H;
       if (!mask || mask.length !== need){
         mask     = new Uint8Array(need);
         noiseVal = new Uint8Array(need);
-        frame    = new ImageData(W, H); // browser-allocated backing store
+        frame    = new ImageData(W, H);   // browser-allocated backing store
+        rand32   = new Uint32Array(need); // reused RNG buffer
       }
     }
+
+    
 
     function resize(){
       const newCssW = window.innerWidth  | 0;
@@ -270,15 +277,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       const n = W * H;
       const threshold = Math.floor(q * 4294967296); // q * 2^32
       if (hasCrypto){
-        const r = new Uint32Array(n);
-        crypto.getRandomValues(r);
+        crypto.getRandomValues(rand32);   // fill in-place; no per-frame allocation
         for (let i=0;i<n;i++){
-          mask[i] = (r[i] < threshold) ? 1 : 0;
+          mask[i] = (rand32[i] < threshold) ? 1 : 0;
         }
-      }else{
-        const scale = 4294967296; // 2^32 fallback
+      } else {
+        const scale = 4294967296;
         for (let i=0;i<n;i++){
-          mask[i] = ((Math.random()*scale)|0) < threshold ? 1 : 0;
+          mask[i] = ((Math.random() * scale) | 0) < threshold ? 1 : 0;
         }
       }
       lastQ = q;
