@@ -65,41 +65,41 @@
                   <h4>Personal Anthems (click title to play)</h4>
                   <ul class="anthem-list" id="anthemList"></ul>
                   <div id="nowPlaying" class="now-playing" aria-live="polite"></div>
-                  <audio id="anthemAudio" class="anthem-audio" preload="none" controls></audio>
-                  
+
                   <script>
-                    // ---- Personal Anthems: add your tracks here ----
+                    // ---- Personal Anthems (drives the GlobalPlayer) ----
                     const ANTHEMS = [
-                      { title: 'Mahler Symphony No. 5: IV. Adagietto (conductor: Abbado)', src: 'audio/mahler-5-adagietto.mp3' },
-                      { title: 'Schubert String Quartet No. 14 "Death and the Maiden": I. Allegro (performer: Takács Quartet)', src: 'audio/death-and-the-maiden.mp3' }
+                      { title: 'Mahler: Symphony No. 5: IV. Adagietto (conductor: Abbado)', src: 'audio/mahler-5-adagietto.mp3' },
+                      { title: 'Björk — Hyperballad',                                       src: 'audio/bjork-hyperballad.mp3' }
                     ];
                   
                     (function () {
                       const list  = document.getElementById('anthemList');
-                      const audio = document.getElementById('anthemAudio');
                       const nowEl = document.getElementById('nowPlaying');
-                      if (!list || !audio || !nowEl) return;
+                      if (!list || !nowEl) return;
                   
-                      function setNowPlaying(i){ nowEl.textContent = i >= 0 ? ANTHEMS[i].title : ''; }
-                  
-                      function renderList(active = -1) {
-                        list.innerHTML = ANTHEMS.map((t, i) =>
+                      function render(active = -1) {
+                        list.innerHTML = ANTHEMS.map((t,i) =>
                           `<li><button type="button" data-i="${i}" ${i===active?'aria-current="true"':''}>${t.title}</button></li>`
                         ).join('');
-                        setNowPlaying(active);
                       }
                   
-                      renderList();
+                      render();
                   
                       list.addEventListener('click', (e) => {
-                        const btn = e.target.closest('button[data-i]'); if (!btn) return;
+                        const btn = e.target.closest('button[data-i]');
+                        if (!btn) return;
                         const i = +btn.dataset.i;
-                        audio.src = ANTHEMS[i].src;
-                        audio.play().catch(()=>{});
-                        renderList(i);
+                        const track = ANTHEMS[i];
+                  
+                        // Use the single, floating player defined in js/includes.js
+                        window.GlobalPlayer.play(track);
+                  
+                        nowEl.textContent = track.title || '';
+                        render(i);
                       });
                     })();
-                  </script>
+                  </script>      
                 </section>
               </div>
             </div> 
