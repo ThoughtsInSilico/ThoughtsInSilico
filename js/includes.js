@@ -33,6 +33,68 @@ async function includeInto(el) {
   else console.error('Include failed for', src, 'tried:', candidatePaths(src));
 }
 
+
+// ---- Global, single audio player (fixed bottom-right) ----
+window.GlobalPlayer = (function () {
+  let shell, titleEl, audio;
+
+  function ensure() {
+    if (shell) return;
+    shell = document.createElement('div');
+    shell.id = 'global-player';
+    // minimal inline styles so it works even before CSS is tweaked
+    Object.assign(shell.style, {
+      position: 'fixed',
+      right: '16px',
+      bottom: '16px',
+      zIndex: 4000,
+      maxWidth: 'min(520px, 90vw)',
+      background: 'rgba(12,14,18,.92)',
+      border: '1px dashed rgba(255,255,255,.4)',
+      borderRadius: '14px',
+      padding: '10px',
+      boxShadow: '0 10px 30px rgba(0,0,0,.45)',
+      display: 'none',
+      color: '#e8e6e3',
+      backdropFilter: 'blur(6px)',
+    });
+
+    titleEl = document.createElement('div');
+    titleEl.id = 'global-player-title';
+    titleEl.style.margin = '0 0 6px';
+    titleEl.style.fontWeight = '700';
+
+    audio = document.createElement('audio');
+    audio.id = 'global-audio';
+    audio.controls = true;
+    audio.preload = 'none';
+    audio.style.width = '100%';
+
+    shell.appendChild(titleEl);
+    shell.appendChild(audio);
+    document.body.appendChild(shell);
+  }
+
+  return {
+    /** Play a track: {title, src} */
+    play(track) {
+      ensure();
+      if (!track || !track.src) return;
+      // always re-use the same <audio>, so only one source plays
+      if (audio.src !== new URL(track.src, location.href).href) {
+        audio.src = track.src;
+      }
+      titleEl.textContent = track.title || '';
+      shell.style.display = 'block';
+      audio.play().catch(() => {});
+    },
+    pause() { ensure(); audio.pause(); },
+    isActive() { return !!audio && !audio.paused; },
+  };
+})();
+
+
+
 // === Sidebar "Currently Listening" tracks (edit this list) ===
 const SIDEBAR_TRACKS = [
   // Example entries — change to your files in /audio/
@@ -50,30 +112,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.body.classList.toggle('nav-open');
   });
 
-  // ---- Sidebar "Currently Listening" wiring ----
-  (function(){
+  // ---- Sidebar "Currently Listening" wiring (uses GlobalPlayer) ----
+  {
     const list  = document.getElementById('sl-list');
-    const audio = document.getElementById('sl-audio');
-    if (!list || !audio) return; // partial not present
+    const nowEl = document.getElementById('sl-now');
   
-    function renderSidebarList(active = -1){
-      list.innerHTML = SIDEBAR_TRACKS.length
-        ? SIDEBAR_TRACKS.map((t,i)=>
-            `<li><button type="button" data-i="${i}" ${i===active?'aria-current="true"':''}>${t.title}</button></li>`
-          ).join('')
-        : '<li><em>Add tracks in <code>audio/</code>…</em></li>';
-        }
+    if (list) {
+      function render(active = -1) {
+        list.innerHTML = SIDEBAR_TRACKS.length
+          ? SIDEBAR_TRACKS.map((t,i)=>
+              `<li><button type="button" data-i="${i}" ${i===active?'aria-current="true"':''}>${t.title}</button></li>`
+            ).join('')
+          : '<li><em>Add tracks in <code>audio/</code>…</em></li>';
+      }
   
-    renderSidebarList();
+      render();
   
-    list.addEventListener('click', e=>{
-      const btn = e.target.closest('button[data-i]'); if(!btn) return;
-      const i = +btn.dataset.i;
-      audio.src = SIDEBAR_TRACKS[i].src;
-      audio.play().catch(()=>{});
-      renderSidebarList(i);
-  });
-
+      list.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-i]');
+        if (!btn) return;
+        const i = +btn.dataset.i;
+        const track = SIDEBAR_TRACKS[i];
+  
+        window.GlobalPlayer.play(track);
+        if (nowEl) nowEl.textContent = track.title || '';
+        render(i);
+      });
+    }
+  }
   // Optional: auto-load first track (but don’t autoplay):
   // if (SIDEBAR_TRACKS.length){ audio.src = SIDEBAR_TRACKS[0].src; renderSidebarList(0); }
 })();
