@@ -115,12 +115,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       hb.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   }
-  
-  // Hamburger toggle (desktop + phone)
-  const hb = document.querySelector('.hamburger');
-  if (hb) hb.addEventListener('click', () => {
-    document.body.classList.toggle('nav-open');
-  });
 
   // ---- Sidebar "Currently Listening" wiring (uses GlobalPlayer) ----
   {
