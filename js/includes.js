@@ -214,3 +214,61 @@ document.addEventListener('DOMContentLoaded', async () => {
   proportionalize('.about-left');
   proportionalize('.about-right');
 });
+
+
+// --- Shannon-entropy static (no animation). Reusable module.
+(function(){
+  function entropy2(p){ 
+    if (p<=0 || p>=1) return 0; 
+    return -(p*Math.log2(p) + (1-p)*Math.log2(1-p)); 
+  }
+  function drawStatic(canvas, p){
+    const ctx = canvas.getContext('2d', { willReadFrequently: false });
+    const w = canvas.clientWidth|0, h = canvas.clientHeight|0;
+    if (canvas.width!==w || canvas.height!==h){ canvas.width=w; canvas.height=h; }
+    const n = w*h;
+    const buf = new Uint8ClampedArray(n*4);
+    for (let i=0;i<n;i++){
+      const v = (Math.random() < p) ? 255 : 0;
+      const j = i*4;
+      buf[j]=buf[j+1]=buf[j+2]=v;
+      buf[j+3]=255;
+    }
+    ctx.putImageData(new ImageData(buf, w, h), 0, 0);
+  }
+  function clamp(x,min,max){ return x<min?min:(x>max?max:x); }
+
+  function attach(root){
+    const container = root.querySelector('.entropy-canvas');
+    const inc = root.querySelector('[data-entropy-inc]');
+    const dec = root.querySelector('[data-entropy-dec]');
+    const reset = root.querySelector('[data-entropy-reset]');
+    const meter = root.querySelector('[data-entropy-meter]');
+    if (!container) return;
+
+    let p = 0.02; // start near a low-entropy state (almost uniform)
+    function redraw(){
+      drawStatic(container, p);
+      if (meter) meter.textContent = entropy2(p).toFixed(3) + ' bits';
+    }
+    function bump(towardHalf){
+      const delta = 0.04 + 0.08*(1- Math.abs(0.5 - p)/0.5);
+      p = clamp(p + (towardHalf? delta : -delta), 0.0005, 0.9995);
+      // snap toward 0.5 on "increase", away from 0.5 on "decrease"
+      if (towardHalf) p = p<0.5 ? Math.min(0.5, p) : Math.max(0.5, p); 
+      redraw();
+    }
+    inc?.addEventListener('click', ()=> bump(true));
+    dec?.addEventListener('click', ()=> bump(false));
+    reset?.addEventListener('click', ()=> { p = 0.02; redraw(); });
+
+    // draw once and on resize
+    const ro = new ResizeObserver(redraw); ro.observe(container);
+    redraw();
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    document.querySelectorAll('.entropy-hero').forEach(attach);
+  });
+})();
+
