@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // 5) Footer
-await includeInto(document.getElementById('footer-include'));
+includeInto(document.getElementById('footer-include'));
 
 // Add this block right AFTER the footer include:
 document.querySelectorAll('a.back-home[href="#"]').forEach(a => {
