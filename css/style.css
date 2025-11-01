@@ -704,17 +704,19 @@ html, body { height: 100%; }
 /* --- Mobile safety gutter so text never touches the edges --- */
 :root { --gutter-mobile: clamp(14px, 4vw, 24px); }
 
+
 @media (max-width: 900px){
-  /* add a thin gutter to the main column */
-  .main{ padding-inline: var(--gutter-mobile); }
+  /* no padding on the parent, so the hero can touch the sidebar */
+  .main{ padding-inline: 0; }
 
-  /* avoid double-padding for your section/container wrappers */
+  /* give the gutter to normal content sections instead */
   .main > .container,
-  .main > .section{ padding-inline: 0; }
+  .main > .section{ padding-inline: var(--gutter-mobile); }
 
-  /* posts sometimes inject raw content without a container —
-     give the title/body a little cushion as a fallback */
+  /* keep the hero truly edge-to-edge */
+  .main > .hero{ margin-inline: 0; padding-inline: 0; }
+
+  /* fallback padding for raw post content (if a post injects bare markup) */
   .post-title,
   .post-body{ padding-inline: var(--gutter-mobile); }
 }
-
