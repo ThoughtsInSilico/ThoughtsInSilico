@@ -635,14 +635,14 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
   pointer-events:none;
 }
 
-/* Phone: use mobile artwork and disable fixed-attachment (prevents jank) */
 @media (max-width: 900px){
   .about-banner{
-    background-image: var(--banner-mobile, var(--banner-desktop));
-    background-attachment: scroll;
+    background-image: url('../img/about-banner-mobile.jpg');
     background-position: center center;
+    background-attachment: fixed;    /* ← keep it “pinned” like desktop */
   }
 }
+
 
 
 
