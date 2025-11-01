@@ -67,10 +67,15 @@ html, body { height: 100%; }
 .main{
   grid-column: 2;
   min-width: 0;
-  display: grid;
-  grid-template-rows: auto 1fr auto;   /* header | content | footer */
-  align-items: start;
+  display: flex;
+  flex-direction: column;   /* vertical stack */
 }
+
+/* ensure the footer rides to the bottom even on short pages */
+.site-footer{
+  margin-top: auto;
+}
+
 
 /* center everything that lives directly under .main */
 .main > *{
