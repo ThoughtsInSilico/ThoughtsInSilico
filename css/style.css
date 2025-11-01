@@ -300,22 +300,21 @@ html, body { height: 100%; }
   background: url('../img/about-upper.jpg') center / cover no-repeat;
    border-bottom: 0;
    position: relative;
-   position: relative;
-   background-attachment: fixed;
+   background-attachment: scroll;
    z-index: 2;           /* sits above the banner */
 
 }
 .about-grid{
    display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: auto;
    gap: 0; border: 1px solid var(--stroke);
-   position: relative; z-index: 2;
+   position: relative; z-index: 1;
 }
 .about-cell{
   border-right: 1px solid #2e3643;
   border-bottom: 1px solid #2e3643;
   padding: 16px;
   background: rgba(13,17,22,0.62);
-  backdrop-filter: blur(1px);
+  backdrop-filter: none;
 }
 .about-cell h4{ margin: 0 0 10px; font-size: 16px; letter-spacing: .08em; }
 .about-grid .post-body, .about-grid .post-body p, .about-grid .post-body li{ text-align: left; }
@@ -378,16 +377,7 @@ html, body { height: 100%; }
    background-attachment: fixed;    
 }
 
-/* Soft fade at bottom to lead into content */
-.about-banner::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom,
-              rgba(0,0,0,0) 60%,
-              rgba(11,14,16,0.88) 100%);  /* matches --bg */
-  pointer-events: none;
-}
+
 
 /* Phone: use mobile image, center normally, and disable fixed to avoid glitch */
 @media (max-width: 900px){
@@ -535,7 +525,7 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 .about-banner-mobile {
   position: sticky !important;
   top: 0;
-  height: min(60vh, 520px);    /* visible window of the banner */
+  height: 100svh;    /* visible window of the banner */
   overflow: hidden;
   z-index: 0;
   /* Use the element itself as the banner surface */
@@ -571,32 +561,6 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 .about-banner-mobile { display: block; }
 }
 
-/* Soft fade at both edges to make the “eclipse” transitions pleasant */
-.about-banner::before,
-.about-banner::after,
-.about-banner-mobile::before,
-.about-banner-mobile::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0;
-  height: 48px;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Fade at the top so it gently emerges from the upper section */
-.about-banner::before,
-.about-banner-mobile::before {
-  top: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0));
-}
-
-/* Fade at the bottom so the lower text “eclipses” the banner */
-.about-banner::after,
-.about-banner-mobile::after {
-  bottom: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0));
-}
 
 /* ---- Post pages: keep Back-to-Home and footer fixed & centered ---- */
 .post .back-home {
@@ -637,7 +601,7 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
   content: "";
   position: absolute;
   left: 0; right: 0;
-  top: -96px;                 /* overlaps the banner slightly */
+  top: 0;                 /* overlaps the banner slightly */
   height: 96px;
   pointer-events: none;
    background: linear-gradient(to bottom, rgba(11,14,16,0) 0%, var(--bg) 100%);
