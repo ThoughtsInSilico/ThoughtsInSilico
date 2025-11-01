@@ -466,12 +466,6 @@ html, body { height: 100%; }
   pointer-events:none;
 }
 
-/* On phones, only change the variable and attachment (no image overrides) */
-@media (max-width: 900px){
-  :root { --banner-img: var(--banner-mobile, var(--banner-desktop)); }
-  .about-banner{ background-attachment: scroll; }
-}
-
 
 
 /* Mobile nav / sidebar behavior (hamburger) */
@@ -640,36 +634,6 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 .post-header + * {
   margin-top: 1.25rem;
 }
-
-
-/* Desktop+mobile: one banner element */
-.about-banner{
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  overflow: hidden;
-  z-index: 0;
-  background-image: var(--banner-desktop, url('../img/about-banner.jpg'));
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-}
-.about-banner::after{
-  content:"";
-  position:absolute; inset:0;
-  background: rgba(0,0,0,.38);
-  pointer-events:none;
-}
-
-@media (max-width: 900px){
-  .about-banner::before{
-    background-image: url('../img/about-banner-mobile.jpg');
-    background-position: center center;
-  }
-}
-
-
 
 
 /* ---- Post pages: keep Back-to-Home and footer fixed & centered ---- */
