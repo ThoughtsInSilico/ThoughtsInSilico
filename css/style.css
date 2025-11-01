@@ -431,7 +431,7 @@ html, body { height: 100%; }
   body.nav-open{ overflow: hidden; }
 
   .about-grid{ grid-template-columns: repeat(2, 1fr); }
-  .about-banner{ background-position: center; }
+  .about-banner{ background-position: center}
 
   .about-upper{ margin-top: -56px; padding-top: 56px; }
 }
@@ -667,5 +667,52 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
     padding-inline: var(--gutter-mobile, 16px);
   }
 }
+
+
+/* --- About: make the entire remainder flat black with white text --- */
+.about-banner ~ * {
+  background: var(--bg) !important;  /* flat black sheet */
+  color: var(--ink) !important;       /* white text */
+}
+
+/* First section after the banner: background gradient that DOESN'T touch text */
+.about-banner + * {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(11,14,16,0) 0,
+      rgba(11,14,16,0.28) 56px,
+      rgba(11,14,16,0.58) 112px,
+      var(--bg) 168px
+    ),
+    var(--bg) !important;
+}
+
+/* Use the full main-column width (not a 1100px box) just for the about-lower area */
+.about-banner ~ .container {
+  max-width: none !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
+  padding-inline: var(--gutter-desktop) !important;  /* keep readable side gutter */
+}
+@media (max-width: 900px){
+  .about-banner ~ .container {
+    padding-inline: var(--gutter-mobile) !important;
+  }
+}
+
+/* Strip "card/box" look only in the about-lower area */
+.about-banner ~ * .post-card,
+.about-banner ~ * .card,
+.about-banner ~ * .feature-card,
+.about-banner ~ * .anthem-card {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
 
 
