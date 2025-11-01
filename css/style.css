@@ -101,6 +101,12 @@ html, body { height: 100%; }
   .container{ padding-inline: var(--gutter-mobile); }  /* text gets a safe gutter */
 }
 
+@media (max-width: 900px){
+  .layout { grid-template-columns: 1fr; } /* no reserved sidebar column */
+  .main   { grid-column: 1; }             /* move main into the only column */
+}
+
+
 /* =========================================================
    Sidebar
 ========================================================= */
