@@ -45,7 +45,11 @@
         try{
           // Fetch the source post
           const absUrl = new URL(u, location.href).href;
-          const res = await fetch(new URL('../posts.json', window.__POST_DIR || location.href).href);
+          // Build a repo-aware root like "/ThoughtsInSilico/" on GitHub Pages
+          const segs = location.pathname.split('/').filter(Boolean);
+          const repo = segs.length ? ('/' + segs[0] + '/') : '/';
+          const res  = await fetch(repo + 'posts.json', { cache: 'no-store' });
+
           if (!res.ok) throw new Error(`HTTP ${res.status} for ${absUrl}`);
           const html   = await res.text();
           const doc    = new DOMParser().parseFromString(html, 'text/html');
