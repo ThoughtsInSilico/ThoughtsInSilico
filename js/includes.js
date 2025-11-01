@@ -115,8 +115,7 @@ window.GlobalPlayer = (function () {
 
 // === Sidebar "Currently Listening" tracks (edit this list) ===
 const SIDEBAR_TRACKS = [
-  { title: 'Cristo Redentor (composer: Duke Pearson)', src: 'audio/cristo-redentor.mp3' },
-  // { title: 'Schubert: Death and the Maiden — I. Allegro (Takács)', src: 'audio/schubert-datm-i-takacs.mp3' },
+  { title: 'ホワット・アー・ユー・ドゥーイング・ザ・レスト・オブ・ユア・ライフ (composer: 羽田健太郎 )', src: 'audio/ホワット・アー・ユー・ドゥーイング・ザ・レスト・オブ・ユア・ライフ.mp3' },
 ];
 
 
