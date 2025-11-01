@@ -49,7 +49,11 @@
           const segs = location.pathname.split('/').filter(Boolean);
           const repo = segs.length ? ('/' + segs[0] + '/') : '/';
           const parts = location.pathname.split('/').filter(Boolean);
-          const res = await fetch('/' + (parts[0] ? parts[0] + '/' : '') + 'posts.json', { cache:'no-store' });
+
+          const res = await fetch((() => {
+            const seg = location.pathname.split('/')[1] || '';
+            return seg ? `/${seg}/posts.json` : 'posts.json';
+          })());
 
 
           if (!res.ok) throw new Error(`HTTP ${res.status} for ${absUrl}`);
