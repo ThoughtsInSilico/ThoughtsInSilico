@@ -300,7 +300,7 @@ html, body { height: 100%; }
   background: url('../img/about-upper.jpg') center / cover no-repeat;
    border-bottom: 0;
    position: relative;
-   background-attachment: scroll;
+   background-attachment: fixed;
    z-index: 2;           /* sits above the banner */
 
 }
@@ -313,7 +313,7 @@ html, body { height: 100%; }
   border-right: 1px solid #2e3643;
   border-bottom: 1px solid #2e3643;
   padding: 16px;
-  background: rgba(13,17,22,0.62);
+  background: transparent;
   backdrop-filter: none;
 }
 .about-cell h4{ margin: 0 0 10px; font-size: 16px; letter-spacing: .08em; }
@@ -369,7 +369,7 @@ html, body { height: 100%; }
    top: 0;
    height: 100svh;
    overflow: hidden;  
-   z-index: 0;
+   z-index: 0;    
    background-image: url('../img/about-banner.jpg');
    background-repeat: no-repeat;
    background-size: cover;
@@ -589,21 +589,22 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
   padding-bottom: calc(var(--footer-height, 56px) + 56px) !important;
 }
 
-/* Lower section (immediately after the banner) should sit above and eclipse the banner */
+
+
+/* Section immediately following the banner */
 .about-banner + * {
   position: relative;
-  z-index: 2;                 /* render above the banner */
-  background: var(--bg);      /* solid base so text is on its own layer */
+  z-index: 1;                 /* render above the banner */
+  background: var(--bg);      /* the black sheet itself */
 }
 
-/* Soft gradient at the top edge of the lower section to ease the transition */
+/* True blend at the top of the black section (transparent → black) */
 .about-banner + *::before {
   content: "";
   position: absolute;
   left: 0; right: 0;
-  top: 0;                 /* overlaps the banner slightly */
-  height: 96px;
+  top: 0;
+  height: 96px;               /* adjust to taste (64–128px) */
   pointer-events: none;
-   background: linear-gradient(to bottom, rgba(11,14,16,0) 0%, var(--bg) 100%);
+  background: linear-gradient(to bottom, rgba(11,14,16,0) 0%, var(--bg) 100%);
 }
-
