@@ -30,114 +30,99 @@
         <div id="footer-include" data-src="partials/footer.html"></div>
       </main>
     </div>
-  
-    
-      <script>
-        async function loadPost(){
-          const usp     = new URLSearchParams(location.search);
-          const u       = usp.get('u');
-          const titleEl = document.getElementById('title');
-          const metaEl  = document.getElementById('meta');
-          const bodyEl  = document.getElementById('body');
-    
-          if (!u){ titleEl.textContent = 'No post selected'; return; }
-    
-          try{
-            const absUrl = new URL(u, location.href).href;
-            // Make all relative URLs inside the injected article resolve to the post's folder
-            const baseDir = absUrl.replace(/[^/]*$/, '');
-            
-            // rewrite helpers
-            function isAbsoluteOrRoot(v){ return /^[a-z]+:|^\/\//i.test(v) || v.startsWith('/'); }
-            function absolutizeAttr(root, selector, attr, xform){
-              root.querySelectorAll(selector).forEach(el=>{
-                const v = el.getAttribute(attr);
-                if (!v) return;
-                // keep hashes and absolute/root URLs as-is
-                if (v.startsWith('#') || isAbsoluteOrRoot(v)) return;
-                el.setAttribute(attr, (xform ? xform(v) : new URL(v, baseDir).href));
-              });
-            }
-            
-            // for <img src>, <script src>, <link href>, etc.
-            absolutizeAttr(bodyEl, '[src]', 'src');
-            absolutizeAttr(bodyEl, 'a[href]', 'href');
-            
-            // handle srcset (comma-separated candidates)
-            bodyEl.querySelectorAll('img[srcset], source[srcset]').forEach(el=>{
-              const raw = el.getAttribute('srcset') || '';
-              const fixed = raw.split(',')
-                .map(part=>{
-                  const [url, desc] = part.trim().split(/\s+/, 2);
-                  if (!url || isAbsoluteOrRoot(url) || url.startsWith('#')) return part.trim();
-                  const abs = new URL(url, baseDir).href;
-                  return desc ? `${abs} ${desc}` : abs;
-                })
-                .join(', ');
-              el.setAttribute('srcset', fixed);
-            });
 
-            // Make all relative URLs inside the injected post resolve to the post's folder
-            const abs   = new URL(u, location.href);
-            const dir   = abs.href.replace(/[^/]*$/, '');   // .../posts/
-            const base  = document.createElement('base');
-            base.href   = dir;
-            document.head.prepend(base); // must be early in <head> to affect URL resolution
-
-            const res  = await fetch(absUrl, { cache:'no-store' });
-            if (!res.ok) throw new Error(`HTTP ${res.status} for ${absUrl}`);
+    <script>
+      async function loadPost(){
+        const usp     = new URLSearchParams(location.search);
+        const u       = usp.get('u');
+        const titleEl = document.getElementById('title');
+        const metaEl  = document.getElementById('meta');
+        const bodyEl  = document.getElementById('body');
+        if (!u){ titleEl.textContent = 'No post selected'; return; }
     
-            const html = await res.text();
-            const doc  = new DOMParser().parseFromString(html, 'text/html');
+        try{
+          // Fetch the source post
+          const absUrl = new URL(u, location.href).href;
+          const res    = await fetch(absUrl, { cache:'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status} for ${absUrl}`);
+          const html   = await res.text();
+          const doc    = new DOMParser().parseFromString(html, 'text/html');
     
-            const h1   = doc.querySelector('h1') || doc.querySelector('.post-title');
-            const time = doc.querySelector('time[datetime]');
-            document.title     = (h1 ? h1.textContent.trim() : 'Post') + ' • Silico: Book of Genesis';
-            titleEl.innerHTML  = h1 ? h1.innerHTML : 'Untitled';
-            metaEl.textContent = time ? new Date(time.getAttribute('datetime'))
-                                        .toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'}) : '';
+          // Title / date
+          const h1   = doc.querySelector('h1') || doc.querySelector('.post-title');
+          const time = doc.querySelector('time[datetime]');
+          document.title    = (h1 ? h1.textContent.trim() : 'Post') + ' • Silico: Book of Genesis';
+          titleEl.innerHTML = h1 ? h1.innerHTML : 'Untitled';
+          metaEl.textContent = time
+            ? new Date(time.getAttribute('datetime')).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'})
+            : '';
     
-            const srcRoot = doc.querySelector('article') || doc.querySelector('main') || doc.body;
-            const cleaned = srcRoot.cloneNode(true);
-            const firstH1   = cleaned.querySelector('h1');            if (firstH1)  firstH1.remove();
-            const firstTime = cleaned.querySelector('time[datetime]'); if (firstTime) firstTime.remove();
+          // Prefer <article>, then <main>, then <body>
+          const srcRoot = doc.querySelector('article') || doc.querySelector('main') || doc.body;
+          const cleaned = srcRoot.cloneNode(true);
+          const firstH1   = cleaned.querySelector('h1');            if (firstH1)  firstH1.remove();
+          const firstTime = cleaned.querySelector('time[datetime]'); if (firstTime) firstTime.remove();
     
-            bodyEl.innerHTML = cleaned.innerHTML;
+          bodyEl.innerHTML = cleaned.innerHTML;
     
-            const baseDir = new URL(absUrl).href.replace(/[^/]*$/, '');
+          // ---- Fix relative URLs inside the injected post ----
+          // Base dir of the fetched post, e.g. /ThoughtsInSilico/posts/
+          const baseDir = new URL(absUrl).href.replace(/[^/]*$/, '');
     
-            bodyEl.querySelectorAll('script').forEach(old => {
-              const s = document.createElement('script');
-              for (const {name, value} of old.attributes) s.setAttribute(name, value);
-              s.textContent = old.textContent;
-              old.replaceWith(s);
-            });
-    
-            bodyEl.querySelectorAll('a[href]').forEach(a => {
-              try{
-                const target = new URL(a.getAttribute('href'), location.href);
-                const path   = target.pathname.replace(/^\/[^/]+\//, '/');
-                if (path.startsWith('/posts/') && /\.html?$/i.test(path)){
-                  a.href = 'post.html?u=' + encodeURIComponent(target.href);
-                }
-              }catch(_){}
-            });
-    
-            if (window.MathJax?.typeset) MathJax.typeset();
-    
-            if (location.hash){
-              const target = document.getElementById(location.hash.slice(1));
-              if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+          // Helper: make a URL that resolves correctly for /img and /audio assets
+          function fixUrl(v){
+            if (!v || /^([a-z]+:)?\/\//i.test(v) || v.startsWith('/')) return v; // already absolute
+            // If the post uses site-root assets like "img/..." or "audio/...",
+            // they actually live one level up from /posts/
+            if (v.startsWith('img/') || v.startsWith('audio/')) {
+              return new URL('../' + v, baseDir).href;
             }
-          }catch(e){
-            console.error('loadPost failed:', e);
-            titleEl.textContent = 'Could not load post';
-            bodyEl.innerHTML = `<p class="post-body" style="color:#cfcac3">
-              Error loading <code>${(u||'').toString()}</code> — ${e.message}.
-            </p>`;
+            // Otherwise resolve relative to the post's folder
+            return new URL(v, baseDir).href;
           }
+    
+          bodyEl.querySelectorAll('[src]').forEach(el => {
+            const v = el.getAttribute('src');
+            el.setAttribute('src', fixUrl(v));
+          });
+          bodyEl.querySelectorAll('a[href]').forEach(a => {
+            const v = a.getAttribute('href');
+            const fixed = fixUrl(v);
+            a.setAttribute('href', fixed);
+          });
+    
+          // Re-run inline scripts inside the post (e.g. “Similar reads”)
+          bodyEl.querySelectorAll('script').forEach(old => {
+            const s = document.createElement('script');
+            for (const {name, value} of old.attributes) s.setAttribute(name, value);
+            s.textContent = old.textContent;
+            old.replaceWith(s);
+          });
+    
+          // Route links to *other* HTML files under /posts/ through the reader
+          bodyEl.querySelectorAll('a[href]').forEach(a => {
+            try{
+              const target = new URL(a.getAttribute('href'), location.href);
+              // If it points to a post HTML under /posts/, rewrite via post.html
+              if (/\/posts\/.+\.html?$/i.test(target.pathname)) {
+                a.href = 'post.html?u=' + encodeURIComponent(target.href);
+              }
+            }catch(_){}
+          });
+    
+          // MathJax render & hash jump
+          if (window.MathJax?.typeset) MathJax.typeset();
+          if (location.hash){
+            const target = document.getElementById(location.hash.slice(1));
+            if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+          }
+        }catch(e){
+          console.error('loadPost failed:', e);
+          titleEl.textContent = 'Could not load post';
+          bodyEl.innerHTML = `<p class="post-body" style="color:#cfcac3">Error loading <code>${(u||'').toString()}</code> — ${e.message}.</p>`;
         }
-        loadPost();
-      </script>
+      }
+      loadPost();
+    </script>
   </body>
 </html>
