@@ -576,29 +576,24 @@ main .section-title {
 
 /* ---- Post pages: keep Back-to-Home and footer fixed & centered ---- */
 .post .back-home {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(var(--footer-height, 56px) + 14px); /* sits just above footer */
-  z-index: 1000;
-  text-align: center;
-  padding: 0.25rem 0.5rem;
-  /* subtle readability help over busy backgrounds */
-  backdrop-filter: blur(2px);
+   position: static;
+   text-align: center;
+   display: block;
+   width: fit-content;
+   margin: 24px auto 12px;
+   padding: 0.25rem 0.5rem;
 }
 
 .site-footer {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  text-align: center;
-  z-index: 999;
-  padding: 0.5rem 0.75rem;
-  /* remember this height if you tweak padding */
-  --footer-height: 56px;
-  min-height: var(--footer-height);
-  /* optional: slight overlay so text never clashes */
-  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
-  pointer-events: none; /* footer isn’t interactive; remove if you have links inside */
+   text-align: center;
+   width: 100%;
+   padding: 0.5rem 0.75rem;
+   /* remember this height if you tweak padding */
+   --footer-height: 56px;
+   min-height: var(--footer-height);
+   /* optional: slight overlay so text never clashes */
+   background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+   pointer-events: auto;
 }
 
 /* Ensure post content doesn’t get hidden behind fixed elements when reaching bottom */
