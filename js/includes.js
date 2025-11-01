@@ -29,7 +29,14 @@ async function includeInto(el) {
   const src = el.dataset.src || el.getAttribute('data-src');
   if (!src) return;
   const html = await fetchFirst(candidatePaths(src));
-  if (html) el.outerHTML = html;
+  if (html) {
+    const parent = el.parentNode;
+    if (!parent) return; // nothing to replace into
+    const tpl = document.createElement('template');
+    tpl.innerHTML = html; // keeps scripts and structure intact
+    parent.insertBefore(tpl.content, el);
+    parent.removeChild(el);
+  }
   else console.error('Include failed for', src, 'tried:', candidatePaths(src));
 }
 
