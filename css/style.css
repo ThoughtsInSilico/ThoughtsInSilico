@@ -712,4 +712,55 @@ html, body { height: 100%; }
 /* footer hugs bottom because .main has a 1fr middle row */
 .site-footer { margin-top: 0; }
 
+/* ==== FIX: keep two-column layout AND center the content ==== */
+
+/* (1) Two-column layout remains: 320px sidebar + flexible content */
+.layout {
+  display: grid;
+  width: 100%;
+  min-height: 100svh;
+  grid-template-columns: 320px minmax(0, 1fr);
+}
+
+/* (2) Ensure the sidebar never collapses */
+#sidebar-include, .sidebar { min-width: 320px; }
+
+/* (3) Main area: header | content | footer, with the middle row stretching */
+.main {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-width: 0;               /* allow children to shrink instead of overflow */
+  margin-left: 0 !important;  /* neutralize any legacy margins */
+}
+
+/* (4) Center all your “page width” blocks (container/section/cards/etc.) */
+.main > * {
+  /* define a comfortable max content width; tweak if you like */
+  --content-max: 1100px;
+  max-width: var(--content-max);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* If you already use .container/.section, ensure they center as well */
+.container, .section {
+  max-width: var(--content-max, 1100px);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;   /* gentle side padding so text doesn’t touch edges */
+  padding-right: 16px;
+}
+
+/* Footer stays at the bottom thanks to the 1fr middle row */
+.site-footer { margin-top: 0; }
+
+/* (5) Mobile: collapse sidebar to the top (optional, but nice) */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  #sidebar-include, .sidebar { min-width: 0; }
+}
 
