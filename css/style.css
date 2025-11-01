@@ -624,38 +624,7 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
   margin-left: 0 !important;
 }
 
-/* Lower sheet: flat black + white, with a single seam and an inset fade inside the black only */
-.about-banner + * {
-  position: relative;
-  background: var(--bg) !important;   /* flat black sheet */
-  color: var(--ink) !important;       /* white text */
-  z-index: 1;                          /* sits above banner */
-  /* “gradient” lives inside the black via inset shadow – no image bleed, no text dim */
-   box-shadow: inset 0 140px 120px -100px rgba(0,0,0,0.98);
-}
 
-/* One straight dividing line at the very top edge of the black sheet */
-.about-banner + *::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: rgba(255,255,255,0.06);  /* raise to 0.10 if you want crisper */
-  pointer-events: none;
-}
-
-/* Broader “no book/card look” inside the about-lower area (regardless of wrappers) */
-.about-banner + * .post-card,
-.about-banner + * .card,
-.about-banner + * .feature-card,
-.about-banner + * .anthem-card {
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
 
 
 /* Ensure Back to Home is clickable and in normal flow */
@@ -668,3 +637,28 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
   pointer-events: auto !important;
   display: inline-block;
 }
+
+
+/* Full-width lower sheet painted on the main column (no box) */
+.main { position: relative; }
+
+/* Everything below the banner is a flat black sheet, with a 1px seam and a soft top fade */
+.main::before{
+  content:"";
+  position:absolute;
+  top: 100svh;           /* start exactly below the sticky banner */
+  left: 0; right: 0; bottom: 0;
+  background: var(--bg); /* flat black */
+  /* gentle inset fade inside the black so the seam feels like a gradient */
+  box-shadow: inset 0 140px 120px -100px rgba(0,0,0,0.98);
+  /* the straight 1px dividing line */
+  border-top: 1px solid rgba(255,255,255,0.06);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* make sure content sits above the painted sheet */
+.about-banner, .main > * { position: relative; z-index: 1; }
+
+/* keep the lower content text white (the sheet is already black) */
+.about-banner ~ * { color: var(--ink); }
