@@ -91,13 +91,15 @@
             a.setAttribute('href', fixed);
           });
     
-          // Re-run inline scripts inside the post (e.g. “Similar reads”)
+          // Re-execute any <script> tags that were inside the post (e.g., "Similar reads")
           bodyEl.querySelectorAll('script').forEach(old => {
             const s = document.createElement('script');
-            for (const {name, value} of old.attributes) s.setAttribute(name, value);
+            // copy attributes (src, type, etc.)
+            for (const { name, value } of old.attributes) s.setAttribute(name, value);
             s.textContent = old.textContent;
             old.replaceWith(s);
           });
+
     
           // Route links to *other* HTML files under /posts/ through the reader
           bodyEl.querySelectorAll('a[href]').forEach(a => {
