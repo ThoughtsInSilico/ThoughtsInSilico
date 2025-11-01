@@ -48,7 +48,9 @@
           // Build a repo-aware root like "/ThoughtsInSilico/" on GitHub Pages
           const segs = location.pathname.split('/').filter(Boolean);
           const repo = segs.length ? ('/' + segs[0] + '/') : '/';
-          const res  = await fetch(repo + 'posts.json', { cache: 'no-store' });
+          const parts = location.pathname.split('/').filter(Boolean);
+          const res = await fetch('/' + (parts[0] ? parts[0] + '/' : '') + 'posts.json', { cache:'no-store' });
+
 
           if (!res.ok) throw new Error(`HTTP ${res.status} for ${absUrl}`);
           const html   = await res.text();
