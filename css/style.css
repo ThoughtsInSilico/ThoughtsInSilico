@@ -104,6 +104,8 @@ html, body { height: 100%; }
 
 /* footer naturally hugs bottom because the middle row is 1fr */
 .site-footer{ margin-top: 0; }
+.site-footer .back-home { margin-bottom: 8px; }
+
 
 /* collapse columns on narrow screens (sidebar is still fixed) */
 @media (max-width: 900px){
