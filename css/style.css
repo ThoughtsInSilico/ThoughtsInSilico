@@ -619,33 +619,53 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 
 
 
-/* Black sheet below the banner: full width of main, real gradient IN the background */
-.about-banner + * {
+
+/* About: black sheet directly under banner (targets the actual container) */
+.about-banner + .container {
   position: relative;
   z-index: 1;
-  color: var(--ink);  /* white text */
-  /* multi-stop gradient lives in the background so it never touches text */
+
+  /* REAL gradient IN THE BACKGROUND, so it never overlaps text */
   background:
-    linear-gradient(to bottom,
+    linear-gradient(
+      to bottom,
       rgba(11,14,16,0) 0px,
       rgba(11,14,16,0.25) 44px,
       rgba(11,14,16,0.55) 92px,
       var(--bg) 140px
     ),
     var(--bg);
+
+  /* span the main column edge-to-edge (no “box” gutters) */
+  margin-inline: 0;
+  padding-inline: 0;
+
+  /* ensure text is white */
+  color: var(--ink);
 }
 
-
-/* Remove boxed/rounded card look just in the about-lower section */
-.about-banner + * .card,
-.about-banner + * .post-card,
-.about-banner + * .feature-card,
-.about-banner + * .anthem-card {
+/* Kill any card “box” styles ONLY in the about-lower section */
+.about-banner + .container .post-card,
+.about-banner + .container .card,
+.about-banner + .container .feature-card,
+.about-banner + .container .anthem-card {
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
+
+/* If your content is wrapped in .post-body inside the card, let it breathe full width */
+.about-banner + .container .post-body {
+  margin-inline: 0 !important;
+  padding-inline: var(--gutter-desktop, 32px); /* keep readable side gutters for text */
+}
+@media (max-width: 900px){
+  .about-banner + .container .post-body {
+    padding-inline: var(--gutter-mobile, 16px);
+  }
+}
+
 
