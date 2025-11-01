@@ -726,3 +726,29 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 }
 
 
+/* FORCE the fade on the very first section after the banner */
+.about-banner + .container,
+.about-banner + section,
+.about-banner + .section,
+.about-banner + * {
+  /* multi-stop fade that blends banner → black sheet */
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(11,14,16,0) 0,
+      rgba(11,14,16,0.28) 56px,
+      rgba(11,14,16,0.58) 112px,
+      var(--bg) 168px
+    ),
+    var(--bg) !important;            /* lower area stays flat black */
+  background-repeat: no-repeat;
+  background-size: 100% 168px, auto; /* first layer = only the top strip */
+  background-position: top left, top left;
+}
+
+/* No first-line indents in the about lower sheet */
+.about-banner ~ .container p {
+  text-indent: 0 !important;
+  margin-left: 0 !important; /* belt-and-suspenders if something injected a left margin */
+}
+
