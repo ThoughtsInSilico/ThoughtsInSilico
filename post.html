@@ -81,6 +81,19 @@
           const firstTime = cleaned.querySelector('time[datetime]'); if (firstTime) firstTime.remove();
     
           bodyEl.innerHTML = cleaned.innerHTML;
+          // Smooth-scroll for in-post hash links (e.g., footnotes)
+          bodyEl.addEventListener('click', (e) => {
+            const a = e.target.closest('a[href^="#"]');
+            if (!a) return;
+            const id = a.getAttribute('href').slice(1);
+            const target = document.getElementById(id);
+            if (target) {
+              e.preventDefault();
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              history.replaceState(null, '', '#' + id);
+            }
+          });
+
 
           // ---- Centralized "Similar reads" ----
           try {
@@ -136,6 +149,7 @@
     
           // Helper: make a URL that resolves correctly for /img and /audio assets
           function fixUrl(v){
+            if (v && v.startsWith('#')) return v;   // ← keep in-page anchors as-is
             if (!v || /^([a-z]+:)?\/\//i.test(v) || v.startsWith('/')) return v; // already absolute
             // If the post uses site-root assets like "img/..." or "audio/...",
             // they actually live one level up from /posts/
