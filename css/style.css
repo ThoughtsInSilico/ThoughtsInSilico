@@ -396,7 +396,7 @@ html, body { height: 100%; }
 /* Phone: use mobile image, center normally, and disable fixed to avoid glitch */
 @media (max-width: 900px){
   .about-banner{
-    bbackground-image: url('../img/about-banner-mobile.jpg');
+    background-image: url('../img/about-banner-mobile.jpg');
     background-position: center center;
     background-attachment: scroll;
   }
@@ -685,6 +685,7 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 .back-home {
   position: static;
   pointer-events: auto !important;
+   z-index: 5;
 }
 .back-home a {
   pointer-events: auto !important;
@@ -697,6 +698,8 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 .about-banner + *,
 .about-banner + .container,
 .about-banner ~ .container:first-of-type {
+   position: relative;
+   z-index: 1;
   /* real gradient that never covers text */
   background:
     linear-gradient(
