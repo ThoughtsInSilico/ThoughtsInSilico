@@ -1,4 +1,23 @@
-<footer class="site-footer" role="contentinfo">
-  <p class="back-home container"><a href="./">← Back to Home</a></p>
-  <p class="container"><small>© <span data-year></span> Silico: Book of Genesis</small></p>
+<footer class="site-footer container">
+  <p class="back-home">← <a id="backHome" href="#">Back to Home</a></p>
+  <p>© 2025 Silico: Book of Genesis</p>
 </footer>
+
+<script>
+(function () {
+  // Figure out your repo root on GitHub Pages (e.g. "/ThoughtsInSilico/")
+  const seg  = location.pathname.split('/')[1] || '';
+  const root = seg ? '/' + seg + '/' : '/';
+
+  // Hide the link on the true home, show it everywhere else
+  const isHome = location.pathname === root || location.pathname === root + 'index.html';
+  const wrap   = document.querySelector('.site-footer .back-home');
+  const a      = document.getElementById('backHome');
+
+  if (isHome && wrap) {
+    wrap.style.display = 'none';
+  } else if (a) {
+    a.href = root; // correct link from /posts/ etc. back to site root
+  }
+})();
+</script>
