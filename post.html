@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Post • Silico: Book of Genesis</title>
+    <title>Post • Silicon: Book of Genesis</title>
     <link rel="stylesheet" href="css/style.css" />
     <meta name="theme-color" content="#000000" />
     <script>
@@ -15,7 +15,6 @@
 
   <body>
     <div class="layout">
-      <!-- Sidebar include -->
       <div id="sidebar-include" data-src="partials/sidebar.html"></div>
   
       <main class="main">
@@ -25,14 +24,12 @@
           <article id="body" class="post-body post-layout"></article>
         </section>
 
-        <!-- Footer include -->
         <div id="footer-include" data-src="partials/footer.html"></div>
       </main>
     </div>
 
     <script>
 
-      // --- centralized helpers ---
       function repoRoot(){
         const repo = (location.pathname.split('/')[1] || '');
         return repo ? `/${repo}` : '';
@@ -54,10 +51,8 @@
         if (!u){ titleEl.textContent = 'No post selected'; return; }
     
         try{
-          // Fetch the source post
           const absUrl = new URL(u, location.href).href;
 
-          // Fetch the source post HTML (the thing specified by ?u=…)
           const res = await fetch(absUrl, { cache: 'no-store' });
 
           
@@ -65,23 +60,20 @@
           const html   = await res.text();
           const doc    = new DOMParser().parseFromString(html, 'text/html');
     
-          // Title / date
           const h1   = doc.querySelector('h1') || doc.querySelector('.post-title');
           const time = doc.querySelector('time[datetime]');
-          document.title    = (h1 ? h1.textContent.trim() : 'Post') + ' • Silico: Book of Genesis';
+          document.title    = (h1 ? h1.textContent.trim() : 'Post') + ' • Silicon: Book of Genesis';
           titleEl.innerHTML = h1 ? h1.innerHTML : 'Untitled';
           metaEl.textContent = time
             ? new Date(time.getAttribute('datetime')).toLocaleDateString(undefined,{year:'numeric', month:'short', day:'numeric'})
             : '';
     
-          // Prefer <article>, then <main>, then <body>
           const srcRoot = doc.querySelector('article') || doc.querySelector('main') || doc.body;
           const cleaned = srcRoot.cloneNode(true);
           const firstH1   = cleaned.querySelector('h1');            if (firstH1)  firstH1.remove();
           const firstTime = cleaned.querySelector('time[datetime]'); if (firstTime) firstTime.remove();
     
           bodyEl.innerHTML = cleaned.innerHTML;
-          // Smooth-scroll for in-post hash links (e.g., footnotes)
           bodyEl.addEventListener('click', (e) => {
             const a = e.target.closest('a[href^="#"]');
             if (!a) return;
@@ -95,15 +87,11 @@
           });
 
 
-          // ---- Centralized "Similar reads" ----
           try {
             const posts = await fetchPostsJSON();
           
-            // Determine which entry in posts.json corresponds to this post
             const uParam = new URLSearchParams(location.search).get('u') || '';
-            // Make an absolute URL for robust matching
             const absU   = new URL(uParam, location.href);
-            // Find by endsWith to handle either absolute or relative forms
             const me = posts.find(p =>
               absU.pathname.endsWith(p.url) || absU.href.endsWith(p.url)
             );
@@ -112,7 +100,6 @@
               const cat = me.category || '';
               const sub = me.subcategory || '';
           
-              // Choose 3 most recent in same (sub)category, excluding current
               const matches = posts
                 .filter(p => p.url !== me.url &&
                              p.category === cat &&
@@ -120,7 +107,6 @@
                 .sort((a,b) => new Date(b.date) - new Date(a.date))
                 .slice(0, 3);
           
-              // If the post HTML contains <div id="similar-list">, populate it
               const slot = document.getElementById('similar-list');
               if (slot) {
                 const fmt = iso => new Date(iso)
@@ -143,20 +129,17 @@
           }
 
     
-          // ---- Fix relative URLs inside the injected post ----
-          // Base dir of the fetched post, e.g. /ThoughtsInSilico/posts/
+
           const baseDir = new URL(absUrl).href.replace(/[^/]*$/, '');
     
-          // Helper: make a URL that resolves correctly for /img and /audio assets
+
           function fixUrl(v){
-            if (v && v.startsWith('#')) return v;   // ← keep in-page anchors intact
-            if (!v || /^([a-z]+:)?\/\//i.test(v) || v.startsWith('/')) return v; // already absolute
-            // If the post uses site-root assets like "img/..." or "audio/...",
-            // they actually live one level up from /posts/
+            if (v && v.startsWith('#')) return v; 
+            if (!v || /^([a-z]+:)?\/\//i.test(v) || v.startsWith('/')) return v; 
             if (v.startsWith('img/') || v.startsWith('audio/')) {
               return new URL('../' + v, baseDir).href;
             }
-            // Otherwise resolve relative to the post's folder
+
             return new URL(v, baseDir).href;
           }
     
@@ -170,21 +153,18 @@
             a.setAttribute('href', fixed);
           });
     
-          // Re-execute any <script> tags that were inside the post (e.g., "Similar reads")
           bodyEl.querySelectorAll('script').forEach(old => {
             const s = document.createElement('script');
-            // copy attributes (src, type, etc.)
             for (const { name, value } of old.attributes) s.setAttribute(name, value);
             s.textContent = old.textContent;
             old.replaceWith(s);
           });
 
     
-          // Route links to *other* HTML files under /posts/ through the reader
           bodyEl.querySelectorAll('a[href]').forEach(a => {
             try{
               const raw = a.getAttribute('href') || '';
-              if (raw.startsWith('#')) return;  // ← skip in-page anchors
+              if (raw.startsWith('#')) return;
               const target = new URL(raw, location.href);
               if (/\/posts\/.+\.html?$/i.test(target.pathname)) {
                 a.href = 'post.html?u=' + encodeURIComponent(target.href);
@@ -193,15 +173,12 @@
           });
 
 
-          // ---- Similar reads (centralized) ----
           try{
-            // resolve posts.json relative to repo root (works on GitHub Pages)
             const seg = location.pathname.split('/')[1] || '';
             const postsRes = await fetch(seg ? `/${seg}/posts/posts.json` : 'posts/posts.json');
             if (postsRes.ok) {
               const posts = await postsRes.json();
           
-              // which post are we showing?
               const absPost = new URL(u, location.href).href;
               const me = posts.find(p => new URL(p.url, location.href).href === absPost);
           
@@ -241,7 +218,6 @@
           }
 
     
-          // MathJax render & hash jump
           if (window.MathJax?.typeset) MathJax.typeset();
           if (location.hash){
             const target = document.getElementById(location.hash.slice(1));
