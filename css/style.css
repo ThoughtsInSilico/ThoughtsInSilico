@@ -21,7 +21,11 @@
   --border: var(--stroke);
   --muted: var(--ink-dim);
 
-  --sidebar-w: 280px;  /* or 260px if you want it tighter */
+  --sidebar-w: 280px;
+
+  /* Global gutters */
+  --gutter-desktop: 32px;
+  --gutter-mobile: clamp(14px, 4vw, 24px);
 }
 
 /* =========================================================
@@ -57,79 +61,40 @@ html, body { height: 100%; }
   width: 100%;
   min-height: 100svh;
   display: grid;
-  grid-template-columns: var(--sidebar-w) minmax(0, 1fr); /* sidebar | content */
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
   gap: 0;
 }
 
-/* left column is the injected sidebar; right column is main */
 .sidebar, #sidebar-include { grid-column: 1; }
 
 .main{
   grid-column: 2;
   min-width: 0;
   display: flex;
-  flex-direction: column;   /* vertical stack */
+  flex-direction: column;
 }
 
-/* ensure the footer rides to the bottom even on short pages */
-.site-footer{
-  margin-top: auto;
-}
+.site-footer{ margin-top: auto; }
 
+/* Sections are full-bleed by default; text padding lives in .container */
+.main > *{ width: 100%; margin: 0; }
 
-/* --- Global layout: padding only on .container --- */
-:root{
-  --gutter-desktop: 32px;
-  --gutter-mobile: clamp(14px, 4vw, 24px);
-}
-
-.main > *{             /* sections can be full-bleed by default */
-  width: 100%;
-  margin: 0;
-}
-
-.container{            /* all text padding lives here */
+.container{
   max-width: 1100px;
   margin-inline: auto;
   padding-inline: var(--gutter-desktop);
 }
 
-.section{              /* keep vertical rhythm here, not side padding */
-  padding-block: 28px;
-}
-@media (max-width: 900px){
-  .container{ padding-inline: var(--gutter-mobile); }
-}
+.section{ padding-block: 28px; }
 
-
-
-/* hero should touch the sidebar—no side padding/margin */
-.hero{
-  width: 100%;
-  margin-inline: 0;
-  padding-inline: 0;
-}
-
-/* Also remove the little 1px seam: let the image touch the sidebar border */
-.hero{ border-left: 0; }
-
-
-/* make sure the hero hugs the sidebar */
-.hero{ padding-inline: 0; }
-
-/* footer naturally hugs bottom because the middle row is 1fr */
-.site-footer{ margin-top: 0; }
-.site-footer .back-home { margin-bottom: 8px; }
-
-
-/* collapse columns on narrow screens (sidebar is still fixed) */
 @media (max-width: 900px){
   .layout { grid-template-columns: 1fr; }
+  .container{ padding-inline: var(--gutter-mobile); }
+
+  /* Fallback for injected post content that may not be wrapped */
+  .post-title,
+  .post-body{ padding-inline: var(--gutter-mobile); }
 }
-
-/* Full-bleed hero must touch the sidebar edge */
-.main > .hero { padding-inline: 0; }
-
 
 /* Any edge-to-edge section (backgrounds, banners, art) */
 .hero,
@@ -137,18 +102,12 @@ html, body { height: 100%; }
 .about-banner,
 .bleed{
   margin-inline: 0;
-  padding-inline: 0;   /* no side gutter */
+  padding-inline: 0;
 }
 
-/* Mobile text gutter: backgrounds stay full-bleed */
-@media (max-width: 900px){
-  .container{ padding-inline: var(--gutter-mobile); }
-
-  /* Fallback for injected posts that might not be wrapped in .container */
-  .post-title,
-  .post-body{ padding-inline: var(--gutter-mobile); }
-}
-
+/* footer spacing */
+.site-footer{ margin-top: 0; }
+.site-footer .back-home { margin-bottom: 8px; }
 
 /* =========================================================
    Sidebar (structure + look)
@@ -227,28 +186,31 @@ html, body { height: 100%; }
 }
 
 /* =========================================================
-   Hero
+   Hero (Home)
 ========================================================= */
 .hero{
-   min-height:62vh;
-   background: url('../img/index-background.jpg') center / cover no-repeat;
-   border-bottom:1px solid var(--stroke);
+  min-height:62vh;
+  background: url('../img/index-background.jpg') center / cover no-repeat;
+  background-attachment: fixed;           /* desktop parallax */
+  border-bottom:1px solid var(--stroke);
 }
 
-/* add this right after */
+/* Mobile: disable parallax to avoid jitter */
 @media (max-width: 900px){
-  .hero{ background-attachment: scroll; } /* mobile: no parallax */
+  .hero{ background-attachment: scroll; }
 }
 
 /* Hide "Back to Home" on the homepage */
 .home .back-home { display: none; }
 
-
 /* =========================================================
-   Containers / cards / grids
+   Cards / grids
 ========================================================= */
-
-.posts-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
+.posts-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+  gap:16px;
+}
 
 .post-card,.feature-card,.anthem-card{
   background:transparent;
@@ -313,7 +275,7 @@ html, body { height: 100%; }
 }
 
 /* =========================================================
-   Cards / post helpers
+   Card helpers / post content
 ========================================================= */
 .post-card{ position:relative; overflow:hidden; }
 .post-card::before{
@@ -336,12 +298,59 @@ html, body { height: 100%; }
 .post-body p{ margin: 0 0 20px; }
 .post-card.post-layout .post-body > :is(ol, ul, blockquote, figure){ margin: 0 0 20px; }
 
+/* Two images side-by-side in posts */
+.post-card.post-layout .post-body .img-row.equal-pair{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+  margin: 12px 0 16px;
+}
+.post-card.post-layout .post-body .img-row.equal-pair img{
+  width: 100%; height: auto; display: block; border-radius: 10px; object-fit: contain;
+}
+
 /* Stack equal pair on very narrow screens */
 @media (max-width: 560px){
-  .post-card.post-layout .post-body .img-row.equal-pair{
-    grid-template-columns: 1fr;
-  }
+  .post-card.post-layout .post-body .img-row.equal-pair{ grid-template-columns: 1fr; }
 }
+
+/* Book-cover pair look for posts */
+.post-card.post-layout .post-body .img-row.as-library{
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin: 12px 0 16px;
+}
+.post-card.post-layout .post-body .img-row.as-library img{
+  display: block;
+  width: clamp(140px, 22vw, 180px);
+  height: auto;
+  border-radius: 10px;
+  margin: 0 auto 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.25);
+}
+
+/* Single book-cover helper */
+.post-card.post-layout .post-body img.book-cover{
+  display: block;
+  width: min(180px, 34vw);
+  height: auto;
+  border-radius: 10px;
+  margin: 0 auto 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.25);
+}
+
+.post-card.post-layout .post-body h2{
+  margin-top: 32px; margin-bottom: 6px; line-height: 1.25;
+}
+.post-card.post-layout .post-body h3{
+  margin-top: 24px; margin-bottom: 4px; line-height: 1.3;
+}
+.post-card.post-layout .post-body h2 + *,
+.post-card.post-layout .post-body h3 + *{ margin-top: 8px; }
 
 /* =========================================================
    About (Vat-brain)
@@ -396,81 +405,26 @@ html, body { height: 100%; }
   border-bottom:1px solid transparent;
 }
 
-/* anthem list */
-.anthem-list{
-  list-style:none; margin:8px 0 10px; padding:0;
-  display:flex; flex-wrap:wrap; gap:8px;
-}
-.anthem-list button{
-  position: relative;
-  font: inherit;
-  padding: 8px 12px 8px 40px;
-  border-radius: 12px;
-  border: 2px dotted rgba(255,255,255,.85);
-  background: transparent;
-  color: var(--ink);
-  cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0,0,0,.15);
-  transition: background .2s ease, border-color .2s ease, transform .05s ease;
-}
-.anthem-list button:hover{
-  background: rgba(255,255,255,.08);
-  border-color: #fff;
-}
-.anthem-list button:active{ transform: translateY(1px); }
-.anthem-list button[aria-current="true"]{
-  background: rgba(255,255,255,.16);
-  border-color: #ffffff;
-}
-.anthem-list button::before{
-  content:"";
-  position:absolute; left:12px; top:50%; transform:translateY(-50%);
-  width:18px; height:18px; border-radius:50%;
-  border:1.5px solid var(--ink);
-  background: transparent;
-  opacity:.95;
-}
-.anthem-list button::after{
-  content:"";
-  position:absolute; left:17px; top:50%; transform:translateY(-50%);
-  width:0; height:0;
-  border-left:7px solid var(--ink);
-  border-top:4px solid transparent;
-  border-bottom:4px solid transparent;
-  opacity:.95;
-}
-.anthem-list button[aria-current="true"]::before{ background: var(--ink); }
-.anthem-list button[aria-current="true"]::after{ border-left-color: var(--bg); }
-
-.anthem-audio{ width:100%; margin-top:6px }
-.now-playing{ margin:8px 0 6px; font-weight:700; }
-
-
-
+/* About banner: fixed on desktop, not fixed on phones */
 .about-banner{
   position: relative;
-  height: 100svh; /* avoids mobile address-bar jumps */
-  overflow: hidden; /* prevents internal scrolling */
+  height: 100svh;           /* avoids mobile address-bar jumps */
+  overflow: hidden;         /* prevents internal scrolling */
   background: var(--banner-desktop, url('../img/banner.jpg')) no-repeat center / cover;
   background-attachment: fixed; /* desktop parallax */
 }
-
-/* Phone banner: use mobile image + no fixed attachment */
 @media (max-width: 900px){
   .about-banner{
     background-image: var(--banner-mobile, var(--banner-desktop));
-    background-attachment: scroll; /* restores original mobile behavior */
+    background-attachment: scroll; /* mobile: no parallax */
     background-position: center;
   }
 }
-
-
 
 /* =========================================================
    Mobile nav / sidebar behavior (hamburger)
 ========================================================= */
 @media (max-width: 900px){
-  /* shell should not block clicks when panel is hidden */
   .sidebar{ pointer-events: none; }
   body.nav-open .sidebar{ pointer-events: auto; }
 
@@ -499,14 +453,11 @@ html, body { height: 100%; }
   body.nav-open .hamburger span:nth-child(2){ opacity: 0; }
   body.nav-open .hamburger span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
 
-  /* Slide ONLY the inner scrolling panel (keeps hamburger tappable) */
   .sidebar-panel{ transform: translateX(-100%); transition: transform .25s ease; }
   body.nav-open .sidebar-panel{ transform: translateX(0); }
 
-  /* Lock page scroll when menu is open */
   body.nav-open{ overflow: hidden; }
 
-  /* About page tweaks */
   .about-grid{ grid-template-columns: repeat(2, 1fr); }
   .about-banner{ background-position: center; }
 
@@ -598,7 +549,6 @@ html, body { height: 100%; }
   user-select: none;
 }
 
-
 @media (max-width: 900px){
   .entropy-control{
     left: auto;
@@ -637,91 +587,3 @@ html, body { height: 100%; }
 [data-entropy] input[type="range"]{
   width: 160px !important;
 }
-
-
-.post-card.post-layout .post-body .img-row.as-library{
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  margin: 12px 0 16px;
-}
-
-.post-card.post-layout .post-body .img-row.as-library img{
-   display: block;
-   width: clamp(140px, 22vw, 180px);
-   height: auto;
-   border-radius: 10px;
-   margin: 0 auto 10px;
-   box-shadow: 0 2px 10px rgba(0,0,0,.25);
-}
-
-/* Reusable book-cover look for single images in posts */
-.post-card.post-layout .post-body img.book-cover{
-  display: block;
-  width: min(180px, 34vw);
-  height: auto;
-  border-radius: 10px;
-  margin: 0 auto 10px;             /* center on narrow screens */
-  box-shadow: 0 2px 10px rgba(0,0,0,.25);
-}
-
-
-
-.post-card.post-layout .post-body .img-row.equal-pair{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
-  margin: 12px 0 16px;
-}
-.post-card.post-layout .post-body .img-row.equal-pair img{
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 10px;
-  object-fit: contain;
-}
-
-.post-card.post-layout .post-body h2{
-  margin-top: 32px;
-  margin-bottom: 6px;
-  line-height: 1.25;
-}
-.post-card.post-layout .post-body h3{
-  margin-top: 24px;
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-.post-card.post-layout .post-body h2 + *,
-.post-card.post-layout .post-body h3 + *{ margin-top: 8px; }
-
-/* =========================================================
-   Library: in-page section links
-========================================================= */
-.library-nav{
-  display: inline-flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  font: 14px/1.2 system-ui, sans-serif;
-  margin: 8px 0 6px;
-}
-.library-nav a{
-  padding: 6px 10px;
-  border: 1px dashed var(--stroke);
-  border-radius: 10px;
-  background: rgba(0,0,0,.25);
-  text-decoration: none;
-}
-.library-nav a:hover,
-.library-nav a:focus-visible{
-  background: rgba(255,255,255,.08);
-  outline: none;
-  text-decoration: none;
-}
-
-/* --- Mobile safety gutter so text never touches the edges --- */
-:root { --gutter-mobile: clamp(14px, 4vw, 24px); }
-
-
