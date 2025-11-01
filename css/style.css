@@ -97,6 +97,10 @@ html, body { height: 100%; }
   .layout { grid-template-columns: 1fr; }
 }
 
+/* Full-bleed hero must touch the sidebar edge */
+.main > .hero { padding-inline: 0; }
+
+
 /* =========================================================
    Sidebar (structure + look)
 ========================================================= */
