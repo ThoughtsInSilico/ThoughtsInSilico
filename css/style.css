@@ -18,6 +18,12 @@
   --muted: var(--ink-dim);
 }
 
+:root{
+  /* ...your existing vars... */
+  --sidebar-w: 320px;   /* single source of truth */
+}
+
+
 /* ---------- Base ---------- */
 *{ box-sizing:border-box }
 html,body{
@@ -38,23 +44,16 @@ hr{ border:0; height:1px; background:var(--stroke) }
 }
 
 
-.layout{
-  display:flex;              /* ← was block */
-  flex-direction: column;    /* stack main then footer */
-  min-height:100vh;
-  padding-left:280px;        /* reserve space for fixed sidebar */
-}
-
-
 /* keep the fixed sidebar layered above, main stays interactive */
 .sidebar{ z-index:10; }
 main{ position:relative; z-index:0; }
 
 /* SIDEBAR (desktop): fixed, full-height – shell has NO border or bg */
 .sidebar{
-  position: fixed; left: 0; top: 0; bottom: 0; width: 280px;
+  position: fixed; left: 0; top: 0; bottom: 0; width: var(--sidebar-w);
   z-index: 10;
 }
+
 
 .sidebar-panel{
   height: 100%;
@@ -131,13 +130,6 @@ main{ position:relative; z-index:0; }
   padding: 0;
 }
 
-.main{
-  flex: 1 0 auto;            /* fill remaining height inside .layout */
-  display:flex;
-  flex-direction:column;
-  min-height:0;              /* avoids overflow pushing the footer up */
-}
-
 
 /* ---------- Home hero ---------- */
 .hero{
@@ -147,7 +139,7 @@ main{ position:relative; z-index:0; }
 }
 
 /* ---------- Containers / cards ---------- */
-.container{ width:min(1100px, 100% - 40px); margin:0 auto }
+.container{ width: min(1100px, 100%); margin: 0 auto; padding-inline: 16px; }
 /* left-align only the About chart container */
 .container-left{  margin-left: 0;  margin-right: auto;}
 .section{ padding:28px 0 }
@@ -217,6 +209,45 @@ main{ position:relative; z-index:0; }
   gap: 24px;
   justify-content: start;                /* last row starts at the left */
 }
+
+/* ====== CANONICAL LAYOUT: grid + centered content + sticky footer ====== */
+html, body { height: 100%; }
+
+.layout{
+  width: 100%;
+  min-height: 100svh;
+  display: grid !important;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) !important; /* sidebar | content */
+  gap: 0;
+}
+
+/* make sure injected sidebar occupies the left column */
+.sidebar, #sidebar-include { grid-column: 1; }
+
+/* main column: center everything inside; sticky footer via 1fr middle row */
+.main{
+  grid-column: 2;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;   /* header | content | footer */
+  align-items: start;                  /* don’t stretch children vertically */
+}
+
+/* cap content width and center the common wrappers */
+.main > *, .container, .section{
+  width: min(1100px, 100%);
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+/* footer naturally hugs bottom because the middle row is 1fr */
+.site-footer{ margin-top: 0; }
+
+/* Mobile: collapse to single column; the sidebar is still fixed but grid won't reserve space */
+@media (max-width: 900px){
+  .layout { grid-template-columns: 1fr; }
+}
+
 
 /* Responsive fallbacks */
 @media (max-width: 1024px) {
@@ -426,26 +457,9 @@ main{ position:relative; z-index:0; }
 }
 .about-banner::after{ content:""; position:absolute; inset:0; background:rgba(0,0,0,.38); }
 
-/* ---- sticky footer + bottom "Back to Home" ---- */
-html, body { height:100%; }
-body{  min-height:100dvh;  display:flex;  flex-direction:column;}
-main{
-  flex:1 0 auto;
-  display:flex;
-  flex-direction:column;
-}
-footer{ margin-top:auto; }
-.post-bottom-nav{ margin-top:auto; padding-top:12px; }
-.back-home{ margin-top:auto }
-main > footer{ margin-top:0 }
-.site-footer{ margin-top:auto; }   /* explicit for the included footer */
-
 
 
 @media (max-width: 900px){
-
-  /* Remove desktop gutter; make room above for the button */
-  .layout{ padding-left: 0 !important; padding-top: 56px; }
 
   /* Phone hamburger (always visible & tappable) */
   .hamburger{
