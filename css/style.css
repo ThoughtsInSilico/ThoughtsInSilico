@@ -497,15 +497,32 @@ html, body { height: 100%; }
 [data-entropy-control] input[type="range"],
 [data-entropy] input[type="range"]{ width: 160px !important; }
 
-/* ---- Section title spacing (safe, additive) ---- */
+/* ---- Section title spacing (expanded, still additive) ---- */
 main h1,
 main .page-title,
 main .section-title {
-  /* top offset scales with viewport; won’t affect sidebars */
-  margin-top: clamp(16px, 6vh, 64px);
+  /* much more breathing room above and below */
+  margin-top: clamp(32px, 10vh, 120px);
+  margin-bottom: clamp(18px, 4vh, 56px);
+  line-height: 1.05; /* keeps large display titles tight */
+  scroll-margin-top: 96px; /* avoids being hidden when navigated to */
 }
 
-/* If you have post headers immediately under main, ensure there’s space before content too */
+/* First heading at the very top of a page gets extra room */
+main > :is(h1, h2, .page-title, .section-title):first-child {
+  margin-top: clamp(40px, 12vh, 140px);
+}
+
+/* Mobile: a bit more space due to the hamburger/top edge */
+@media (max-width: 900px){
+  main h1,
+  main .page-title,
+  main .section-title {
+    margin-top: clamp(44px, 12vh, 150px);
+  }
+}
+
+/* Keep a little opening between post headers and the following content */
 .post-header + * {
   margin-top: 1.25rem;
 }
