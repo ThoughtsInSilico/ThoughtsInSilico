@@ -14,23 +14,22 @@
 </head>
 
 <body class="home">
+  <!-- Global Shannon entropy slider (Signal to Static) -->
+  <div class="entropy-control" data-entropy-global>
+    <div class="entropy-title">Signal to Static</div>
+    <label class="visually-hidden" for="entropy-range">
+      Noise Injection Level — Probability each pixel is replaced (q)
+    </label>
+    <input id="entropy-range" type="range" min="0" max="1" step="0.001" value="0">
+    <output data-entropy-out aria-live="polite">Noise: 0%</output>
+  </div>
+  
   <div class="layout"> 
-    
     <!-- sidebar include -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
       <section class="hero" aria-label="Background art"></section>  
-
-      <!-- global entropy slider (signal to static) -->
-      <div class="entropy-control" data-entropy-global>
-        <div class="entropy-title">Signal to Static</div>
-        <label class="visually-hidden" for="entropy-range">
-          Noise Injection Level — Probability each pixel is replaced (q)
-        </label>
-        <input id="entropy-range" type="range" min="0" max="1" step="0.001" value="0">
-        <output data-entropy-out aria-live="polite">Noise: 0%</output>
-      </div>
 
       
       <section class="container section">
