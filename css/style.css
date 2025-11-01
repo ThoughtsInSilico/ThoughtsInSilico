@@ -79,11 +79,6 @@ html, body { height: 100%; }
 .main > *{ width: 100%; margin: 0; }
 
 
-:root{
-  --gutter-desktop: 32px;
-  --gutter-mobile: clamp(14px, 4vw, 24px);
-}
-
 .container{
   max-width: 1100px;
   margin-inline: auto;
@@ -289,14 +284,7 @@ html, body { height: 100%; }
 }
 
 
-/* Vertical image stack with same width */
-.post-card.post-layout .post-body .img-stack img{
-  display: block;
-  width: min(900px, 100%);
-  height: auto;
-  border-radius: 10px;
-  margin: 0 auto 12px;      /* same width, centered, stacked */
-}
+
 
 
 /* =========================================================
