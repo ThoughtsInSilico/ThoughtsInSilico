@@ -301,9 +301,16 @@ html, body { height: 100%; }
    border-bottom: 1px solid var(--stroke);
    position: relative;
    background-attachment: fixed;
+   background-position: calc(50% + (var(--sidebar-w) / 2)) center;
    z-index: 2;           /* sits above the banner */
-
 }
+
+@media (max-width: 900px){
+  .about-banner{ background-position: center center; }
+  .about-upper{  background-position: center center; }
+}
+
+
 .about-grid{
    display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: auto;
    gap: 0; border: 1px solid var(--stroke);
@@ -373,7 +380,7 @@ html, body { height: 100%; }
   background-image: url('../img/about-banner.jpg');   /* keep your path */
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center center;
+  background-position: calc(50% + (var(--sidebar-w) / 2)) center;
   background-attachment: fixed;
 }
 
@@ -381,7 +388,7 @@ html, body { height: 100%; }
   content:"";
   position:absolute;
   inset:0;
-  background: rgba(0,0,0,.58);
+  background: rgba(0,0,0,.38);
   pointer-events: none;
 }
 
@@ -497,20 +504,20 @@ html, body { height: 100%; }
 [data-entropy-control] input[type="range"],
 [data-entropy] input[type="range"]{ width: 160px !important; }
 
-/* ---- Section title spacing (roomier) ---- */
+/* Roomier section/page titles */
 main h1,
 main .page-title,
 main .section-title {
-  margin-top: clamp(48px, 12vh, 160px);
-  margin-bottom: clamp(28px, 6vh, 80px);
+  margin-top: clamp(64px, 14vh, 180px);
+  margin-bottom: clamp(28px, 6vh, 88px);
   line-height: 1.06;
-  scroll-margin-top: 112px;
+  scroll-margin-top: 120px;
 }
 
-/* If a heading is the very first element, give it extra top space */
 main > :is(h1, .page-title, .section-title):first-child {
-  margin-top: clamp(64px, 14vh, 180px);
+  margin-top: clamp(72px, 16vh, 200px);
 }
+
 
 
 /* First heading at the very top of a page gets extra room */
@@ -610,33 +617,24 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
   background: var(--bg);      /* the black sheet itself */
 }
 
-/* Stronger real gradient at the top edge of the black section */
-.about-banner + *::before {
-  content: "";
-  position: absolute;
-  left: 0; right: 0;
-  top: 0;
-  height: 140px;  /* make the blend obvious; tweak 120–180px to taste */
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0) 0%,
-    rgba(0,0,0,0.25) 35%,
-    rgba(0,0,0,0.55) 65%,
-    var(--bg) 100%
-  );
-}
 
 
-/* --- About: full-width black sheet below the banner --- */
+/* Black sheet below the banner: full width of main, real gradient IN the background */
 .about-banner + * {
   position: relative;
   z-index: 1;
-  background: var(--bg);     /* black sheet spans full width */
-  color: var(--ink);         /* force white text */
-  margin-inline: 0;          /* remove any container margins */
-  padding-inline: 0;         /* remove container padding that causes side gaps */
+  color: var(--ink);  /* white text */
+  /* multi-stop gradient lives in the background so it never touches text */
+  background:
+    linear-gradient(to bottom,
+      rgba(11,14,16,0) 0px,
+      rgba(11,14,16,0.25) 44px,
+      rgba(11,14,16,0.55) 92px,
+      var(--bg) 140px
+    ),
+    var(--bg);
 }
+
 
 /* Remove boxed/rounded card look just in the about-lower section */
 .about-banner + * .card,
