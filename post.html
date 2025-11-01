@@ -43,7 +43,7 @@
         try{
           // Fetch the source post
           const absUrl = new URL(u, location.href).href;
-          const res    = await fetch(absUrl, { cache:'no-store' });
+          const res = await fetch(new URL('../posts.json', window.__POST_DIR || location.href).href);
           if (!res.ok) throw new Error(`HTTP ${res.status} for ${absUrl}`);
           const html   = await res.text();
           const doc    = new DOMParser().parseFromString(html, 'text/html');
