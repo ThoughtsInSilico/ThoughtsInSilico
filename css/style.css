@@ -493,7 +493,7 @@ html, body { height: 100%; }
 [data-entropy] input[type="range"]{ width: 160px !important; }
 
 /* ---- Uniform section mastheads across pages ---- */
-:root{ --masthead-size: clamp(40px, 5.5vw, 72px); }
+:root{ --masthead-size: clamp(34px, 4.8vw, 64px); }
 
 main h1,
 main .page-title,
