@@ -119,32 +119,49 @@ const SIDEBAR_TRACKS = [
   // { title: 'Schubert: Death and the Maiden — I. Allegro (Takács)', src: 'audio/schubert-datm-i-takacs.mp3' },
 ];
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1) Sidebar
-  includeInto(document.getElementById('sidebar-include'));
 
-  // 2) Hamburger toggle
-  const hb = document.getElementById('navToggle') || document.querySelector('.hamburger');
-  if (hb) {
-    hb.addEventListener('click', () => {
-      const open = !document.body.classList.contains('nav-open');
-      document.body.classList.toggle('nav-open', open);
-      hb.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // --- helper to resolve site-root URLs on GitHub Pages ---
+  function repoRoot(){
+    const seg = location.pathname.split('/').filter(Boolean)[0] || '';
+    return seg ? `/${seg}` : '';
   }
 
-  // 3) Sidebar "Currently Listening" wiring (uses GlobalPlayer)
+  // 1) Sidebar (await so #sl-list actually exists)
+  await includeInto(document.getElementById('sidebar-include'));
+
+  // 2) Hamburger toggle (now safe: the button exists)
+  {
+    const hb = document.getElementById('navToggle') || document.querySelector('.hamburger');
+    if (hb) {
+      hb.addEventListener('click', () => {
+        const open = !document.body.classList.contains('nav-open');
+        document.body.classList.toggle('nav-open', open);
+        hb.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+  }
+
+  // 3) Sidebar "Currently Listening" wiring (after include)
   {
     const list  = document.getElementById('sl-list');
     const nowEl = document.getElementById('sl-now');
 
+    function absSrc(src){
+      // turn 'audio/foo.mp3' or '/audio/foo.mp3' into an absolute URL with the repo prefix
+      const clean = String(src || '').replace(/^\/+/, '');   // drop leading slashes
+      return new URL(`${repoRoot()}/${clean}`, location.origin).href;
+    }
+
     if (list) {
       function render(active = -1) {
-        list.innerHTML = SIDEBAR_TRACKS.length
-          ? SIDEBAR_TRACKS.map((t,i)=>
+        const tracks = Array.isArray(SIDEBAR_TRACKS) ? SIDEBAR_TRACKS : [];
+        list.innerHTML = tracks.length
+          ? tracks.map((t,i)=>
               `<li><button type="button" data-i="${i}" ${i===active?'aria-current="true"':''}>${t.title}</button></li>`
             ).join('')
-          : '<li><em>Add tracks in <code>audio/</code>…</em></li>';
+          : '<li><em>No tracks found. Put files in <code>audio/</code> and entries in <code>SIDEBAR_TRACKS</code>.</em></li>';
       }
 
       render();
@@ -153,14 +170,63 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = e.target.closest('button[data-i]');
         if (!btn) return;
         const i = +btn.dataset.i;
-        const track = SIDEBAR_TRACKS[i];
+        const track = SIDEBAR_TRACKS?.[i];
+        if (!track) return;
 
-        window.GlobalPlayer.play(track);
+        // force absolute, repo-aware URL so it also works from /posts/*
+        window.GlobalPlayer.play({ title: track.title, src: absSrc(track.src) });
         if (nowEl) nowEl.textContent = track.title || '';
         render(i);
       });
     }
   }
+
+  // 4) Highlight active link (after sidebar exists)
+  {
+    const path = (location.pathname.split('/').pop() || 'index.html');
+    document.querySelectorAll('.sidebar nav a').forEach(a => {
+      const href = a.getAttribute('href') || '';
+      if (href === path || href.startsWith(path + '?')) a.setAttribute('aria-current', 'page');
+    });
+  }
+
+  // 5) Footer (await so it’s reliably injected before we touch it)
+  await includeInto(document.getElementById('footer-include'));
+
+  // 6) Year stamp
+  const yearEl = document.querySelector('[data-year], #y');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // 7) Proportional panel sizing
+  function proportionalize(colSelector){
+    const col = document.querySelector(colSelector);
+    if (!col) return;
+    const panels = Array.from(col.querySelectorAll('.panel'));
+    if (panels.length < 2) return;
+
+    const measures = panels.map(p => {
+      const prev = p.style.flex;
+      p.style.flex = '0 0 auto';
+      const h = p.scrollHeight;
+      p.style.flex = prev;
+      return h;
+    });
+
+    const total = measures.reduce((a,b)=>a+b,0) || 1;
+    const allTiny = measures.every(h => h < 8);
+
+    panels.forEach((p, i) => {
+      const grow = allTiny ? 1 : measures[i] / total;
+      p.style.flex = `${grow} 1 0px`;
+    });
+  }
+  proportionalize('.about-left');
+  proportionalize('.about-right');
+});
+
+
+
+
   // Optional: auto-load first track (but don’t autoplay):
   // if (SIDEBAR_TRACKS.length){ window.GlobalPlayer.play(SIDEBAR_TRACKS[0]); }
 
@@ -171,8 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (href === path || href.startsWith(path + '?')) a.setAttribute('aria-current', 'page');
   });
 
-  // 5) Footer
-  includeInto(document.getElementById('footer-include'));
 
   // 6) Year
     const yearEl = document.querySelector('[data-year], #y');
