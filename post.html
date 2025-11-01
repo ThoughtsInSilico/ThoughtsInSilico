@@ -44,6 +44,39 @@
     
           try{
             const absUrl = new URL(u, location.href).href;
+            // Make all relative URLs inside the injected article resolve to the post's folder
+            const baseDir = absUrl.replace(/[^/]*$/, '');
+            
+            // rewrite helpers
+            function isAbsoluteOrRoot(v){ return /^[a-z]+:|^\/\//i.test(v) || v.startsWith('/'); }
+            function absolutizeAttr(root, selector, attr, xform){
+              root.querySelectorAll(selector).forEach(el=>{
+                const v = el.getAttribute(attr);
+                if (!v) return;
+                // keep hashes and absolute/root URLs as-is
+                if (v.startsWith('#') || isAbsoluteOrRoot(v)) return;
+                el.setAttribute(attr, (xform ? xform(v) : new URL(v, baseDir).href));
+              });
+            }
+            
+            // for <img src>, <script src>, <link href>, etc.
+            absolutizeAttr(bodyEl, '[src]', 'src');
+            absolutizeAttr(bodyEl, 'a[href]', 'href');
+            
+            // handle srcset (comma-separated candidates)
+            bodyEl.querySelectorAll('img[srcset], source[srcset]').forEach(el=>{
+              const raw = el.getAttribute('srcset') || '';
+              const fixed = raw.split(',')
+                .map(part=>{
+                  const [url, desc] = part.trim().split(/\s+/, 2);
+                  if (!url || isAbsoluteOrRoot(url) || url.startsWith('#')) return part.trim();
+                  const abs = new URL(url, baseDir).href;
+                  return desc ? `${abs} ${desc}` : abs;
+                })
+                .join(', ');
+              el.setAttribute('srcset', fixed);
+            });
+
             // Make all relative URLs inside the injected post resolve to the post's folder
             const abs   = new URL(u, location.href);
             const dir   = abs.href.replace(/[^/]*$/, '');   // .../posts/
