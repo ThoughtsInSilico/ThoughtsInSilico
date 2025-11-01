@@ -112,9 +112,9 @@ const SIDEBAR_TRACKS = [
   // { title: 'Schubert: Death and the Maiden — I. Allegro (Takács)', src: 'audio/schubert-datm-i-takacs.mp3' },
 ];
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
   // 1) Sidebar
-  await includeInto(document.getElementById('sidebar-include'));
+  includeInto(document.getElementById('sidebar-include'));
 
   // 2) Hamburger toggle
   const hb = document.getElementById('navToggle') || document.querySelector('.hamburger');
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // 5) Footer
-  await includeInto(document.getElementById('footer-include'));
+  includeInto(document.getElementById('footer-include'));
 
   // 6) Year
     const yearEl = document.querySelector('[data-year], #y');
