@@ -149,7 +149,7 @@
     
           // Helper: make a URL that resolves correctly for /img and /audio assets
           function fixUrl(v){
-            if (v && v.startsWith('#')) return v;   // ← keep in-page anchors as-is
+            if (v && v.startsWith('#')) return v;   // ← keep in-page anchors intact
             if (!v || /^([a-z]+:)?\/\//i.test(v) || v.startsWith('/')) return v; // already absolute
             // If the post uses site-root assets like "img/..." or "audio/...",
             // they actually live one level up from /posts/
@@ -183,13 +183,15 @@
           // Route links to *other* HTML files under /posts/ through the reader
           bodyEl.querySelectorAll('a[href]').forEach(a => {
             try{
-              const target = new URL(a.getAttribute('href'), location.href);
-              // If it points to a post HTML under /posts/, rewrite via post.html
+              const raw = a.getAttribute('href') || '';
+              if (raw.startsWith('#')) return;  // ← skip in-page anchors
+              const target = new URL(raw, location.href);
               if (/\/posts\/.+\.html?$/i.test(target.pathname)) {
                 a.href = 'post.html?u=' + encodeURIComponent(target.href);
               }
             }catch(_){}
           });
+
 
           // ---- Similar reads (centralized) ----
           try{
