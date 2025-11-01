@@ -177,6 +177,54 @@
               }
             }catch(_){}
           });
+
+          // ---- Similar reads (centralized) ----
+          try{
+            // resolve posts.json relative to repo root (works on GitHub Pages)
+            const seg = location.pathname.split('/')[1] || '';
+            const postsRes = await fetch(seg ? `/${seg}/posts.json` : 'posts.json');
+            if (postsRes.ok) {
+              const posts = await postsRes.json();
+          
+              // which post are we showing?
+              const absPost = new URL(u, location.href).href;
+              const me = posts.find(p => new URL(p.url, location.href).href === absPost);
+          
+              const cat = me?.category;
+              const sub = me?.subcategory || '';
+              const el  = bodyEl.querySelector('#similar-list');
+          
+              if (el && cat){
+                const items = posts
+                  .filter(p =>
+                    p.category === cat &&
+                    (!sub || p.subcategory === sub) &&
+                    new URL(p.url, location.href).href !== absPost
+                  )
+                  .sort((a,b)=> new Date(b.date) - new Date(a.date))
+                  .slice(0,3)
+                  .map(p => {
+                    const href = 'post.html?u=' + encodeURIComponent(p.url);
+                    const meta = [
+                      p.subcategory || '',
+                      new Date(p.date).toLocaleString(undefined, { month: 'short', year: 'numeric' })
+                    ].filter(Boolean).join(' • ');
+                    return `
+                      <a class="similar-card" href="${href}">
+                        <strong>${p.titleHtml || p.title}</strong>
+                        <span>${meta}</span>
+                      </a>`;
+                  }).join('');
+          
+                el.innerHTML = items || `<p class="muted">No related posts yet.</p>`;
+              }
+            }
+          }catch(err){
+            const el = bodyEl.querySelector('#similar-list');
+            if (el) el.innerHTML = `<p class="muted">Couldn’t load suggestions.</p>`;
+            console.warn('Similar reads skipped:', err);
+          }
+
     
           // MathJax render & hash jump
           if (window.MathJax?.typeset) MathJax.typeset();
