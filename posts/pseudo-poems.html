@@ -33,28 +33,4 @@
     <h2>Similar reads</h2>
     <div id="similar-list">Loading…</div>
   </aside>
-  
-  <script>
-    (async function(){
-      const hereUrl = location.pathname.split('/').slice(-1)[0];
-      const cat = "Fiction"; const sub = "Poetry";
-      try{
-        const res = await fetch('../posts.json');
-        const posts = await res.json();
-        const matches = posts
-          .filter(p => p.category===cat && (!sub || p.subcategory===sub) && !p.url.endsWith(hereUrl))
-          .sort((a,b)=> new Date(b.date)-new Date(a.date))
-          .slice(0,3);
-        const el = document.getElementById('similar-list');
-        el.innerHTML = matches.length ? matches.map(p=>`
-          <a class="similar-card" href="../${p.url}">
-            <strong>${p.titleHtml || p.title}</strong>
-            <span>${p.subcategory ? p.subcategory + " • " : ""}${new Date(p.date).toLocaleString(undefined,{month:"short", year:"numeric"})}</span>
-          </a>`).join("") : `<p class="muted">No related posts yet.</p>`;
-      }catch(e){
-        console.error(e);
-        document.getElementById('similar-list').innerHTML = `<p class="muted">Couldn’t load suggestions.</p>`;
-      }
-    })();
-  </script>
 </article>
