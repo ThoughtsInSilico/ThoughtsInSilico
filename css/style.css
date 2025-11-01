@@ -434,18 +434,31 @@ html, body { height: 100%; }
 /* ---- About banner: one element, source chosen via variable ---- */
 .about-banner{
   position: sticky;
-  top: 0;
-  height: 100svh;
-  overflow: hidden;
-  z-index: 0;
+   top: 0;
+   height: 100svh;
+   overflow: hidden;
+   z-index: 0;
+   will-change: transform;
+   transform: translateZ(0);
+}
 
-  /* always read from --banner-img; default to --banner-desktop */
-  background-image: var(--banner-img, var(--banner-desktop));
-  background-repeat: no-repeat;
+/* Draw the banner image as a fixed layer pinned to the viewport */
+.about-banner::before{
+  content: "";
+  position: fixed;        /* makes it look “static” while you scroll */
+  inset: 0;
+  background-image: url('../img/about-banner.jpg');   /* desktop image */
   background-size: cover;
   background-position: center center;
-  background-attachment: fixed;
+  background-repeat: no-repeat;
+  will-change: transform;
+  transform: translateZ(0);
+  z-index: -1;            /* behind everything else */
+  pointer-events: none;
 }
+
+
+
 .about-banner::after{
   content:"";
   position:absolute; inset:0;
@@ -636,10 +649,9 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 }
 
 @media (max-width: 900px){
-  .about-banner{
+  .about-banner::before{
     background-image: url('../img/about-banner-mobile.jpg');
     background-position: center center;
-    background-attachment: fixed;    /* ← keep it “pinned” like desktop */
   }
 }
 
