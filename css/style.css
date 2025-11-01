@@ -415,15 +415,25 @@ html, body { height: 100%; }
 
 /* full-screen banner */
 .about-banner{
-  position:relative; height:100vh;
-  background:url('../img/banner.jpg') no-repeat fixed;
-  background-size:cover;
-  background-position:calc(50% + 140px) center;
-  -webkit-mask-image:linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+   position:relative; height:100vh;
+   background: var(--banner-desktop, url('../img/banner.jpg')) no-repeat fixed;
+   background-size:cover;
+   background-position:calc(50% + 140px) center;
+   -webkit-mask-image:linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
           mask-image:linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
-  margin:0;
+   margin:0;
 }
 .about-banner::after{ content:""; position:absolute; inset:0; background:rgba(0,0,0,.38); }
+
+/* Phone banner switches to the mobile image */
+@media (max-width: 900px){
+  .about-banner{
+    background: var(--banner-mobile, var(--banner-desktop)) no-repeat fixed;
+    background-size: cover;
+    background-position: center;
+  }
+}
+
 
 /* =========================================================
    Mobile nav / sidebar behavior (hamburger)
