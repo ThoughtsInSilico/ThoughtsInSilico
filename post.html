@@ -34,6 +34,20 @@
     </div>
 
     <script>
+
+      // --- centralized helpers ---
+      function repoRoot(){
+        const repo = (location.pathname.split('/')[1] || '');
+        return repo ? `/${repo}` : '';
+      }
+      
+      async function fetchPostsJSON(){
+        const res = await fetch(`${repoRoot()}/posts.json`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`posts.json HTTP ${res.status}`);
+        return res.json();
+      }
+
+      
       async function loadPost(){
         const usp     = new URLSearchParams(location.search);
         const u       = usp.get('u');
@@ -70,6 +84,54 @@
           const firstTime = cleaned.querySelector('time[datetime]'); if (firstTime) firstTime.remove();
     
           bodyEl.innerHTML = cleaned.innerHTML;
+
+          // ---- Centralized "Similar reads" ----
+          try {
+            const posts = await fetchPostsJSON();
+          
+            // Determine which entry in posts.json corresponds to this post
+            const uParam = new URLSearchParams(location.search).get('u') || '';
+            // Make an absolute URL for robust matching
+            const absU   = new URL(uParam, location.href);
+            // Find by endsWith to handle either absolute or relative forms
+            const me = posts.find(p =>
+              absU.pathname.endsWith(p.url) || absU.href.endsWith(p.url)
+            );
+          
+            if (me) {
+              const cat = me.category || '';
+              const sub = me.subcategory || '';
+          
+              // Choose 3 most recent in same (sub)category, excluding current
+              const matches = posts
+                .filter(p => p.url !== me.url &&
+                             p.category === cat &&
+                             (!sub || p.subcategory === sub))
+                .sort((a,b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 3);
+          
+              // If the post HTML contains <div id="similar-list">, populate it
+              const slot = document.getElementById('similar-list');
+              if (slot) {
+                const fmt = iso => new Date(iso)
+                  .toLocaleString(undefined, { month:'short', year:'numeric' });
+          
+                slot.innerHTML = matches.length
+                  ? matches.map(p => `
+                      <a class="similar-card" href="post.html?u=${encodeURIComponent(p.url)}">
+                        <strong>${p.titleHtml || p.title}</strong>
+                        <span>${p.subcategory ? p.subcategory + ' • ' : ''}${fmt(p.date)}</span>
+                      </a>
+                    `).join('')
+                  : `<p class="muted">No related posts yet.</p>`;
+              }
+            }
+          } catch (err) {
+            console.error('Similar reads failed:', err);
+            const slot = document.getElementById('similar-list');
+            if (slot) slot.innerHTML = `<p class="muted">Couldn’t load suggestions.</p>`;
+          }
+
     
           // ---- Fix relative URLs inside the injected post ----
           // Base dir of the fetched post, e.g. /ThoughtsInSilico/posts/
