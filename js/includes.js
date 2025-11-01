@@ -391,3 +391,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 })();
 
+
+// 5) Footer
+await includeInto(document.getElementById('footer-include'));
+
+// Add this block right AFTER the footer include:
+document.querySelectorAll('a.back-home[href="#"]').forEach(a => {
+  // If we’re inside /posts/, go up one level; else use index.html in place
+  a.href = /\/posts\//.test(location.pathname) ? '../index.html' : 'index.html';
+});
