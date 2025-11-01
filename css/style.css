@@ -504,23 +504,30 @@ html, body { height: 100%; }
 [data-entropy-control] input[type="range"],
 [data-entropy] input[type="range"]{ width: 160px !important; }
 
-/* Uniform section/page titles: same size & generous space */
+
+
+/* ---- Uniform section mastheads across pages ---- */
+:root{ --masthead-size: clamp(40px, 5.5vw, 72px); }
+
 main h1,
 main .page-title,
-main .section-title {
-  font-size: clamp(40px, 5.5vw, 72px);
-  margin-top: clamp(56px, 12vh, 160px);
-  margin-bottom: clamp(28px, 6vh, 80px);
+main .section-title,
+.post-title,                   /* used on some pages */
+.post-card > h1,
+.post-card .post-title,
+.container > h1:first-child {
+  font-size: var(--masthead-size) !important;
+  margin-top: clamp(56px, 12vh, 160px) !important;
+  margin-bottom: clamp(28px, 6vh, 80px) !important;
   padding-block: clamp(8px, 2vh, 16px);
   line-height: 1.06;
   scroll-margin-top: 120px;
 }
 
-/* If a heading is the first element on the page, give it a bit more air */
-main > :is(h1, .page-title, .section-title):first-child {
-  margin-top: clamp(72px, 16vh, 200px);
+/* If a heading is literally the first element in main, give it a touch more air */
+main > :is(h1, .page-title, .section-title, .post-title):first-child {
+  margin-top: clamp(72px, 16vh, 200px) !important;
 }
-
 
 
 
@@ -615,47 +622,6 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 
 
 
-/* Section immediately following the banner */
-.about-banner + * {
-  position: relative;
-  z-index: 1;                 /* render above the banner */
-  background:
-     linear-gradient(
-       to bottom,
-       rgba(11,14,16,0) 0px,
-       rgba(11,14,16,0.28) 56px,
-       rgba(11,14,16,0.58) 112px,
-       var(--bg) 168px
-     ),
-     var(--bg);
-}
-
-
-
-
-/* About: black sheet directly under banner (targets the actual container) */
-.about-banner + .container {
-  position: relative;
-  z-index: 1;
-
-  /* REAL gradient IN THE BACKGROUND, so it never overlaps text */
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(11,14,16,0) 0px,
-      rgba(11,14,16,0.25) 44px,
-      rgba(11,14,16,0.55) 92px,
-      var(--bg) 140px
-    ),
-    var(--bg);
-
-  /* span the main column edge-to-edge (no “box” gutters) */
-  margin-inline: 0;
-  padding-inline: 0;
-
-  /* ensure text is white */
-  color: var(--ink);
-}
 
 /* Kill any card “box” styles ONLY in the about-lower section */
 .about-banner + .container .post-card,
@@ -688,18 +654,6 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
   color: var(--ink) !important;       /* white text */
 }
 
-/* First section after the banner: background gradient that DOESN'T touch text */
-.about-banner + * {
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(11,14,16,0) 0,
-      rgba(11,14,16,0.28) 56px,
-      rgba(11,14,16,0.58) 112px,
-      var(--bg) 168px
-    ),
-    var(--bg) !important;
-}
 
 /* Use the full main-column width (not a 1100px box) just for the about-lower area */
 .about-banner ~ .container {
@@ -739,3 +693,18 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 
 
 
+/* ---- Banner to black boundary: true multi-stop gradient in BACKGROUND ---- */
+.about-banner + *,
+.about-banner + .container,
+.about-banner ~ .container:first-of-type {
+  /* real gradient that never covers text */
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(11,14,16,0) 0px,
+      rgba(11,14,16,0.28) 56px,
+      rgba(11,14,16,0.58) 112px,
+      var(--bg) 168px
+    ),
+    var(--bg) !important;
+}
