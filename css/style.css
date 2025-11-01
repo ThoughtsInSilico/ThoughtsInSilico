@@ -222,10 +222,9 @@ html, body { height: 100%; }
    Hero
 ========================================================= */
 .hero{
-  min-height:62vh;
-  background: url('../img/index-background.jpg') center / cover no-repeat;
-  background-attachment: fixed;           /* desktop parallax */
-  border-bottom:1px solid var(--stroke);
+   min-height:62vh;
+   background: url('../img/index-background.jpg') center / cover no-repeat;
+   border-bottom:1px solid var(--stroke);
 }
 
 
@@ -236,10 +235,7 @@ html, body { height: 100%; }
 /* =========================================================
    Containers / cards / grids
 ========================================================= */
-.container{ width: min(1100px, 100%); margin: 0 auto; padding-inline: 16px; }
-/* left-align only the About chart container */
-.container-left{  margin-left: 0;  margin-right: auto;}
-.section{ padding:28px 0 }
+
 .posts-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
 
 .post-card,.feature-card,.anthem-card{
@@ -340,7 +336,6 @@ html, body { height: 100%; }
 ========================================================= */
 .about-upper{
   background: url('../img/about-upper.jpg') center / cover no-repeat;
-  background-attachment: fixed;
   border-bottom:0;
 }
 
@@ -445,7 +440,6 @@ html, body { height: 100%; }
    background: var(--banner-desktop, url('../img/banner.jpg')) no-repeat;
    background-size: cover;
    background-position: calc(50% + 140px) center;
-   background-attachment: fixed;
    /* … */
 }
 
