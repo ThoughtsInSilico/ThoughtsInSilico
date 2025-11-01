@@ -101,6 +101,10 @@ html, body { height: 100%; }
   padding-inline: 0;
 }
 
+@media (max-width: 900px){
+  .main{ padding-inline: 0; }                 /* no side padding on the whole column */
+  .container{ padding-inline: var(--gutter-mobile); }  /* text gets a safe gutter */
+}
 
 /* =========================================================
    Sidebar
@@ -284,6 +288,17 @@ html, body { height: 100%; }
   box-shadow: 0 2px 10px rgba(0,0,0,.25);
 }
 
+
+/* Vertical image stack with same width */
+.post-card.post-layout .post-body .img-stack img{
+  display: block;
+  width: min(900px, 100%);
+  height: auto;
+  border-radius: 10px;
+  margin: 0 auto 12px;      /* same width, centered, stacked */
+}
+
+
 /* =========================================================
    About (Vat-brain)
 ========================================================= */
@@ -352,33 +367,36 @@ html, body { height: 100%; }
 
 .about-banner{
   position: relative;
-  height: 100svh;              /* no inner scrolling */
-  overflow: hidden;
-  background: var(--banner-desktop, url('../img/banner.jpg')) center / cover no-repeat;
-  background-attachment: fixed; /* desktop: not scrollable; section above/below scroll past it */
-}
-/* subtle dim on top of the image (like before) */
-.about-banner::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.35);
-  pointer-events:none;
-}
-/* soft fade at the bottom to lead into text */
-.about-banner{
-  -webkit-mask-image: linear-gradient(to bottom, black 88%, transparent 100%);
-          mask-image: linear-gradient(to bottom, black 88%, transparent 100%);
+  height: 100svh;                 /* fills the viewport without jumping bars */
+  overflow: hidden;               /* banner itself never scrolls */
+  background-image: var(--banner-desktop, url('../img/banner.jpg'));
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* center on the MAIN column: center of main = 50vw + (sidebar/2) */
+  background-position: calc(50vw + var(--sidebar-w)/2) center;
+  background-attachment: fixed;   /* desktop parallax */
 }
 
-/* phones: use mobile image + no fixed-attachment (prevents the glitch) */
+/* Soft fade at bottom to lead into content */
+.about-banner::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+              rgba(0,0,0,0) 60%,
+              rgba(11,14,16,0.88) 100%);  /* matches --bg */
+  pointer-events: none;
+}
+
+/* Phone: use mobile image, center normally, and disable fixed to avoid glitch */
 @media (max-width: 900px){
   .about-banner{
     background-image: var(--banner-mobile, var(--banner-desktop));
-    background-attachment: scroll;  /* mobile: no parallax */
-    background-position: center;
+    background-position: center center;
+    background-attachment: scroll;
   }
 }
+
 
 
 /* Mobile nav / sidebar behavior (hamburger) */
