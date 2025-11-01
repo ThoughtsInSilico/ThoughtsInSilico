@@ -227,50 +227,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-  // Optional: auto-load first track (but don’t autoplay):
-  // if (SIDEBAR_TRACKS.length){ window.GlobalPlayer.play(SIDEBAR_TRACKS[0]); }
-
-  // 4) Highlight active link after sidebar is present
-  const path = (location.pathname.split('/').pop() || 'index.html');
-  document.querySelectorAll('.sidebar nav a').forEach(a => {
-    const href = a.getAttribute('href') || '';
-    if (href === path || href.startsWith(path + '?')) a.setAttribute('aria-current', 'page');
-  });
-
-
-  // 6) Year
-    const yearEl = document.querySelector('[data-year], #y');
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
-    const isHome = document.body.classList.contains('home') || /(?:^|\/)index\.html?$/.test(location.pathname);
-  
-
-  // 8) Proportional panel sizing for the about page columns
-  function proportionalize(colSelector){
-    const col = document.querySelector(colSelector);
-    if (!col) return;
-    const panels = Array.from(col.querySelectorAll('.panel'));
-    if (panels.length < 2) return;
-
-    const measures = panels.map(p => {
-      const prev = p.style.flex;
-      p.style.flex = '0 0 auto';
-      const h = p.scrollHeight;
-      p.style.flex = prev;
-      return h;
-    });
-
-    const total = measures.reduce((a,b)=>a+b,0) || 1;
-    const allTiny = measures.every(h => h < 8);
-
-    panels.forEach((p, i) => {
-      const grow = allTiny ? 1 : measures[i] / total;
-      p.style.flex = `${grow} 1 0px`;
-    });
-  }
-
-  proportionalize('.about-left');
-  proportionalize('.about-right');
-});
 
 
 // --- Global replacement-noise overlay (ES5, DPR-correct, per-pixel replacement)
