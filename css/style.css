@@ -543,13 +543,22 @@ html, body { height: 100%; }
   image-rendering: pixelated;
 }
 
-/* Signal→Static control — stays in original spot */
-.entropy-control{
+
+
+/* Signal → Static control: fixed in the upper-right corner */
+.entropy-control,
+#entropy-control,
+[data-entropy-control],
+[data-entropy],
+[data-entropy-global]{
   position: fixed;
   top: 12px;
   right: 12px;
-  z-index: var(--z-ui);       /* always above the overlay */
-  display: flex;
+  left: auto;
+  bottom: auto;
+  margin: 0;
+  z-index: var(--z-ui);
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
@@ -557,12 +566,17 @@ html, body { height: 100%; }
   border: 1px dashed var(--stroke);
   background: rgba(0,0,0,.35);
   backdrop-filter: blur(4px);
+  pointer-events: auto;
 }
 .entropy-control input[type="range"]{ width: 160px; }
 .entropy-control output{ font: 600 12px/1 system-ui, sans-serif; color: var(--ink-dim); }
 
 @media (max-width: 900px){
-  .entropy-control{ max-width: min(360px, 80vw); }
+  .entropy-control,
+  #entropy-control,
+  [data-entropy-control],
+  [data-entropy],
+  [data-entropy-global]{ max-width: min(360px, 80vw); }
 }
 
 
