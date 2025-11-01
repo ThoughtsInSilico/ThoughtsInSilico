@@ -44,6 +44,13 @@
     
           try{
             const absUrl = new URL(u, location.href).href;
+            // Make all relative URLs inside the injected post resolve to the post's folder
+            const abs   = new URL(u, location.href);
+            const dir   = abs.href.replace(/[^/]*$/, '');   // .../posts/
+            const base  = document.createElement('base');
+            base.href   = dir;
+            document.head.prepend(base); // must be early in <head> to affect URL resolution
+
             const res  = await fetch(absUrl, { cache:'no-store' });
             if (!res.ok) throw new Error(`HTTP ${res.status} for ${absUrl}`);
     
@@ -65,18 +72,6 @@
             bodyEl.innerHTML = cleaned.innerHTML;
     
             const baseDir = new URL(absUrl).href.replace(/[^/]*$/, '');
-            bodyEl.querySelectorAll('[src]').forEach(el => {
-              const v = el.getAttribute('src');
-              if (v && !/^([a-z]+:)?\/\//i.test(v) && !v.startsWith('/')){
-                el.setAttribute('src', new URL(v, baseDir).href);
-              }
-            });
-            bodyEl.querySelectorAll('a[href]').forEach(a => {
-              const v = a.getAttribute('href');
-              if (v && !/^([a-z]+:)?\/\//i.test(v) && !v.startsWith('/')){
-                a.setAttribute('href', new URL(v, baseDir).href);
-              }
-            });
     
             bodyEl.querySelectorAll('script').forEach(old => {
               const s = document.createElement('script');
