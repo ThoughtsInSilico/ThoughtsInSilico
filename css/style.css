@@ -293,7 +293,7 @@ html, body { height: 100%; }
   border-bottom: 1px solid var(--stroke);
   position: relative;
   background-attachment: fixed;
-  background-position: calc(50% + (var(--sidebar-w) / 0.5)) center;
+  background-position: center center;
   z-index: 2;           /* sits above the banner */
 }
 
