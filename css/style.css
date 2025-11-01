@@ -140,6 +140,14 @@ html, body { height: 100%; }
   padding-inline: 0;   /* no side gutter */
 }
 
+/* Mobile text gutter: backgrounds stay full-bleed */
+@media (max-width: 900px){
+  .container{ padding-inline: var(--gutter-mobile); }
+
+  /* Fallback for injected posts that might not be wrapped in .container */
+  .post-title,
+  .post-body{ padding-inline: var(--gutter-mobile); }
+}
 
 
 /* =========================================================
@@ -227,6 +235,10 @@ html, body { height: 100%; }
    border-bottom:1px solid var(--stroke);
 }
 
+/* add this right after */
+@media (max-width: 900px){
+  .hero{ background-attachment: scroll; } /* mobile: no parallax */
+}
 
 /* Hide "Back to Home" on the homepage */
 .home .back-home { display: none; }
@@ -339,7 +351,6 @@ html, body { height: 100%; }
   border-bottom:0;
 }
 
-}
 .about-grid{
   display:grid; grid-template-columns:repeat(6, 1fr); grid-auto-rows: auto;
   gap:0; border:1px solid var(--stroke);
@@ -435,31 +446,24 @@ html, body { height: 100%; }
 .now-playing{ margin:8px 0 6px; font-weight:700; }
 
 
+
 .about-banner{
-   position:relative; height:100vh;
-   background: var(--banner-desktop, url('../img/banner.jpg')) no-repeat;
-   background-size: cover;
-   background-position: calc(50% + 140px) center;
-   /* … */
+  position: relative;
+  height: 100svh; /* avoids mobile address-bar jumps */
+  overflow: hidden; /* prevents internal scrolling */
+  background: var(--banner-desktop, url('../img/banner.jpg')) no-repeat center / cover;
+  background-attachment: fixed; /* desktop parallax */
 }
 
-
-
-.about-banner::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.38);
-}
-
-/* Phone banner switches to the mobile image */
+/* Phone banner: use mobile image + no fixed attachment */
 @media (max-width: 900px){
   .about-banner{
     background-image: var(--banner-mobile, var(--banner-desktop));
-    background-size: cover;
+    background-attachment: scroll; /* restores original mobile behavior */
     background-position: center;
   }
 }
+
 
 
 /* =========================================================
