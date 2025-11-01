@@ -360,15 +360,15 @@ html, body { height: 100%; }
 
 
 .about-banner{
-  position: relative;
-  height: 100svh;                 /* fills the viewport without jumping bars */
-  overflow: hidden;               /* banner itself never scrolls */
-  background-image: var(--banner-desktop, url('../img/banner.jpg'));
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* center on the MAIN column: center of main = 50vw + (sidebar/2) */
-   background-position: center center;   /* center within the main column */
-   background-attachment: scroll;        /* avoids viewport-based offset */
+   position: sticky;
+   top: 0;
+   height: min(60vh, 520px);
+   overflow: hidden;       
+   background-image: url('../img/about-banner.jpg');
+   background-repeat: no-repeat;
+   background-size: cover;
+   background-position: center center;   
+   background-attachment: fixed;    
 }
 
 /* Soft fade at bottom to lead into content */
@@ -385,9 +385,9 @@ html, body { height: 100%; }
 /* Phone: use mobile image, center normally, and disable fixed to avoid glitch */
 @media (max-width: 900px){
   .about-banner{
-    background-image: var(--banner-mobile, var(--banner-desktop));
+    bbackground-image: url('../img/about-banner-mobile.jpg');
     background-position: center center;
-    background-attachment: scroll;
+    background-attachment: fixed;
   }
 }
 
@@ -507,8 +507,8 @@ main .section-title {
 }
 
 /* ---- About: sticky reveal banner (desktop + mobile) ---- */
-#about-banner,
-#about-banner-mobile {
+.about-banner,
+.about-banner-mobile {
   position: sticky !important;
   top: 0;
   height: min(60vh, 520px);    /* visible window of the banner */
@@ -525,33 +525,33 @@ main .section-title {
 
 /* If your HTML uses <img> inside the banner, hide it so the CSS background is the source of truth,
    without deleting content. If you don't have an <img> inside, this is a no-op. */
-#about-banner img,
-#about-banner-mobile img {
+.about-banner img,
+.about-banner-mobile img {
   display: none !important;
 }
 
 /* Desktop uses the full banner */
-#about-banner {
+.about-banner {
   display: block;
   background-image: url("../img/about-banner.jpg");
 }
 
 /* Mobile gets its own artwork; hide desktop banner when narrow */
-#about-banner-mobile {
+.about-banner-mobile {
   display: none;
   background-image: url("../img/about-banner-mobile.jpg");
 }
 
 @media (max-width: 800px) {
-  #about-banner { display: none; }
-  #about-banner-mobile { display: block; }
+.about-banner { display: none; }
+.about-banner-mobile { display: block; }
 }
 
 /* Soft fade at both edges to make the “eclipse” transitions pleasant */
-#about-banner::before,
-#about-banner::after,
-#about-banner-mobile::before,
-#about-banner-mobile::after {
+.about-banner::before,
+.about-banner::after,
+.about-banner-mobile::before,
+.about-banner-mobile::after {
   content: "";
   position: absolute;
   left: 0; right: 0;
@@ -561,15 +561,15 @@ main .section-title {
 }
 
 /* Fade at the top so it gently emerges from the upper section */
-#about-banner::before,
-#about-banner-mobile::before {
+.about-banner::before,
+.about-banner-mobile::before {
   top: 0;
   background: linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0));
 }
 
 /* Fade at the bottom so the lower text “eclipses” the banner */
-#about-banner::after,
-#about-banner-mobile::after {
+.about-banner::after,
+.about-banner-mobile::after {
   bottom: 0;
   background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0));
 }
