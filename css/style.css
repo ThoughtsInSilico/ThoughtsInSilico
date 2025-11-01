@@ -687,22 +687,29 @@ main > footer{ margin-top:0 }
   text-decoration: none;
 }
 
-
-/* === sticky footer patch — paste as LAST lines of css/style.css === */
-
+/* === layout + sticky footer (final) === */
 html, body { height: 100%; }
 
+/* 2-column grid: left sidebar (fixed 320px) | right content */
 .layout {
-  min-height: 100svh;            /* full viewport height */
   display: grid;
-  grid-template-columns: 320px 1fr; /* sidebar + main */
+  width: 100%;
+  min-height: 100svh;
+  grid-template-columns: 320px minmax(0, 1fr);
 }
 
+/* make sure the injected sidebar never collapses */
+#sidebar-include, .sidebar { min-width: 320px; }
+
+/* main area: header | content (fills) | footer */
 .main {
-  min-height: 100%;
   display: grid;
-  grid-template-rows: auto 1fr auto; /* header/section, content, footer */
+  grid-template-rows: auto 1fr auto;
+  min-width: 0;               /* prevent content from squishing */
+  margin-left: 0 !important;  /* neutralize any legacy left margin */
 }
 
+/* footer hugs bottom because .main has a 1fr middle row */
 .site-footer { margin-top: 0; }
+
 
