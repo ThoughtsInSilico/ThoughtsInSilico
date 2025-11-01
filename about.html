@@ -11,7 +11,7 @@
 
 <body>
   <div class="layout">
-    <!-- Sidebar include -->
+    <!-- sidebar include -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
@@ -24,7 +24,7 @@
         <!-- left-aligned chart container -->
         <div class="container section">
           <div class="about-grid">
-            <!-- LEFT COLUMN (span 3): Fixations (top) + About (bottom) -->
+            <!-- LEFT COLUMN (span 3) -->
             <div class="about-cell span-3">
               <div class="about-col about-left">
                 <section class="panel">
@@ -53,7 +53,7 @@
               </div>
             </div>
             
-            <!-- RIGHT COLUMN (span 3): Favorite artists (top) + Personal Anthems (bottom) -->
+            <!-- RIGHT COLUMN (span 3) -->
             <div class="about-cell span-3">
               <div class="about-col about-right">
 
@@ -77,7 +77,7 @@
                   <div id="nowPlaying" class="now-playing" aria-live="polite"></div>
 
                   <script>
-                    // ---- Personal Anthems (drives the GlobalPlayer) ----
+                    // ---- personal anthems (drives the globalplayer) ----
                     const ANTHEMS = [
                       { title: "Mahler: Symphony No. 5: IV. Adagietto (conductor: Abbado)", src: "audio/mahler-5-adagietto.mp3" },
                       { title: "Schubert: String Quartet No. 14 'Death and the Maiden': I. Allegro (performer: Takács Quartet)", src: "audio/death-and-the-maiden.mp3" },
@@ -103,7 +103,7 @@
                         const i = +btn.dataset.i;
                         const track = ANTHEMS[i];
                   
-                        // Use the single, floating player defined in js/includes.js
+                        // use the single, floating player defined in js/includes.js
                         window.GlobalPlayer.play(track);
                   
                         nowEl.textContent = track.title || '';
@@ -150,7 +150,7 @@
         </div>
       </section>
 
-      <!-- Footer include -->
+      <!-- footer include -->
       <div id="footer-include" data-src="partials/footer.html"></div>
     </main>
   </div>
