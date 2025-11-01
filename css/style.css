@@ -764,3 +764,31 @@ html, body { height: 100%; }
   #sidebar-include, .sidebar { min-width: 0; }
 }
 
+/* --- Hard center the main content column --- */
+.layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) !important; /* sidebar + flexible main */
+  min-height: 100svh;
+}
+
+.main {
+  display: flex !important;             /* center children horizontally */
+  flex-direction: column;
+  align-items: center;                   /* <-- the centering */
+  min-width: 0;
+}
+
+/* every direct child inside .main gets a max width and expands up to it */
+.main > * {
+  width: min(1100px, 100%) !important;   /* change 1100px if you want wider/narrower */
+}
+
+/* common containers should also honor that width cap */
+.container, .section {
+  width: min(1100px, 100%) !important;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
