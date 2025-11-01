@@ -693,21 +693,36 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 }
 
 
-
-/* ---- Banner to black boundary: true multi-stop gradient in BACKGROUND ---- */
-.about-banner + *,
+/* Banner → black boundary: paint gradient on the FIRST content section */
+.about-banner + .section,
 .about-banner + .container,
+.about-banner + *:first-child,
+.about-banner ~ .section:first-of-type,
 .about-banner ~ .container:first-of-type {
-   position: relative;
-   z-index: 1;
-  /* real gradient that never covers text */
+  position: relative;
+  z-index: 1;
   background:
     linear-gradient(
       to bottom,
-      rgba(11,14,16,0) 0px,
-      rgba(11,14,16,0.28) 56px,
-      rgba(11,14,16,0.58) 112px,
-      var(--bg) 168px
+      rgba(11,14,16,0) 0,
+      rgba(11,14,16,0.32) 80px,
+      rgba(11,14,16,0.72) 160px,
+      var(--bg) 240px
     ),
     var(--bg) !important;
 }
+
+/* Make that first section span the full main column (no boxed look) */
+.about-banner ~ .section:first-of-type > .container {
+  max-width: none !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
+  padding-inline: var(--gutter-desktop) !important;
+}
+@media (max-width: 900px){
+  .about-banner ~ .section:first-of-type > .container {
+    padding-inline: var(--gutter-mobile) !important;
+  }
+}
+
+
