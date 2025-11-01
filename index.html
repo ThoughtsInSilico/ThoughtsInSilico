@@ -14,14 +14,15 @@
 </head>
 
 <body class="home">
-  <div class="layout">    
-    <!-- Sidebar include -->
+  <div class="layout"> 
+    
+    <!-- sidebar include -->
     <div id="sidebar-include" data-src="partials/sidebar.html"></div>
 
     <main class="main">
       <section class="hero" aria-label="Background art"></section>  
 
-      <!-- Global Shannon entropy slider (Signal to Static) -->
+      <!-- global entropy slider (signal to static) -->
       <div class="entropy-control" data-entropy-global>
         <div class="entropy-title">Signal to Static</div>
         <label class="visually-hidden" for="entropy-range">
@@ -38,7 +39,7 @@
         <div id="posts-grid" class="posts-grid" aria-live="polite"></div>
       </section>
 
-      <!-- Footer include -->
+      <!-- footer include -->
       <div id="footer-include" data-src="partials/footer.html"></div>
     </main>
   </div>
@@ -47,7 +48,6 @@
     (async function(){
       const grid = document.getElementById('posts-grid');
       try{
-        // more robust fetch + clear error messages
         const res = (await fetch('posts/posts.json').catch(() => null)) || (await fetch('posts.json'));
         if (!res) throw new Error('Could not fetch posts/posts.json or posts.json');
         const text = await res.text();
