@@ -687,3 +687,22 @@ main > footer{ margin-top:0 }
   text-decoration: none;
 }
 
+
+/* === sticky footer patch — paste as LAST lines of css/style.css === */
+
+html, body { height: 100%; }
+
+.layout {
+  min-height: 100svh;            /* full viewport height */
+  display: grid;
+  grid-template-columns: 320px 1fr; /* sidebar + main */
+}
+
+.main {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* header/section, content, footer */
+}
+
+.site-footer { margin-top: 0; }
+
