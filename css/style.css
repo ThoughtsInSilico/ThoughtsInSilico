@@ -86,6 +86,19 @@ html, body { height: 100%; }
   padding-inline: 16px;
 }
 
+/* Make the top hero banner flush against the sidebar (no side padding) */
+.main > .hero{
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+}
+
+/* Also remove the little 1px seam: let the image touch the sidebar border */
+.hero{ border-left: 0; }
+
+
 /* make sure the hero hugs the sidebar */
 .hero{ padding-inline: 0; }
 
@@ -532,6 +545,8 @@ html, body { height: 100%; }
   color: var(--ink-dim);
   user-select: none;
 }
+
+
 @media (max-width: 900px){
   .entropy-control{
     left: auto;
@@ -541,6 +556,36 @@ html, body { height: 100%; }
   }
   .entropy-control input[type="range"]{ width: 120px; }
 }
+
+/* Compact the entropy control and pin it top-right, regardless of variant */
+.entropy-control,
+#entropy-control,
+[data-entropy-control],
+[data-entropy]{
+  position: fixed !important;
+  top: 12px !important;
+  right: 12px !important;
+  left: auto !important;
+  z-index: 60;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px !important;
+  border-radius: 10px;
+  border: 1px dashed var(--stroke);
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(4px);
+  max-width: 360px;
+}
+
+/* make the slider itself shorter */
+.entropy-control input[type="range"],
+#entropy-control input[type="range"],
+[data-entropy-control] input[type="range"],
+[data-entropy] input[type="range"]{
+  width: 160px !important;
+}
+
 
 /* =========================================================
    Post-specific helpers (images + headings)
