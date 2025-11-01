@@ -367,8 +367,8 @@ html, body { height: 100%; }
   background-repeat: no-repeat;
   background-size: cover;
   /* center on the MAIN column: center of main = 50vw + (sidebar/2) */
-  background-position: calc(50vw - var(--sidebar-w)/2) center;
-  background-attachment: fixed;   /* desktop parallax */
+   background-position: center center;   /* center within the main column */
+   background-attachment: scroll;        /* avoids viewport-based offset */
 }
 
 /* Soft fade at bottom to lead into content */
