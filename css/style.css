@@ -300,12 +300,15 @@ html, body { height: 100%; }
   background: url('../img/about-upper.jpg') center / cover no-repeat;
    border-bottom: 0;
    position: relative;
+   position: relative;
+   background-attachment: fixed;
    z-index: 2;           /* sits above the banner */
 
 }
 .about-grid{
-  display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: auto;
-  gap: 0; border: 1px solid var(--stroke);
+   display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: auto;
+   gap: 0; border: 1px solid var(--stroke);
+   position: relative; z-index: 2;
 }
 .about-cell{
   border-right: 1px solid #2e3643;
@@ -365,7 +368,7 @@ html, body { height: 100%; }
 .about-banner{
    position: sticky;
    top: 0;
-   height: min(60vh, 520px);
+   height: 100svh;
    overflow: hidden;  
    z-index: 0;
    background-image: url('../img/about-banner.jpg');
@@ -634,9 +637,9 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
   content: "";
   position: absolute;
   left: 0; right: 0;
-  top: -48px;                 /* overlaps the banner slightly */
-  height: 48px;
+  top: -96px;                 /* overlaps the banner slightly */
+  height: 96px;
   pointer-events: none;
-  background: linear-gradient(to bottom, var(--bg) 0%, rgba(11,14,16,0) 100%);
+   background: linear-gradient(to bottom, rgba(11,14,16,0) 0%, var(--bg) 100%);
 }
 
