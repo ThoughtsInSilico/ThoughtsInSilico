@@ -199,6 +199,10 @@ html, body { height: 100%; }
   border-bottom:1px solid var(--stroke);
 }
 
+/* Hide "Back to Home" on the homepage */
+.home .back-home { display: none; }
+
+
 /* =========================================================
    Containers / cards / grids
 ========================================================= */
