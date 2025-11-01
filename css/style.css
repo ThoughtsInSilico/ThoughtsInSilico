@@ -587,16 +587,18 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
 }
 
 
-/* If your content is wrapped in .post-body inside the card, let it breathe full width */
+/* About (lower): keep body text aligned with the container gutter */
 .about-banner + .container .post-body {
   margin-inline: 0 !important;
-  padding-inline: var(--gutter-desktop, 32px);
+  padding-inline: 0 !important;
 }
 @media (max-width: 900px){
   .about-banner + .container .post-body {
-    padding-inline: var(--gutter-mobile, 16px);
+    padding-inline: 0 !important;
   }
 }
+
+
 
 /* --- About: make the entire remainder flat black with white text --- */
 .about-banner ~ * {
