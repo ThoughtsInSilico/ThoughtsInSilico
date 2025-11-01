@@ -21,7 +21,7 @@
   --border: var(--stroke);
   --muted: var(--ink-dim);
 
-  --sidebar-w: 320px;   /* single source of truth */
+  --sidebar-w: 280px;  /* or 260px if you want it tighter */
 }
 
 /* =========================================================
@@ -72,12 +72,22 @@ html, body { height: 100%; }
   align-items: start;
 }
 
-/* cap content width and center common wrappers */
-.main > *, .container, .section{
+/* center everything that lives directly under .main */
+.main > *{
+  width: min(1100px, 100%);
+  margin-inline: auto;
+}
+
+/* only these get side padding */
+.container,
+.section{
   width: min(1100px, 100%);
   margin-inline: auto;
   padding-inline: 16px;
 }
+
+/* make sure the hero hugs the sidebar */
+.hero{ padding-inline: 0; }
 
 /* footer naturally hugs bottom because the middle row is 1fr */
 .site-footer{ margin-top: 0; }
@@ -492,7 +502,8 @@ html, body { height: 100%; }
   background: rgba(0,0,0,.35);
   backdrop-filter: blur(4px);
 }
-.entropy-control input[type="range"]{ width: 220px; }
+.entropy-control input[type="range"]{ width: 140px; }
+
 .entropy-control output{
   font: 600 12px/1 system-ui, sans-serif;
   color: var(--ink-dim);
@@ -524,7 +535,7 @@ html, body { height: 100%; }
     max-width: min(360px, 80vw);
     text-wrap: nowrap;
   }
-  .entropy-control input[type="range"]{ width: 160px; }
+  .entropy-control input[type="range"]{ width: 120px; }
 }
 
 /* =========================================================
