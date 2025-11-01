@@ -77,20 +77,30 @@ html, body { height: 100%; }
 }
 
 
-/* center everything that lives directly under .main */
-.main > *{
-  width: min(1100px, 100%);
-  margin-inline: auto;
+/* --- Global layout: padding only on .container --- */
+:root{
+  --gutter-desktop: 32px;
+  --gutter-mobile: clamp(14px, 4vw, 24px);
 }
 
-/* Center only standard content blocks; hero is not one of them */
-.container,
-.section{
-  max-width: 1100px;
+.main > *{             /* sections can be full-bleed by default */
   width: 100%;
-  margin-inline: auto;
-  padding-inline: 16px;
+  margin: 0;
 }
+
+.container{            /* all text padding lives here */
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
+.section{              /* keep vertical rhythm here, not side padding */
+  padding-block: 28px;
+}
+@media (max-width: 900px){
+  .container{ padding-inline: var(--gutter-mobile); }
+}
+
 
 
 /* hero should touch the sidebar—no side padding/margin */
@@ -119,6 +129,17 @@ html, body { height: 100%; }
 
 /* Full-bleed hero must touch the sidebar edge */
 .main > .hero { padding-inline: 0; }
+
+
+/* Any edge-to-edge section (backgrounds, banners, art) */
+.hero,
+.about-upper,
+.about-banner,
+.bleed{
+  margin-inline: 0;
+  padding-inline: 0;   /* no side gutter */
+}
+
 
 
 /* =========================================================
@@ -705,18 +726,3 @@ html, body { height: 100%; }
 :root { --gutter-mobile: clamp(14px, 4vw, 24px); }
 
 
-@media (max-width: 900px){
-  /* no padding on the parent, so the hero can touch the sidebar */
-  .main{ padding-inline: 0; }
-
-  /* give the gutter to normal content sections instead */
-  .main > .container,
-  .main > .section{ padding-inline: var(--gutter-mobile); }
-
-  /* keep the hero truly edge-to-edge */
-  .main > .hero{ margin-inline: 0; padding-inline: 0; }
-
-  /* fallback padding for raw post content (if a post injects bare markup) */
-  .post-title,
-  .post-body{ padding-inline: var(--gutter-mobile); }
-}
