@@ -792,3 +792,35 @@ html, body { height: 100%; }
   padding-right: 16px;
 }
 
+/* ==== LAYOUT FIX: keep sidebar left, center main column ==== */
+html, body { height: 100%; }
+
+.layout{
+  width: 100%;
+  min-height: 100vh;
+  display: grid !important;
+  grid-template-columns: 320px minmax(0, 1fr) !important; /* sidebar | content */
+  gap: 0;
+}
+
+/* make sure the two direct children land in the correct columns */
+.sidebar, #sidebar-include { grid-column: 1; }
+.main{ 
+  grid-column: 2;
+  min-width: 0;               /* allow content to shrink instead of pushing grid */
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;        /* centers children horizontally */
+}
+
+/* cap content width and actually center it */
+.main > *, .container, .section{
+  width: min(1100px, 100%);
+  margin-inline: auto;
+  padding-inline: 16px;       /* a little breathing room at small widths */
+}
+
+/* keep the footer on the bottom of the viewport even with short pages */
+.site-footer{ margin-top: auto; }
+
+
