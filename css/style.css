@@ -381,7 +381,7 @@ html, body { height: 100%; }
   content:"";
   position:absolute;
   inset:0;
-  background: rgba(0,0,0,.38);
+  background: rgba(0,0,0,.58);
   pointer-events: none;
 }
 
@@ -497,16 +497,21 @@ html, body { height: 100%; }
 [data-entropy-control] input[type="range"],
 [data-entropy] input[type="range"]{ width: 160px !important; }
 
-/* ---- Section title spacing (expanded, still additive) ---- */
+/* ---- Section title spacing (roomier) ---- */
 main h1,
 main .page-title,
 main .section-title {
-  /* much more breathing room above and below */
-  margin-top: clamp(32px, 10vh, 120px);
-  margin-bottom: clamp(18px, 4vh, 56px);
-  line-height: 1.05; /* keeps large display titles tight */
-  scroll-margin-top: 96px; /* avoids being hidden when navigated to */
+  margin-top: clamp(48px, 12vh, 160px);
+  margin-bottom: clamp(28px, 6vh, 80px);
+  line-height: 1.06;
+  scroll-margin-top: 112px;
 }
+
+/* If a heading is the very first element, give it extra top space */
+main > :is(h1, .page-title, .section-title):first-child {
+  margin-top: clamp(64px, 14vh, 180px);
+}
+
 
 /* First heading at the very top of a page gets extra room */
 main > :is(h1, h2, .page-title, .section-title):first-child {
@@ -605,13 +610,44 @@ main > :is(h1, h2, .page-title, .section-title):first-child {
   background: var(--bg);      /* the black sheet itself */
 }
 
-/* True blend at the top of the black section (transparent → black) */
+/* Stronger real gradient at the top edge of the black section */
 .about-banner + *::before {
   content: "";
   position: absolute;
   left: 0; right: 0;
   top: 0;
-  height: 96px;               /* adjust to taste (64–128px) */
+  height: 140px;  /* make the blend obvious; tweak 120–180px to taste */
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(11,14,16,0) 0%, var(--bg) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.25) 35%,
+    rgba(0,0,0,0.55) 65%,
+    var(--bg) 100%
+  );
 }
+
+
+/* --- About: full-width black sheet below the banner --- */
+.about-banner + * {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);     /* black sheet spans full width */
+  color: var(--ink);         /* force white text */
+  margin-inline: 0;          /* remove any container margins */
+  padding-inline: 0;         /* remove container padding that causes side gaps */
+}
+
+/* Remove boxed/rounded card look just in the about-lower section */
+.about-banner + * .card,
+.about-banner + * .post-card,
+.about-banner + * .feature-card,
+.about-banner + * .anthem-card {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding-left: 0;
+  padding-right: 0;
+}
+
