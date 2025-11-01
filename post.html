@@ -40,7 +40,7 @@
       }
       
       async function fetchPostsJSON(){
-        const res = await fetch(`${repoRoot()}/posts.json`, { cache: 'no-store' });
+        const res = await fetch(`${repoRoot()}/posts/posts.json`, { cache: 'no-store' });
         if (!res.ok) throw new Error(`posts.json HTTP ${res.status}`);
         return res.json();
       }
@@ -182,7 +182,7 @@
           try{
             // resolve posts.json relative to repo root (works on GitHub Pages)
             const seg = location.pathname.split('/')[1] || '';
-            const postsRes = await fetch(seg ? `/${seg}/posts.json` : 'posts.json');
+            const postsRes = await fetch(seg ? `/${seg}/posts/posts.json` : 'posts/posts.json');
             if (postsRes.ok) {
               const posts = await postsRes.json();
           
