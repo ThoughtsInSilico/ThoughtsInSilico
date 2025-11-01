@@ -298,7 +298,10 @@ html, body { height: 100%; }
 ========================================================= */
 .about-upper{
   background: url('../img/about-upper.jpg') center / cover no-repeat;
-  border-bottom: 0;
+   border-bottom: 0;
+   position: relative;
+   z-index: 2;           /* sits above the banner */
+
 }
 .about-grid{
   display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: auto;
@@ -363,7 +366,8 @@ html, body { height: 100%; }
    position: sticky;
    top: 0;
    height: min(60vh, 520px);
-   overflow: hidden;       
+   overflow: hidden;  
+   z-index: 0;
    background-image: url('../img/about-banner.jpg');
    background-repeat: no-repeat;
    background-size: cover;
@@ -600,3 +604,22 @@ main .section-title {
 .post main {
   padding-bottom: calc(var(--footer-height, 56px) + 56px) !important;
 }
+
+/* Lower section (immediately after the banner) should sit above and eclipse the banner */
+.about-banner + * {
+  position: relative;
+  z-index: 2;                 /* render above the banner */
+  background: var(--bg);      /* solid base so text is on its own layer */
+}
+
+/* Soft gradient at the top edge of the lower section to ease the transition */
+.about-banner + *::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: -48px;                 /* overlaps the banner slightly */
+  height: 48px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--bg) 0%, rgba(11,14,16,0) 100%);
+}
+
